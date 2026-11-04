@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "prod"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "workloadName": {
+      "value": "cloudresumeai"
+    },
+    "postgresAdminUsername": {
+      "value": "cloudresume_admin"
+    },
+    "postgresAdminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>/providers/Microsoft.KeyVault/vaults/<KEY_VAULT_NAME>"
+        },
+        "secretName": "postgres-admin-password"
+      }
+    },
+    "flaskSecretKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>/providers/Microsoft.KeyVault/vaults/<KEY_VAULT_NAME>"
+        },
+        "secretName": "flask-secret-key"
+      }
+    },
+    "geminiApiKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>/providers/Microsoft.KeyVault/vaults/<KEY_VAULT_NAME>"
+        },
+        "secretName": "gemini-api-key"
+      }
+    },
+    "geminiModel": {
+      "value": "gemini-3.5-flash-lite"
+    },
+    "entraTenantId": {
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "entraClientId": {
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    "entraAudience": {
+      "value": "api://00000000-0000-0000-0000-000000000000"
+    },
+    "entraIssuer": {
+      "value": "https://<tenant-subdomain>.ciamlogin.com/<tenant-id>/v2.0"
+    }
+  }
+}
+

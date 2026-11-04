@@ -1,0 +1,72 @@
+services:
+  # PostgreSQL Database Service
+  db:
+    image: postgres:16-alpine
+    container_name: cloudresumeai-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cloudresume_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cloudresume_password_placeholder}
+      POSTGRES_DB: ${POSTGRES_DB:-cloudresumeai_dev}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cloudresume_user} -d ${POSTGRES_DB:-cloudresumeai_dev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - cloudresume-network
+
+  # Python Flask REST API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cloudresumeai-backend
+    environment:
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-1}
+      PORT: 5000
+      SECRET_KEY: ${SECRET_KEY:-placeholder-secret-key-change-me}
+      POSTGRES_USER: ${POSTGRES_USER:-cloudresume_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cloudresume_password_placeholder}
+      POSTGRES_DB: ${POSTGRES_DB:-cloudresumeai_dev}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cloudresume_user}:${POSTGRES_PASSWORD:-cloudresume_password_placeholder}@db:5432/${POSTGRES_DB:-cloudresumeai_dev}
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - cloudresume-network
+
+  # React + Vite Static Frontend (served via Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cloudresumeai-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - cloudresume-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  cloudresume-network:
+    driver: bridge
+
