@@ -32,3 +32,34 @@ def test_health_endpoint_cors_headers(client):
     assert response.status_code == 200
     allow_origin = response.headers.get("Access-Control-Allow-Origin")
     assert allow_origin == "http://localhost:5173"
+
+
+def test_baseline_security_headers_present(client):
+    """Test that responses include baseline security headers."""
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    assert response.headers.get("X-Content-Type-Options") == "nosniff"
+    assert response.headers.get("X-Frame-Options") == "DENY"
+    assert (
+        response.headers.get("Referrer-Policy")
+        == "strict-origin-when-cross-origin"
+    )
+    assert "geolocation=()" in response.headers.get("Permissions-Policy", "")
+
+
+def test_hsts_header_in_production_https(client, monkeypatch):
+    """Test that HSTS is added only when requests arrive over HTTPS in production."""
+    # Test 1: In testing/dev over HTTP, HSTS should NOT be set
+    resp_dev = client.get("/api/health")
+    assert "Strict-Transport-Security" not in resp_dev.headers
+
+    # Test 2: In production environment over HTTPS (via X-Forwarded-Proto)
+    from flask import current_app
+    monkeypatch.setitem(current_app.config, "ENV", "production")
+
+    resp_prod_https = client.get(
+        "/api/health", headers={"X-Forwarded-Proto": "https"}
+    )
+    assert resp_prod_https.status_code == 200
+    hsts = resp_prod_https.headers.get("Strict-Transport-Security")
+    assert hsts == "max-age=31536000; includeSubDomains"

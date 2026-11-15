@@ -1,6 +1,6 @@
 """Application factory for the Flask backend."""
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from app.config import Config
 from app.extensions import db, migrate
@@ -51,6 +51,38 @@ def create_app(config_class=Config):
     application.register_blueprint(resumes_bp, url_prefix="/api")
     application.register_blueprint(profile_bp, url_prefix="/api")
     application.register_blueprint(ai_bp, url_prefix="/api")
+
+    # Centralized Security Headers
+    @application.after_request
+    def set_security_headers(response):
+        """Attach baseline production security headers to all responses."""
+        if "X-Content-Type-Options" not in response.headers:
+            response.headers["X-Content-Type-Options"] = "nosniff"
+
+        if "X-Frame-Options" not in response.headers:
+            response.headers["X-Frame-Options"] = "DENY"
+
+        if "Referrer-Policy" not in response.headers:
+            response.headers["Referrer-Policy"] = (
+                "strict-origin-when-cross-origin"
+            )
+
+        if "Permissions-Policy" not in response.headers:
+            response.headers["Permissions-Policy"] = (
+                "geolocation=(), camera=(), microphone=(), payment=()"
+            )
+
+        is_https = (
+            request.is_secure
+            or request.headers.get("X-Forwarded-Proto", "").lower() == "https"
+        )
+        if is_https and application.config.get("ENV") == "production":
+            if "Strict-Transport-Security" not in response.headers:
+                response.headers["Strict-Transport-Security"] = (
+                    "max-age=31536000; includeSubDomains"
+                )
+
+        return response
 
     # Global safe error handlers
     @application.errorhandler(404)

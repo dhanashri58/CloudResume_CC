@@ -52,7 +52,9 @@
     },
     "entraIssuer": {
       "value": "https://<tenant-subdomain>.ciamlogin.com/<tenant-id>/v2.0"
+    },
+    "corsOrigins": {
+      "value": "https://ca-cloudresumeai-frontend-prod.eastus.azurecontainerapps.io"
     }
   }
 }
-

@@ -52,7 +52,9 @@
     },
     "entraIssuer": {
       "value": "https://<tenant-subdomain>.ciamlogin.com/<tenant-id>/v2.0"
+    },
+    "corsOrigins": {
+      "value": "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173"
     }
   }
 }
-

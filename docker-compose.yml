@@ -8,7 +8,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cloudresume_password_placeholder}
       POSTGRES_DB: ${POSTGRES_DB:-cloudresumeai_dev}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # Bind strictly to loopback interface to prevent public network exposure
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -69,4 +70,3 @@ volumes:
 networks:
   cloudresume-network:
     driver: bridge
-

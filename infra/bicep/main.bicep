@@ -43,6 +43,9 @@ param entraAudience string = ''
 @description('Microsoft Entra External ID Issuer URL.')
 param entraIssuer string = ''
 
+@description('Allowed CORS origins for the backend API (comma-separated).')
+param corsOrigins string = ''
+
 @description('Optional notification email addresses for Azure Cost Management budget alerts.')
 param budgetAlertEmails array = []
 
@@ -142,6 +145,9 @@ module containerAppEnv 'modules/environment.bicep' = {
 var backendImage = '${registry.outputs.loginServer}/cloudresumeai-backend:latest'
 var frontendImage = '${registry.outputs.loginServer}/cloudresumeai-frontend:latest'
 
+var defaultCorsOrigins = environment == 'prod' ? 'https://${frontendAppName}.${containerAppEnv.outputs.defaultDomain}' : 'http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173'
+var effectiveCorsOrigins = !empty(corsOrigins) ? corsOrigins : defaultCorsOrigins
+
 // 7. Backend Container App
 module backendApp 'modules/backend.bicep' = {
   name: 'deploy-backend-${environment}'
@@ -169,6 +175,7 @@ module backendApp 'modules/backend.bicep' = {
     entraClientId: entraClientId
     entraAudience: entraAudience
     entraIssuer: entraIssuer
+    corsOrigins: effectiveCorsOrigins
   }
 }
 
@@ -219,4 +226,3 @@ output backendApiUrl string = backendApp.outputs.apiUrl
 
 @description('Frontend application HTTPS URL.')
 output frontendAppUrl string = frontendApp.outputs.appUrl
-

@@ -33,7 +33,7 @@ param entraTenantId string = ''
 param entraClientId string = ''
 param entraAudience string = ''
 param entraIssuer string = ''
-param corsOrigins string = '*'
+param corsOrigins string = 'http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173'
 
 resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: appName
@@ -226,4 +226,3 @@ output fqdn string = backendApp.properties.configuration.ingress.fqdn
 
 @description('Full HTTPS URL of the backend API.')
 output apiUrl string = 'https://${backendApp.properties.configuration.ingress.fqdn}'
-
