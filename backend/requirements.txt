@@ -14,3 +14,4 @@ azure-storage-blob>=12.20.0
 azure-identity>=1.16.0
 azure-keyvault-secrets>=4.8.0
 azure-monitor-opentelemetry>=1.6.0
+httpx>=0.25.0

@@ -39,24 +39,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
 
   return (
     <aside
-      className={`h-screen bg-white border-r border-slate-200 flex flex-col transition-all duration-200 shrink-0 ${
+      className={`h-screen bg-[#0d1427]/90 backdrop-blur-xl border-r border-white/[0.08] flex flex-col transition-all duration-200 shrink-0 select-none ${
         collapsed ? 'w-16' : 'w-60'
       }`}
     >
       {/* Logo */}
-      <div className={`flex items-center h-16 border-b border-slate-100 px-4 gap-3 ${collapsed ? 'justify-center' : ''}`}>
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-          <Cloud size={16} className="text-white" />
+      <div className={`flex items-center h-16 border-b border-white/[0.08] px-4 gap-3 ${collapsed ? 'justify-center' : ''}`}>
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 p-[1px] shadow-glow-sm shadow-blue-500/20 shrink-0">
+          <div className="w-full h-full bg-[#0a0f1d] rounded-[7px] flex items-center justify-center">
+            <Cloud size={16} className="text-blue-400" />
+          </div>
         </div>
         {!collapsed && (
-          <span className="font-bold text-slate-900 text-sm tracking-tight">
+          <span className="font-bold text-white text-sm tracking-tight font-sans">
             CloudResumeAI
           </span>
         )}
       </div>
 
       {/* Nav items */}
-      <nav className="flex-1 py-4 px-2 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const active =
             item.path === '/dashboard'
@@ -68,13 +70,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
               key={item.path}
               to={item.path}
               title={collapsed ? item.label : undefined}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
+              className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
                 active
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-white border border-indigo-500/30 shadow-glow-sm shadow-blue-500/10'
+                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
               } ${collapsed ? 'justify-center' : ''}`}
             >
-              <span className={active ? 'text-blue-600' : ''}>{item.icon}</span>
+              <span className={active ? 'text-indigo-400' : ''}>{item.icon}</span>
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -82,10 +84,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       </nav>
 
       {/* Bottom section */}
-      <div className="border-t border-slate-100 py-4 px-2 space-y-0.5">
+      <div className="border-t border-white/[0.08] py-4 px-2 space-y-1">
         <Link
           to="/profile"
-          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors ${
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-white/[0.04] transition-colors ${
             collapsed ? 'justify-center' : ''
           }`}
           title={collapsed ? 'Settings' : undefined}
@@ -96,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         {isAuthenticated && (
           <button
             onClick={() => logout()}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-red-50 hover:text-red-700 transition-colors ${
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 transition-colors ${
               collapsed ? 'justify-center' : ''
             }`}
             title={collapsed ? 'Sign out' : undefined}
@@ -108,10 +110,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       </div>
 
       {/* Collapse toggle */}
-      <div className="border-t border-slate-100 px-2 py-3 flex justify-end">
+      <div className="border-t border-white/[0.08] px-2 py-3 flex justify-end">
         <button
           onClick={() => onCollapse(!collapsed)}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -140,9 +142,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
     : 'AM';
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6 gap-4 shrink-0">
+    <header className="h-16 bg-[#0a0f1d]/85 backdrop-blur-xl border-b border-white/[0.08] flex items-center px-6 gap-4 shrink-0 select-none">
       {title && (
-        <h1 className="text-base font-semibold text-slate-900 flex-1">{title}</h1>
+        <h1 className="text-base font-semibold text-white flex-1">{title}</h1>
       )}
       {!title && <div className="flex-1" />}
       {actions && <div className="flex items-center gap-3">{actions}</div>}
@@ -150,7 +152,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
       {isAuthenticated ? (
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex flex-col items-end">
-            <span className="text-xs font-semibold text-slate-900">
+            <span className="text-xs font-semibold text-white">
               {user?.name || 'Authenticated User'}
             </span>
             <span className="text-[10px] text-slate-400">
@@ -158,7 +160,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
             </span>
           </div>
           <div
-            className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm"
+            className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-glow-sm shadow-blue-500/20 border border-white/20"
             title={user?.email}
           >
             {initials}
@@ -167,7 +169,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
       ) : (
         <button
           onClick={() => login()}
-          className="text-xs px-3 py-1.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          className="text-xs px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-500 hover:to-indigo-500 transition-all shadow-glow-sm shadow-blue-500/20"
         >
           Sign in
         </button>
@@ -188,19 +190,19 @@ interface BreadcrumbProps {
 }
 
 export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => (
-  <nav className="flex items-center gap-1.5 text-sm text-slate-500">
+  <nav className="flex items-center gap-1.5 text-sm text-slate-400">
     {items.map((item, i) => (
       <React.Fragment key={i}>
-        {i > 0 && <span className="text-slate-300">/</span>}
+        {i > 0 && <span className="text-slate-600">/</span>}
         {item.path ? (
           <Link
             to={item.path}
-            className="hover:text-slate-900 transition-colors"
+            className="hover:text-white transition-colors"
           >
             {item.label}
           </Link>
         ) : (
-          <span className="text-slate-900 font-medium">{item.label}</span>
+          <span className="text-white font-medium">{item.label}</span>
         )}
       </React.Fragment>
     ))}
@@ -213,38 +215,56 @@ export const PublicNav: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Cloud size={16} className="text-white" />
+    <header className="sticky top-0 z-50 bg-[#0a0f1d]/80 backdrop-blur-xl border-b border-white/[0.08] transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 p-[1px] shadow-glow-sm shadow-blue-500/20 group-hover:shadow-glow-md transition-all">
+            <div className="w-full h-full bg-[#0a0f1d] rounded-[11px] flex items-center justify-center">
+              <Cloud size={18} className="text-blue-400 group-hover:scale-110 transition-transform" />
+            </div>
           </div>
-          <span className="font-bold text-slate-900 text-sm">CloudResumeAI</span>
+          <div className="flex flex-col">
+            <span className="font-bold text-white text-base tracking-tight font-sans">
+              CloudResumeAI
+            </span>
+            <span className="text-[10px] text-slate-400 font-mono tracking-wider uppercase -mt-1 hidden sm:block">
+              Cloud-Native Engine
+            </span>
+          </div>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 text-sm">
-          <Link to="/templates" className="px-3 py-1.5 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors">
+        <nav className="hidden md:flex items-center gap-1 text-sm bg-white/[0.03] px-3 py-1.5 rounded-full border border-white/[0.08] backdrop-blur-md">
+          <Link
+            to="/templates"
+            className="px-3.5 py-1.5 text-slate-300 hover:text-white rounded-full hover:bg-white/[0.06] transition-all"
+          >
             Templates
           </Link>
-          <a href="#features" className="px-3 py-1.5 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors">
+          <a
+            href="#features"
+            className="px-3.5 py-1.5 text-slate-300 hover:text-white rounded-full hover:bg-white/[0.06] transition-all"
+          >
             Features
           </a>
-          <a href="#how-it-works" className="px-3 py-1.5 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors">
+          <a
+            href="#how-it-works"
+            className="px-3.5 py-1.5 text-slate-300 hover:text-white rounded-full hover:bg-white/[0.06] transition-all"
+          >
             How it works
           </a>
         </nav>
 
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-3">
           <Link
             to="/dashboard"
-            className="text-sm px-3 py-1.5 text-slate-700 hover:text-slate-900 font-medium transition-colors"
+            className="text-sm px-4 py-2 text-slate-300 hover:text-white font-medium hover:bg-white/[0.05] rounded-xl border border-transparent hover:border-white/10 transition-all"
           >
             Sign in
           </Link>
           <Link
             to="/dashboard"
-            className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+            className="text-sm px-4 py-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-xl font-medium hover:from-blue-500 hover:to-violet-500 transition-all shadow-glow-sm shadow-blue-500/25 hover:shadow-glow-md hover:scale-[1.02] active:scale-[0.98] border border-white/15"
           >
             Get started free
           </Link>
@@ -252,7 +272,7 @@ export const PublicNav: React.FC = () => {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-slate-600"
+          className="md:hidden p-2 text-slate-300 hover:text-white bg-white/[0.05] rounded-lg border border-white/10"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -264,13 +284,43 @@ export const PublicNav: React.FC = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1">
-          <Link to="/templates" className="block px-3 py-2 text-sm text-slate-700 rounded-lg hover:bg-slate-100">Templates</Link>
-          <a href="#features" className="block px-3 py-2 text-sm text-slate-700 rounded-lg hover:bg-slate-100" onClick={() => setOpen(false)}>Features</a>
-          <a href="#how-it-works" className="block px-3 py-2 text-sm text-slate-700 rounded-lg hover:bg-slate-100" onClick={() => setOpen(false)}>How it works</a>
-          <div className="pt-2 flex flex-col gap-2">
-            <Link to="/dashboard" className="text-center text-sm py-2 border border-slate-300 rounded-lg text-slate-700 font-medium">Sign in</Link>
-            <Link to="/dashboard" className="text-center text-sm py-2 bg-blue-600 text-white rounded-lg font-medium">Get started free</Link>
+        <div className="md:hidden border-t border-white/[0.08] bg-[#0a0f1d]/95 backdrop-blur-2xl px-6 py-4 space-y-2">
+          <Link
+            to="/templates"
+            className="block px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.05]"
+            onClick={() => setOpen(false)}
+          >
+            Templates
+          </Link>
+          <a
+            href="#features"
+            className="block px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.05]"
+            onClick={() => setOpen(false)}
+          >
+            Features
+          </a>
+          <a
+            href="#how-it-works"
+            className="block px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.05]"
+            onClick={() => setOpen(false)}
+          >
+            How it works
+          </a>
+          <div className="pt-3 flex flex-col gap-2 border-t border-white/[0.08]">
+            <Link
+              to="/dashboard"
+              className="text-center text-sm py-2.5 border border-white/10 rounded-xl text-slate-300 hover:text-white font-medium bg-white/[0.03]"
+              onClick={() => setOpen(false)}
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/dashboard"
+              className="text-center text-sm py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium shadow-glow-sm"
+              onClick={() => setOpen(false)}
+            >
+              Get started free
+            </Link>
           </div>
         </div>
       )}

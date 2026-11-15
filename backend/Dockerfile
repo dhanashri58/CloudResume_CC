@@ -1,5 +1,5 @@
 FROM python:3.12-slim AS builder
-
+ENV HOME=/tmp
 WORKDIR /app
 
 # Install build dependencies if needed
@@ -40,7 +40,7 @@ ENV PORT=5000 \
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:${PORT:-5000}/api/health || exit 1
+    CMD curl -f http://localhost:${PORT:-5000}/api/health || exit 1
 
 CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 --threads 4 wsgi:app"]
 
