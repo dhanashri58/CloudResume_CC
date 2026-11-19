@@ -717,7 +717,7 @@ sequenceDiagram
         Runner->>Runner: Build backend Dockerfile
         Runner->>Runner: Build frontend Dockerfile
     end
-    Runner-->>Git: CI Checks Green ✓
+    Runner-->>Git: CI Checks Green (Passed)
 
     Note over Dev,Runner: Manual Deployment (.github/workflows/deploy.yml)
     Dev->>Runner: Trigger Deploy Workflow

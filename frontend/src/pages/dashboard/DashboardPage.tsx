@@ -232,7 +232,7 @@ const DashboardPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl font-bold tracking-tight text-white">
-              Good morning, Alex 👋
+              Good morning, Alex
             </h1>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />

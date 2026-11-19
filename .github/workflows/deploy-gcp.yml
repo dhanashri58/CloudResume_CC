@@ -1,0 +1,112 @@
+name: GCP Cloud Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target GCP deployment environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
+      deploy_infra:
+        description: 'Provision or update GCP infrastructure via Terraform'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: gcp-deploy-${{ github.event.inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-gcp:
+    name: Deploy to Google Cloud Platform
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Set up Terraform
+        if: ${{ github.event.inputs.deploy_infra == 'true' }}
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.0
+
+      - name: Terraform Init & Apply
+        if: ${{ github.event.inputs.deploy_infra == 'true' }}
+        working-directory: infra/terraform
+        run: |
+          terraform init
+          terraform apply -auto-approve \
+            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+            -var="environment=${{ github.event.inputs.environment }}" \
+            -var="gemini_api_key=${{ secrets.GEMINI_API_KEY }}" \
+            -var="flask_secret_key=${{ secrets.FLASK_SECRET_KEY }}" \
+            -var="db_password=${{ secrets.POSTGRES_PASSWORD }}"
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Build and Push Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloudresumeai-repo/backend:latest
+
+      - name: Build and Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloudresumeai-repo/frontend:latest
+
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy cloudresumeai-backend-${{ github.event.inputs.environment }} \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloudresumeai-repo/backend:latest \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 5000
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy cloudresumeai-frontend-${{ github.event.inputs.environment }} \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloudresumeai-repo/frontend:latest \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 80
+
+      - name: Verify Live Service Health
+        run: |
+          BACKEND_URL=$(gcloud run services describe cloudresumeai-backend-${{ github.event.inputs.environment }} --region us-central1 --format 'value(status.url)')
+          echo "Backend URL: $BACKEND_URL"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/api/health")
+          echo "Health Check HTTP Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Health check failed with status $HTTP_STATUS"
+            exit 1
+          fi
+          echo "Cloud Run deployment validated successfully (HTTP 200 OK)."

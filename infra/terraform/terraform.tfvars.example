@@ -1,0 +1,21 @@
+# =================================================================
+# Google Cloud Platform (GCP) Terraform Configuration Variables
+# Copy to terraform.tfvars and fill in your actual GCP values.
+# Never commit terraform.tfvars to version control!
+# =================================================================
+
+project_id        = "your-gcp-project-id"
+region            = "us-central1"
+environment       = "dev"
+workload_name     = "cloudresumeai"
+
+# Database Configuration
+db_user           = "cloudresume_user"
+db_password       = "YourStrongDbPassword123!"
+db_tier           = "db-f1-micro" # Use db-f1-micro for free-tier / evaluation
+
+# Security & AI Keys
+flask_secret_key  = "generate-a-secure-random-32-byte-hex-string"
+gemini_api_key    = "your-google-ai-studio-gemini-key"
+gemini_model      = "gemini-3.5-flash-lite"
+cors_origins      = "*"

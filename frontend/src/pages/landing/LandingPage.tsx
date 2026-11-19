@@ -6,9 +6,6 @@ import {
   BarChart3,
   Download,
   ArrowRight,
-  Cloud,
-  Github,
-  Linkedin,
   Star,
   Zap,
   Shield,
@@ -17,6 +14,7 @@ import {
   Check,
 } from 'lucide-react';
 import { RESUME_TEMPLATES } from '../../data/mockData';
+import MeadowRiseFooter from '../../components/ui/meadow-rise-footer';
 
 // ─── Interactive Hero Glass Preview Card ──────────────────────────────────────
 
@@ -106,24 +104,24 @@ const HeroGlassPreview: React.FC = () => {
               {activeTab === 'improved' ? (
                 <div className="space-y-1.5 animate-fadeIn">
                   <p className="text-xs text-emerald-300 font-mono leading-relaxed">
-                    + Architected multi-region Azure Container Apps topology using Bicep IaC, decreasing deployment latency by 68% and achieving 99.99% availability.
+                    + Architected serverless Google Cloud Run microservices using Terraform IaC, decreasing deployment latency by 68% and achieving 99.99% availability.
                   </p>
                   <div className="flex items-center gap-2 pt-1">
                     <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                      ✓ Google XYZ Formula
+                      Google XYZ Formula
                     </span>
                     <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                      ✓ Quantified Metric (+68%)
+                      Quantified Metric (+68%)
                     </span>
                   </div>
                 </div>
               ) : (
                 <div className="animate-fadeIn">
                   <p className="text-xs text-slate-400 line-through font-mono leading-relaxed">
-                    - Helped deploy application containers to Microsoft Azure and assisted with infrastructure code.
+                    - Helped deploy application containers to the cloud and assisted with infrastructure code.
                   </p>
                   <p className="text-[10px] text-amber-400 mt-1">
-                    ⚠️ Lacks measurable business outcome and active power verbs.
+                    Lacks measurable business outcome and active power verbs.
                   </p>
                 </div>
               )}
@@ -617,65 +615,14 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── Footer ───────────────────────────────────────────────────────── */}
-      <footer className="border-t border-white/[0.08] bg-[#070b16] text-slate-400 py-12 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start justify-between gap-8 mb-10">
-            <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white">
-                  <Cloud size={16} />
-                </div>
-                <span className="font-bold text-white text-sm">
-                  CloudResumeAI
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed max-w-xs">
-                AI-powered cloud resume engineering platform for students, developers, and tech professionals.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs">
-              <div>
-                <p className="text-white font-semibold mb-2.5">Product</p>
-                <div className="space-y-2">
-                  <Link to="/templates" className="block text-slate-400 hover:text-white transition-colors">Templates</Link>
-                  <Link to="/dashboard" className="block text-slate-400 hover:text-white transition-colors">Dashboard</Link>
-                  <Link to="/ai" className="block text-slate-400 hover:text-white transition-colors">AI Assistant</Link>
-                </div>
-              </div>
-              <div>
-                <p className="text-white font-semibold mb-2.5">Architecture</p>
-                <div className="space-y-2">
-                  <span className="block text-slate-400">Azure Container Apps</span>
-                  <span className="block text-slate-400">PostgreSQL DBaaS</span>
-                  <span className="block text-slate-400">ReportLab Engine</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-white font-semibold mb-2.5">Security</p>
-                <div className="space-y-2">
-                  <span className="block text-slate-400">Entra ID (OIDC)</span>
-                  <span className="block text-slate-400">Redacted Logs</span>
-                  <span className="block text-slate-400">Zero-Trust Isolation</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-            <p>© 2026 CloudResumeAI. Academic Cloud Computing Project.</p>
-            <div className="flex items-center gap-4">
-              <a href="https://github.com/dhanashri58/CloudResume_CC" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
-                <Github size={16} />
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                <Linkedin size={16} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* ─── Footer: Meadow Rise Animated Canvas Footer ───────────────────── */}
+      <MeadowRiseFooter
+        name="CloudResumeAI"
+        preset="moonlit"
+        tagline="Next-generation cloud resume engineering powered by Google Cloud Platform & Gemini AI."
+        subheading="Optimize for ATS scanners, craft impact bullets, and export vector PDFs in milliseconds."
+        cta={{ label: "Start Building Free", href: "/dashboard" }}
+      />
     </div>
   );
 };

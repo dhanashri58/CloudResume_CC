@@ -57,7 +57,7 @@ const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
               className="inline-flex items-center gap-0.5 text-[9px] font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded"
               title={`Response time: ${message.durationMs}ms`}
             >
-              ⚡ {message.durationMs >= 1000 ? `${(message.durationMs / 1000).toFixed(1)}s` : `${message.durationMs}ms`}
+              {message.durationMs >= 1000 ? `${(message.durationMs / 1000).toFixed(1)}s` : `${message.durationMs}ms`}
             </span>
           )}
         </div>
@@ -164,12 +164,12 @@ const AIAssistantPage: React.FC = () => {
       if (err instanceof AIServiceError) {
         if (err.status === 503) {
           errorText =
-            '⚠️ Gemini AI is not configured. Please set GEMINI_API_KEY in your backend .env file to enable live responses.';
+            'Gemini AI is not configured. Please set GEMINI_API_KEY in your backend .env file to enable live responses.';
         } else {
-          errorText = `⚠️ AI Error (${err.status}): ${err.message}`;
+          errorText = `AI Error (${err.status}): ${err.message}`;
         }
       } else if (err instanceof Error) {
-        errorText = `⚠️ Error: ${err.message}`;
+        errorText = `Error: ${err.message}`;
       }
 
       const errorMsg: ChatMessage = {

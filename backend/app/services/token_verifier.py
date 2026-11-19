@@ -59,15 +59,24 @@ class TokenVerifier:
     def resolve_jwks_uri(cls, config: Any) -> Optional[str]:
         """Derive standard JWKS keys endpoint from config.
 
-        Ensures consistency with the configured issuer and never silently
-        falls back to login.microsoftonline.com for a CIAM issuer.
+        Ensures consistency with the configured issuer (Google or Entra ID).
         """
         explicit_uri = config.get("AZURE_ENTRA_JWKS_URI")
         if explicit_uri:
             return explicit_uri
 
-        issuer = (config.get("AZURE_ENTRA_ISSUER") or "").strip()
+        issuer = (
+            config.get("AZURE_ENTRA_ISSUER")
+            or config.get("OIDC_ISSUER")
+            or ""
+        ).strip()
         tenant_id = (config.get("AZURE_ENTRA_TENANT_ID") or "").strip()
+
+        # Google Identity / OAuth 2.0 endpoints
+        if "accounts.google.com" in issuer or (
+            config.get("GOOGLE_CLIENT_ID") and not tenant_id and not issuer
+        ):
+            return "https://www.googleapis.com/oauth2/v3/certs"
 
         # Derive JWKS endpoint directly from CIAM issuer
         if "ciamlogin.com" in issuer:
@@ -89,9 +98,16 @@ class TokenVerifier:
     @classmethod
     def resolve_expected_issuer(cls, config: Any) -> Optional[str]:
         """Derive trusted issuer from config."""
-        explicit_issuer = config.get("AZURE_ENTRA_ISSUER")
+        explicit_issuer = config.get("AZURE_ENTRA_ISSUER") or config.get(
+            "OIDC_ISSUER"
+        )
         if explicit_issuer:
             return explicit_issuer.strip()
+
+        if config.get("GOOGLE_CLIENT_ID") and not config.get(
+            "AZURE_ENTRA_TENANT_ID"
+        ):
+            return "https://accounts.google.com"
 
         tenant_id = (config.get("AZURE_ENTRA_TENANT_ID") or "").strip()
         if tenant_id:
@@ -158,7 +174,10 @@ class TokenVerifier:
         # 3. Resolve validation criteria
         expected_issuer = cls.resolve_expected_issuer(cfg)
         expected_audience = (
-            cfg.get("AZURE_ENTRA_AUDIENCE") or cfg.get("AZURE_ENTRA_CLIENT_ID")
+            cfg.get("GOOGLE_OAUTH_AUDIENCE")
+            or cfg.get("GOOGLE_CLIENT_ID")
+            or cfg.get("AZURE_ENTRA_AUDIENCE")
+            or cfg.get("AZURE_ENTRA_CLIENT_ID")
         )
 
         decode_options = {

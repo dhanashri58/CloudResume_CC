@@ -80,16 +80,16 @@ The entire project is built following strict cloud-native architectural patterns
 
 | Layer | Technology | Details |
 | :--- | :--- | :--- |
-| **Frontend SPA** | React 18, TypeScript, Vite 5 | Tailwind CSS, Lucide Icons, MSAL.js |
+| **Frontend SPA** | React 18, TypeScript, Vite 5 | Tailwind CSS, Lucide Icons, Dev Auth & Google / OIDC |
 | **Backend REST API** | Python 3.12, Flask 3.0, Gunicorn | Application Factory, SQLAlchemy ORM, Pydantic v2 |
-| **Database** | PostgreSQL 16 | Alembic / Flask-Migrate, JSON column support |
+| **Database** | PostgreSQL 16 | Google Cloud SQL / Azure Database / Local PostgreSQL |
 | **AI Model** | Google Gemini (`gemini-3.5-flash-lite`)| Official Google GenAI SDK, 20s timeout, exponential backoff |
 | **PDF Engine** | Python ReportLab 4.x | In-memory canvas rendering, vector typography |
-| **Storage** | Azure Blob Storage & Local Disk | Private containers, user partition isolation |
-| **Identity (IAM)** | Microsoft Entra ID (Azure AD) | OAuth 2.0 / OIDC, JWKS caching, dev auth fallback |
-| **IaC & Cloud** | Azure Bicep, Azure Container Apps | Azure Database for PostgreSQL, Azure Key Vault, ACR |
-| **CI / CD** | GitHub Actions | Flake8, Pytest, Vitest, TypeScript check, Docker build |
-| **Monitoring** | OpenTelemetry, Azure Monitor | `X-Request-ID` tracing, `Server-Timing`, Log Analytics |
+| **Storage** | Google Cloud Storage (GCS), Azure Blob & Local | Private buckets/containers, user partition isolation |
+| **Identity (IAM)** | Google Identity / Entra ID / Dev Auth | OAuth 2.0 / OIDC, JWKS caching, dev auth fallback |
+| **IaC & Cloud** | Google Cloud Platform (GCP) & Azure | **Terraform** (`infra/terraform`), **Google Cloud Run**, Secret Manager |
+| **CI / CD** | GitHub Actions | Flake8, Pytest, Vitest, Docker build, Cloud Run deploy |
+| **Monitoring** | Cloud Logging & OpenTelemetry | `X-Request-ID` tracing, `Server-Timing`, Log Analytics |
 
 ---
 
@@ -333,12 +333,12 @@ Full testing documentation available in [`docs/testing.md`](file:///C:/Users/hp/
 |  |                                          |  |                                    |  |
 |  | [Summary Section]                        |  | Professional Summary:              |  |
 |  | Results-driven Cloud Engineer with 3+... |  | Results-driven Cloud Engineer...   |  |
-|  | [ ✨ AI Improve Summary ]                 |  |                                    |  |
+|  | [ AI Improve Summary ]                    |  |                                    |  |
 |  |                                          |  | Experience:                        |  |
 |  | [Experience: Cloud DevOps Intern]        |  | • Architected Azure Bicep IaC...   |  |
 |  | • Built Bicep templates for deployment   |  | • Optimized container build time   |  |
-|  | [ ✨ AI Bullet Optimizer ]                |  |                                    |  |
-|  |                                          |  | [ ⬇️ Download Professional PDF ]    |  |
+|  | [ AI Bullet Optimizer ]                   |  |                                    |  |
+|  |                                          |  | [ Download Professional PDF ]       |  |
 |  +------------------------------------------+  +------------------------------------+  |
 +----------------------------------------------------------------------------------------+
 ```
@@ -362,6 +362,7 @@ Full testing documentation available in [`docs/testing.md`](file:///C:/Users/hp/
 ## Documentation Index
 
 Comprehensive engineering guides are available in the [`docs/`](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/) directory:
+- [Google Cloud Platform (GCP) Architecture & Migration Guide](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/GCP_MIGRATION_AND_ARCHITECTURE.md)
 - [System Architecture & Design Diagrams](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/architecture.md)
 - [Database Schema & ER Documentation](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/database.md)
 - [REST API Endpoint Specification](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/api.md)

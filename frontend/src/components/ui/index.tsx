@@ -23,15 +23,15 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary:
-      'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm',
+      'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 focus:ring-indigo-500 shadow-md shadow-indigo-500/20',
     secondary:
-      'bg-slate-100 text-slate-800 hover:bg-slate-200 focus:ring-slate-400',
+      'bg-white/[0.08] text-slate-100 hover:bg-white/[0.14] border border-white/[0.1] focus:ring-slate-400',
     ghost:
-      'text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:ring-slate-400',
+      'text-slate-400 hover:bg-white/[0.06] hover:text-white focus:ring-slate-400',
     danger:
       'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm',
     outline:
-      'border border-slate-300 text-slate-700 hover:bg-slate-50 focus:ring-blue-500',
+      'border border-white/[0.15] text-slate-200 hover:bg-white/[0.06] hover:text-white focus:ring-indigo-500',
   };
 
   const sizes = {
@@ -120,9 +120,9 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white border border-slate-200 rounded-xl shadow-sm ${
+      className={`bg-[#11192e]/80 border border-white/[0.08] text-slate-100 rounded-xl shadow-xl shadow-black/20 backdrop-blur-sm ${
         hover
-          ? 'hover:shadow-md hover:border-slate-300 transition-all duration-200 cursor-pointer'
+          ? 'hover:shadow-2xl hover:border-indigo-500/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer'
           : ''
       } ${className}`}
       onClick={onClick}
@@ -150,26 +150,26 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-sm font-medium text-slate-700"
+          className="block text-xs font-medium text-slate-300"
         >
           {label}
         </label>
       )}
       <input
         id={inputId}
-        className={`w-full px-3 py-2 text-sm border rounded-lg bg-white text-slate-900 placeholder-slate-400 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-          error ? 'border-red-400' : 'border-slate-300 hover:border-slate-400'
+        className={`w-full px-3 py-2 text-sm border rounded-lg bg-[#0a0f1d]/90 text-slate-100 placeholder-slate-500 transition focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/80 ${
+          error ? 'border-red-400' : 'border-white/[0.12] hover:border-white/[0.2]'
         } ${className}`}
         {...rest}
       />
       {hint && !error && (
-        <p className="text-xs text-slate-500">{hint}</p>
+        <p className="text-xs text-slate-400">{hint}</p>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
   );
 };
@@ -191,23 +191,23 @@ export const Textarea: React.FC<TextareaProps> = ({
 }) => {
   const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-sm font-medium text-slate-700"
+          className="block text-xs font-medium text-slate-300"
         >
           {label}
         </label>
       )}
       <textarea
         id={inputId}
-        className={`w-full px-3 py-2 text-sm border rounded-lg bg-white text-slate-900 placeholder-slate-400 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${
-          error ? 'border-red-400' : 'border-slate-300 hover:border-slate-400'
+        className={`w-full px-3 py-2 text-sm border rounded-lg bg-[#0a0f1d]/90 text-slate-100 placeholder-slate-500 transition focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/80 resize-none ${
+          error ? 'border-red-400' : 'border-white/[0.12] hover:border-white/[0.2]'
         } ${className}`}
         {...rest}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
   );
 };
@@ -227,9 +227,9 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => (
   <div className="flex items-start justify-between gap-4">
     <div>
-      <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+      <h2 className="text-base font-semibold text-white">{title}</h2>
       {subtitle && (
-        <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>
+        <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>
       )}
     </div>
     {action && <div className="flex-shrink-0">{action}</div>}
@@ -240,7 +240,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 
 export const Divider: React.FC<{ className?: string }> = ({
   className = '',
-}) => <hr className={`border-slate-200 ${className}`} />;
+}) => <hr className={`border-white/[0.08] ${className}`} />;
 
 // ─── Spinner ────────────────────────────────────────────────────────────────
 
@@ -314,4 +314,6 @@ export const AtsScore: React.FC<AtsScoreProps> = ({ score, size = 'md' }) => {
     <span className={`${sizeClass} ${color} tabular-nums`}>{score}%</span>
   );
 };
+
+export { default as MeadowRiseFooter } from './meadow-rise-footer';
 

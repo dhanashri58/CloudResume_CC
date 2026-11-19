@@ -277,7 +277,7 @@ sequenceDiagram
         Actions->>Actions: Build Backend Docker image
         Actions->>Actions: Build Frontend Docker image
     end
-    Actions-->>Git: All CI Checks Green ✓
+    Actions-->>Git: All CI Checks Green (Passed)
 
     Note over Dev,Actions: Manual Deployment via workflow_dispatch (.github/workflows/deploy.yml)
     Dev->>Git: Trigger Deploy Workflow (env: dev/prod)

@@ -241,6 +241,100 @@ class AzureBlobStorageProvider(BaseStorageProvider):
             return False
 
 
+class GoogleCloudStorageProvider(BaseStorageProvider):
+    """Production storage provider backed by Google Cloud Storage (GCS)."""
+
+    def __init__(
+        self,
+        bucket_name: str = "cloudresumeai-resumes",
+        project_id: Optional[str] = None,
+    ):
+        self.bucket_name = bucket_name
+        self.project_id = project_id
+        self._storage_client = None
+        self._bucket = None
+
+    def _get_client(self):
+        """Initialize Google Cloud Storage client via Application Default Credentials (ADC)."""
+        if self._storage_client is not None:
+            return self._storage_client
+
+        try:
+            from google.cloud import storage
+
+            self._storage_client = storage.Client(project=self.project_id)
+            return self._storage_client
+        except Exception as e:
+            raise StorageConfigurationError(
+                f"Google Cloud Storage client initialization failed: {e}"
+            )
+
+    def _get_bucket(self):
+        """Get or initialize GCS Bucket instance."""
+        if self._bucket is not None:
+            return self._bucket
+
+        client = self._get_client()
+        try:
+            self._bucket = client.bucket(self.bucket_name)
+            return self._bucket
+        except Exception as e:
+            raise StorageConfigurationError(
+                f"Failed to access Google Cloud Storage bucket '{self.bucket_name}': {e}"
+            )
+
+    def upload(
+        self,
+        blob_name: str,
+        data: bytes,
+        content_type: str = "application/pdf"
+    ) -> str:
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        bucket = self._get_bucket()
+        blob = bucket.blob(clean_name)
+        blob.upload_from_string(data, content_type=content_type)
+        logger.info(
+            "Uploaded blob '%s' to Google Cloud Storage bucket '%s'",
+            clean_name,
+            self.bucket_name,
+        )
+        return clean_name
+
+    def download(self, blob_name: str) -> Optional[bytes]:
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        bucket = self._get_bucket()
+        blob = bucket.blob(clean_name)
+        try:
+            if not blob.exists():
+                return None
+            return blob.download_as_bytes()
+        except Exception as e:
+            logger.error("Error downloading GCS blob '%s': %s", clean_name, e)
+            raise StorageError(f"Failed to download GCS blob '{clean_name}': {e}")
+
+    def exists(self, blob_name: str) -> bool:
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        bucket = self._get_bucket()
+        blob = bucket.blob(clean_name)
+        try:
+            return blob.exists()
+        except Exception:
+            return False
+
+    def delete(self, blob_name: str) -> bool:
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        bucket = self._get_bucket()
+        blob = bucket.blob(clean_name)
+        try:
+            if blob.exists():
+                blob.delete()
+                return True
+            return False
+        except Exception as e:
+            logger.error("Error deleting GCS blob '%s': %s", clean_name, e)
+            return False
+
+
 class StorageService:
     """Service facade for resume storage with user ownership isolation."""
 
@@ -257,12 +351,40 @@ class StorageService:
         config = app_config or {}
         mode = str(
             config.get(
-                "AZURE_STORAGE_MODE",
-                os.getenv("AZURE_STORAGE_MODE", "local")
+                "STORAGE_PROVIDER",
+                config.get(
+                    "AZURE_STORAGE_MODE",
+                    os.getenv(
+                        "STORAGE_PROVIDER",
+                        os.getenv("AZURE_STORAGE_MODE", "local")
+                    )
+                )
             )
         ).lower()
 
-        if mode == "azure":
+        if mode in ("gcs", "gcp", "google"):
+            bucket = config.get(
+                "GCS_BUCKET_NAME",
+                config.get(
+                    "GCP_STORAGE_BUCKET",
+                    os.getenv(
+                        "GCS_BUCKET_NAME",
+                        os.getenv(
+                            "GCP_STORAGE_BUCKET",
+                            "cloudresumeai-resumes"
+                        )
+                    )
+                )
+            )
+            project_id = config.get(
+                "GCP_PROJECT_ID",
+                os.getenv("GCP_PROJECT_ID", "")
+            )
+            cls._provider = GoogleCloudStorageProvider(
+                bucket_name=bucket,
+                project_id=project_id or None,
+            )
+        elif mode == "azure":
             container = config.get(
                 "AZURE_STORAGE_CONTAINER_NAME",
                 os.getenv(

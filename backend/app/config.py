@@ -68,14 +68,23 @@ class Config:
         _engine_options["connect_args"] = {"sslmode": _effective_sslmode}
     SQLALCHEMY_ENGINE_OPTIONS = _engine_options
 
-    # Azure Storage Configuration
-    AZURE_STORAGE_MODE = os.getenv("AZURE_STORAGE_MODE", "local").lower()
+    # Cloud Storage Configuration (Supports Local, Azure Blob, and Google Cloud Storage GCS)
+    STORAGE_PROVIDER = os.getenv(
+        "STORAGE_PROVIDER", os.getenv("AZURE_STORAGE_MODE", "local")
+    ).lower()
+    AZURE_STORAGE_MODE = STORAGE_PROVIDER
     AZURE_STORAGE_ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME", "")
     AZURE_STORAGE_CONTAINER_NAME = os.getenv(
         "AZURE_STORAGE_CONTAINER_NAME", "cloudresumeai-resumes"
     )
     AZURE_STORAGE_CONNECTION_STRING = os.getenv(
         "AZURE_STORAGE_CONNECTION_STRING", ""
+    )
+    GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "")
+    GCP_REGION = os.getenv("GCP_REGION", "us-central1")
+    GCS_BUCKET_NAME = os.getenv(
+        "GCS_BUCKET_NAME",
+        os.getenv("GCP_STORAGE_BUCKET", "cloudresumeai-resumes")
     )
     _default_storage_dir = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -84,8 +93,9 @@ class Config:
     )
     LOCAL_STORAGE_DIR = os.getenv("LOCAL_STORAGE_DIR", _default_storage_dir)
 
-    # Azure Key Vault Configuration
+    # Cloud Secrets Management Configuration (Azure Key Vault & GCP Secret Manager)
     AZURE_KEY_VAULT_URL = os.getenv("AZURE_KEY_VAULT_URL", "")
+    GCP_SECRET_MANAGER_ENABLED = os.getenv("GCP_SECRET_MANAGER_ENABLED", "0").lower() in ("1", "true", "yes")
 
     # Application Insights / Cloud Monitoring Configuration
     APPLICATIONINSIGHTS_CONNECTION_STRING = os.getenv(
@@ -111,6 +121,12 @@ class Config:
     AZURE_ENTRA_ISSUER = os.getenv("AZURE_ENTRA_ISSUER", "")
     AZURE_ENTRA_JWKS_URI = os.getenv("AZURE_ENTRA_JWKS_URI", "")
     AZURE_ENTRA_PUBLIC_KEY = os.getenv("AZURE_ENTRA_PUBLIC_KEY", "")
+
+    # Google Cloud / Google Identity Configuration
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+    GOOGLE_OAUTH_AUDIENCE = os.getenv(
+        "GOOGLE_OAUTH_AUDIENCE", GOOGLE_CLIENT_ID
+    )
 
     # Gemini AI Configuration
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
