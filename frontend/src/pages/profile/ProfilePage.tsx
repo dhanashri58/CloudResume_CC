@@ -44,7 +44,7 @@ const defaultFormData: ProfileFormData = {
 };
 
 const ProfilePage: React.FC = () => {
-  const { logout, isMsalConfigured } = useAuth();
+  const { logout } = useAuth();
   const [formData, setFormData] = useState<ProfileFormData>(defaultFormData);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -149,9 +149,9 @@ const ProfilePage: React.FC = () => {
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Page title */}
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Profile & Settings</h1>
-        <p className="text-sm text-slate-500 mt-0.5">
-          Manage your account information, personal details, and preferences.
+        <h1 className="text-2xl font-serif text-[#1C1917] tracking-tight">Profile & Settings</h1>
+        <p className="text-xs text-stone-500 mt-1 uppercase tracking-wider font-mono">
+          Account details, cloud synchronization, and personal preferences
         </p>
       </div>
 
@@ -190,15 +190,15 @@ const ProfilePage: React.FC = () => {
           <>
             <div className="flex items-start gap-5 mb-5">
               <div className="relative shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white text-xl font-bold tracking-wider">
+                <div className="w-16 h-16 rounded-2xl bg-[#1C1917] flex items-center justify-center text-[#FAF7F2] font-serif text-xl tracking-wider shadow-sm">
                   {initials}
                 </div>
                 <button
                   type="button"
                   aria-label="Upload avatar"
-                  className="absolute -bottom-1 -right-1 w-6 h-6 bg-white border border-slate-200 rounded-full flex items-center justify-center shadow-sm hover:bg-slate-50 transition-colors"
+                  className="absolute -bottom-1 -right-1 w-6 h-6 bg-white border border-[#E7DFD5] rounded-full flex items-center justify-center shadow-sm hover:bg-[#FAF7F2] transition-colors"
                 >
-                  <Camera size={11} className="text-slate-600" />
+                  <Camera size={11} className="text-stone-600" />
                 </button>
               </div>
               <div className="flex-1 space-y-3">
@@ -340,17 +340,17 @@ const ProfilePage: React.FC = () => {
           {(
             [
               { value: 'system', icon: <Monitor size={16} />, label: 'System' },
-              { value: 'light', icon: <Globe size={16} />, label: 'Light' },
+              { value: 'light', icon: <Globe size={16} />, label: 'Golden Light' },
               { value: 'dark', icon: <Moon size={16} />, label: 'Dark' },
             ] as { value: Theme; icon: React.ReactNode; label: string }[]
           ).map((opt) => (
             <button
               key={opt.value}
               onClick={() => setTheme(opt.value)}
-              className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border-2 text-sm font-medium transition-all ${
+              className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border text-sm font-medium transition-all ${
                 theme === opt.value
-                  ? 'border-blue-500 bg-blue-50 text-blue-700'
-                  : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                  ? 'border-amber-600 bg-amber-50/70 text-amber-950 font-semibold shadow-xs'
+                  : 'border-[#E7DFD5] text-stone-600 hover:border-stone-400 bg-white'
               }`}
             >
               {opt.icon}
@@ -362,46 +362,44 @@ const ProfilePage: React.FC = () => {
 
       {/* Account */}
       <Card className="p-5">
-        <SectionHeader title="Account" subtitle="Manage your subscription and security." />
+        <SectionHeader title="Account & Cloud Sync" subtitle="Manage your cloud identity and credentials." />
         <Divider className="my-4" />
         <div className="space-y-2">
           {[
             {
               icon: <CreditCard size={16} />,
-              label: 'Subscription',
-              value: <Badge variant="blue">Cloud Tier Free</Badge>,
+              label: 'Subscription Tier',
+              value: <Badge variant="green">GCP Free Tier Active</Badge>,
             },
             {
               icon: <Shield size={16} />,
-              label: 'Two-factor authentication',
-              value: <Badge variant="slate">Managed via Entra</Badge>,
+              label: 'Authentication Provider',
+              value: <Badge variant="slate">Google OAuth 2.0</Badge>,
             },
             {
               icon: <Bell size={16} />,
-              label: 'Connected accounts',
+              label: 'Cloud Infrastructure',
               value: (
-                <span className="text-xs text-slate-500">
-                  {isMsalConfigured
-                    ? 'Microsoft Entra ID (Connected)'
-                    : 'Dev Identity (Active)'}
+                <span className="text-xs text-stone-500 font-mono">
+                  Google Cloud Run & Cloud SQL
                 </span>
               ),
             },
           ].map((item, i) => (
             <div
               key={i}
-              className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group"
+              className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#FAF7F2] cursor-pointer transition-colors group"
             >
-              <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
+              <div className="w-8 h-8 bg-[#F5EFE6] rounded-lg flex items-center justify-center text-stone-600">
                 {item.icon}
               </div>
-              <span className="flex-1 text-sm text-slate-700 font-medium">
+              <span className="flex-1 text-sm text-stone-800 font-medium">
                 {item.label}
               </span>
               {item.value}
               <ChevronRight
                 size={14}
-                className="text-slate-300 group-hover:text-slate-500 transition-colors"
+                className="text-stone-300 group-hover:text-stone-500 transition-colors"
               />
             </div>
           ))}
@@ -410,8 +408,8 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-red-600">Delete account</p>
-            <p className="text-xs text-slate-500">
-              Permanently remove your account and all associated resumes.
+            <p className="text-xs text-stone-500">
+              Permanently remove your account and all stored resumes.
             </p>
           </div>
           <Button variant="danger" size="sm">
@@ -424,7 +422,7 @@ const ProfilePage: React.FC = () => {
       <button
         type="button"
         onClick={() => logout()}
-        className="w-full flex items-center justify-center gap-2 py-3 text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-slate-200"
+        className="w-full flex items-center justify-center gap-2 py-3 text-sm text-stone-600 hover:text-red-600 hover:bg-red-50/50 rounded-full transition-colors border border-[#E7DFD5] bg-white shadow-xs font-medium"
       >
         <LogOut size={15} />
         Sign out

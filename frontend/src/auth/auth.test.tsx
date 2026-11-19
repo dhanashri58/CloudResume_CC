@@ -93,6 +93,8 @@ describe('ProtectedRoute component', () => {
     error: null,
     isMsalConfigured: true,
     login: vi.fn(),
+    loginWithGoogle: vi.fn(),
+    loginAsDemo: vi.fn(),
     logout: vi.fn(),
     getAccessToken: vi.fn(),
     ...overrides,

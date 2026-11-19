@@ -50,21 +50,21 @@ const EditorSection: React.FC<{
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border border-white/[0.08] rounded-xl overflow-hidden bg-[#11192e]/85 backdrop-blur-md shadow-xl shadow-black/20 transition-all duration-200">
+    <div className="border border-[#E7DFD5] rounded-3xl overflow-hidden bg-white shadow-sm transition-all duration-200">
       <button
         type="button"
-        className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-white/[0.03] transition-colors"
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-[#FAF8F5] transition-colors"
         onClick={() => setOpen(!open)}
       >
-        <span className="text-sm font-semibold text-slate-100">{title}</span>
+        <span className="text-sm font-bold text-[#1C1917] font-serif">{title}</span>
         {open ? (
-          <ChevronUp size={16} className="text-slate-400" />
+          <ChevronUp size={16} className="text-stone-400" />
         ) : (
-          <ChevronDown size={16} className="text-slate-400" />
+          <ChevronDown size={16} className="text-stone-400" />
         )}
       </button>
       {open && (
-        <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] text-slate-200">
+        <div className="px-6 pb-6 pt-3 border-t border-[#EFEAE2] text-stone-700">
           {children}
         </div>
       )}
@@ -78,7 +78,7 @@ const ResumePreview: React.FC<{ data: ResumeData }> = ({ data }) => {
   const { personalInfo: p, summary, experience, education, skills, projects } = data;
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl shadow-2xl shadow-black/80 ring-1 ring-white/10 overflow-hidden text-slate-900 max-w-[800px] mx-auto">
+    <div className="bg-white border border-stone-200/90 rounded-sm shadow-2xl shadow-stone-400/30 overflow-hidden text-stone-900 max-w-[800px] mx-auto min-h-[1050px]">
       {/* Header */}
       <div className="px-8 pt-8 pb-5 border-b border-slate-200">
         <h1 className="text-xl font-bold text-slate-900 leading-tight">
@@ -405,16 +405,12 @@ const EditorPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full min-h-screen bg-[#0a0f1d] text-slate-100 relative overflow-hidden selection:bg-indigo-500/30 selection:text-indigo-200">
-      {/* Ambient background lighting */}
-      <div className="absolute top-0 right-1/4 w-[600px] h-[350px] bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-1/4 w-[500px] h-[350px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-
+    <div className="flex flex-col h-full min-h-screen bg-[#FAF7F2] text-[#1C1917] relative overflow-hidden selection:bg-amber-500/20 selection:text-amber-900">
       {/* Editor top bar */}
-      <div className="sticky top-0 z-30 bg-[#0d1527]/90 backdrop-blur-md border-b border-white/[0.08] px-4 py-3 flex items-center gap-3">
+      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#E7DFD5] px-4 py-3 flex items-center gap-3">
         <Link
           to="/dashboard"
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+          className="p-1.5 rounded-full text-stone-500 hover:text-[#1C1917] hover:bg-[#FAF7F2] border border-[#E7DFD5] transition-colors"
         >
           <ArrowLeft size={16} />
         </Link>
@@ -424,20 +420,20 @@ const EditorPage: React.FC = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-sm font-semibold text-white bg-white/[0.04] border border-white/[0.08] rounded-lg px-2.5 py-1 focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/60 w-full max-w-xs placeholder-slate-500"
+            className="text-sm font-bold text-[#1C1917] bg-[#FAF8F5] border border-[#E7DFD5] rounded-full px-3.5 py-1 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 w-full max-w-xs placeholder-stone-400"
             placeholder="Resume title..."
           />
         </div>
 
         {errorMessage && (
-          <span className="text-xs text-amber-400 hidden md:block">
+          <span className="text-xs text-amber-700 hidden md:block">
             {errorMessage}
           </span>
         )}
 
         <div className="flex items-center gap-2">
           {loading && (
-            <RefreshCw size={13} className="animate-spin text-slate-400" />
+            <RefreshCw size={13} className="animate-spin text-stone-400" />
           )}
           <Badge variant={saved ? 'green' : 'slate'}>
             {saving ? 'Saving...' : saved ? 'Saved' : 'Unsaved'}
@@ -445,10 +441,10 @@ const EditorPage: React.FC = () => {
 
           <button
             onClick={() => setPreviewMode(!previewMode)}
-            className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
+            className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${
               previewMode
-                ? 'bg-indigo-600/20 border-indigo-500/40 text-indigo-300'
-                : 'border-white/[0.1] text-slate-300 hover:bg-white/[0.06] hover:text-white'
+                ? 'bg-amber-100 border-amber-300 text-amber-900'
+                : 'border-[#DCD3C7] text-stone-700 hover:bg-[#FAF7F2] hover:text-[#1C1917]'
             }`}
           >
             <Eye size={13} />
@@ -458,20 +454,20 @@ const EditorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsJobMatchModalOpen(true)}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 transition-colors"
           >
-            <Sparkles size={13} className="text-purple-400" />
+            <Sparkles size={13} className="text-amber-700" />
             Match Job
           </button>
 
           <Link to="/ai">
-            <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 transition-colors">
-              <Sparkles size={13} className="text-indigo-400" />
+            <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-[#DCD3C7] bg-white text-stone-700 hover:bg-[#FAF7F2] transition-colors">
+              <Sparkles size={13} className="text-amber-600" />
               AI assist
             </button>
           </Link>
 
-          <Button size="sm" onClick={handleSave} className="shadow-lg shadow-indigo-600/20">
+          <Button size="sm" onClick={handleSave}>
             <Save size={13} />
             Save
           </Button>
@@ -484,9 +480,9 @@ const EditorPage: React.FC = () => {
             aria-label="Export PDF"
           >
             {exporting ? (
-              <RefreshCw size={13} className="animate-spin text-indigo-400" />
+              <RefreshCw size={13} className="animate-spin text-amber-600" />
             ) : exportSuccess ? (
-              <Check size={13} className="text-emerald-400" />
+              <Check size={13} className="text-emerald-600" />
             ) : (
               <Download size={13} />
             )}
@@ -503,7 +499,7 @@ const EditorPage: React.FC = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Editor panel */}
         <div
-          className={`overflow-y-auto p-4 sm:p-6 space-y-4 ${
+          className={`overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#FAF7F2] ${
             previewMode ? 'hidden lg:block lg:w-1/2' : 'w-full lg:w-1/2'
           }`}
         >
@@ -584,14 +580,14 @@ const EditorPage: React.FC = () => {
               {data.experience.map((exp) => (
                 <div
                   key={exp.id}
-                  className="border border-white/[0.08] bg-[#0d1629]/60 rounded-xl p-4 space-y-3 shadow-inner shadow-black/20"
+                  className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs"
                 >
                   <div className="flex items-center gap-2">
-                    <GripVertical size={14} className="text-slate-500 cursor-grab" />
-                    <span className="text-xs font-semibold text-slate-200 flex-1">
+                    <GripVertical size={14} className="text-stone-400 cursor-grab" />
+                    <span className="text-xs font-bold text-[#1C1917] flex-1">
                       {exp.company}
                     </span>
-                    <button className="p-1 text-slate-500 hover:text-red-400 transition-colors">
+                    <button className="p-1 text-stone-400 hover:text-rose-600 transition-colors">
                       <Trash2 size={13} />
                     </button>
                   </div>
@@ -626,26 +622,26 @@ const EditorPage: React.FC = () => {
                       }
                     />
                   </div>
-                  <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs text-stone-600 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={exp.current}
                       onChange={(e) =>
                         updateExperienceField(exp.id, 'current', e.target.checked)
                       }
-                      className="rounded bg-[#0a0f1d] border-white/20 text-blue-500 focus:ring-blue-500"
+                      className="rounded bg-white border-stone-300 text-amber-600 focus:ring-amber-500"
                     />
                     Currently working here
                   </label>
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-medium text-slate-300">
+                      <p className="text-xs font-bold text-stone-700">
                         Bullet points
                       </p>
                       <button
                         type="button"
                         onClick={() => setAiExpTarget(exp)}
-                        className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 font-medium"
+                        className="flex items-center gap-1 text-[11px] text-amber-700 hover:text-amber-800 font-bold"
                       >
                         <Sparkles size={11} />
                         Enhance with AI
@@ -655,7 +651,7 @@ const EditorPage: React.FC = () => {
                       <div key={idx} className="flex gap-2 mb-2">
                         <textarea
                           rows={2}
-                          className="flex-1 px-3 py-2 text-xs border border-white/[0.1] bg-[#0a0f1d] text-slate-100 placeholder-slate-500 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="flex-1 px-3 py-2 text-xs border border-[#E7DFD5] bg-white text-stone-900 placeholder-stone-400 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
                           value={bullet}
                           onChange={(e) =>
                             updateExperienceBullet(exp.id, idx, e.target.value)
@@ -663,7 +659,7 @@ const EditorPage: React.FC = () => {
                         />
                         <button
                           onClick={() => removeExperienceBullet(exp.id, idx)}
-                          className="p-1 text-slate-500 hover:text-red-400 transition-colors self-start mt-1"
+                          className="p-1 text-stone-400 hover:text-rose-600 transition-colors self-start mt-1"
                         >
                           <Trash2 size={13} />
                         </button>
@@ -671,7 +667,7 @@ const EditorPage: React.FC = () => {
                     ))}
                     <button
                       onClick={() => addExperienceBullet(exp.id)}
-                      className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-medium mt-1"
+                      className="flex items-center gap-1 text-xs text-amber-700 hover:text-amber-800 font-bold mt-1"
                     >
                       <Plus size={12} />
                       Add bullet
@@ -679,7 +675,7 @@ const EditorPage: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-white/[0.12] text-sm text-slate-400 hover:text-blue-400 hover:border-blue-400/50 hover:bg-white/[0.02] rounded-xl transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all">
                 <Plus size={15} />
                 Add experience
               </button>
@@ -692,7 +688,7 @@ const EditorPage: React.FC = () => {
               {data.education.map((ed) => (
                 <div
                   key={ed.id}
-                  className="border border-white/[0.08] bg-[#0d1629]/60 rounded-xl p-4 grid sm:grid-cols-2 gap-3 shadow-inner shadow-black/20"
+                  className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 grid sm:grid-cols-2 gap-3 shadow-2xs"
                 >
                   <Input
                     label="Institution"
@@ -711,7 +707,7 @@ const EditorPage: React.FC = () => {
                   )}
                 </div>
               ))}
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-white/[0.12] text-sm text-slate-400 hover:text-blue-400 hover:border-blue-400/50 hover:bg-white/[0.02] rounded-xl transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all">
                 <Plus size={15} />
                 Add education
               </button>
@@ -737,7 +733,7 @@ const EditorPage: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <button className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-medium">
+              <button className="flex items-center gap-1 text-xs text-amber-700 hover:text-amber-800 font-bold">
                 <Plus size={12} />
                 Add skill group
               </button>
@@ -750,7 +746,7 @@ const EditorPage: React.FC = () => {
               {data.projects.map((proj) => (
                 <div
                   key={proj.id}
-                  className="border border-white/[0.08] bg-[#0d1629]/60 rounded-xl p-4 space-y-3 shadow-inner shadow-black/20"
+                  className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs"
                 >
                   <Input label="Project name" value={proj.name} onChange={() => {}} />
                   <Textarea
@@ -766,7 +762,7 @@ const EditorPage: React.FC = () => {
                   />
                 </div>
               ))}
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 border-2 border-dashed border-white/[0.12] text-sm text-slate-400 hover:text-blue-400 hover:border-blue-400/50 hover:bg-white/[0.02] rounded-xl transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all">
                 <Plus size={15} />
                 Add project
               </button>
@@ -776,14 +772,14 @@ const EditorPage: React.FC = () => {
 
         {/* Preview panel */}
         <div
-          className={`bg-[#070b14] border-l border-white/[0.08] backdrop-blur-md overflow-y-auto p-6 ${
+          className={`bg-[#F5EFE6] border-l border-[#E7DFD5] overflow-y-auto p-6 ${
             previewMode ? 'w-full lg:w-1/2' : 'hidden lg:block lg:w-1/2'
           }`}
         >
           <div className="sticky top-0 flex items-center justify-between mb-4 z-10 pb-2">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Live preview</p>
+            <p className="text-xs font-bold text-stone-600 uppercase tracking-wider">Live preview</p>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded border border-white/[0.1] bg-white/[0.03] text-slate-400">A4 Studio</span>
+              <span className="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full border border-stone-300 bg-white text-stone-700 font-semibold shadow-2xs">A4 Studio</span>
             </div>
           </div>
           <ResumePreview data={data} />
@@ -855,30 +851,30 @@ const SummaryAIModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-      <div className="bg-[#0d1629] border border-white/[0.1] text-slate-100 rounded-2xl shadow-2xl shadow-black/80 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
-              <Sparkles size={16} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm">
+      <div className="bg-white border border-[#E7DFD5] text-[#1C1917] rounded-3xl shadow-2xl shadow-stone-400/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-4">
+        <div className="flex items-center justify-between border-b border-[#EFEAE2] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 flex items-center justify-center">
+              <Sparkles size={18} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Improve Summary with AI</h3>
-              <p className="text-xs text-slate-400">Powered by Google Gemini (gemini-3.5-flash-lite)</p>
+              <h3 className="text-base font-bold text-[#1C1917] font-serif">Improve Summary with AI</h3>
+              <p className="text-xs text-stone-500">Powered by Google Gemini (gemini-3.5-flash-lite)</p>
             </div>
           </div>
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="p-1 text-slate-400 hover:text-white rounded-lg transition-colors"
+            className="p-1.5 text-stone-400 hover:text-[#1C1917] hover:bg-[#FAF8F5] rounded-full transition-colors"
           >
             <X size={16} />
           </button>
         </div>
 
         {error && (
-          <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl text-xs text-amber-200 flex items-start gap-2">
-            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-400" />
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-800 flex items-start gap-2">
+            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-600" />
             <span>{error}</span>
           </div>
         )}
@@ -893,27 +889,27 @@ const SummaryAIModal: React.FC<{
         </div>
 
         <div>
-          <label className="text-xs font-medium text-slate-300 block mb-1">Current Summary</label>
-          <div className="p-3 bg-[#0a0f1d] border border-white/[0.08] rounded-lg text-xs text-slate-300 leading-relaxed max-h-32 overflow-y-auto">
-            {currentSummary || <span className="italic text-slate-500">No summary written yet. Write a draft first.</span>}
+          <label className="text-xs font-bold text-stone-700 block mb-1">Current Summary</label>
+          <div className="p-3.5 bg-[#FAF8F5] border border-[#E7DFD5] rounded-2xl text-xs text-stone-700 leading-relaxed max-h-32 overflow-y-auto">
+            {currentSummary || <span className="italic text-stone-400">No summary written yet. Write a draft first.</span>}
           </div>
         </div>
 
         {result && (
           <div className="space-y-3 pt-2">
             <div>
-              <label className="text-xs font-semibold text-emerald-400 block mb-1">
+              <label className="text-xs font-bold text-amber-900 block mb-1">
                 AI Suggested Summary
               </label>
-              <div className="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-lg text-xs text-emerald-100 leading-relaxed">
+              <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-2xl text-xs text-stone-900 leading-relaxed font-medium">
                 {result.improvedSummary}
               </div>
             </div>
 
             {result.keyChanges && result.keyChanges.length > 0 && (
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">Key Improvements Made</label>
-                <ul className="list-disc list-inside space-y-1 text-xs text-slate-400 pl-1">
+                <label className="text-xs font-bold text-stone-700 block mb-1">Key Improvements Made</label>
+                <ul className="list-disc list-inside space-y-1 text-xs text-stone-600 pl-1">
                   {result.keyChanges.map((change, i) => (
                     <li key={i}>{change}</li>
                   ))}
@@ -923,7 +919,7 @@ const SummaryAIModal: React.FC<{
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-2 border-t border-white/[0.08] pt-3">
+        <div className="flex items-center justify-end gap-2 border-t border-[#EFEAE2] pt-4">
           <Button variant="outline" size="sm" onClick={onClose}>
             Cancel
           </Button>
@@ -993,18 +989,18 @@ const ExperienceAIModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-      <div className="bg-[#0d1629] border border-white/[0.1] text-slate-100 rounded-2xl shadow-2xl shadow-black/80 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
-              <Sparkles size={16} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm">
+      <div className="bg-white border border-[#E7DFD5] text-[#1C1917] rounded-3xl shadow-2xl shadow-stone-400/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-4">
+        <div className="flex items-center justify-between border-b border-[#EFEAE2] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 flex items-center justify-center">
+              <Sparkles size={18} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-base font-bold text-[#1C1917] font-serif">
                 Enhance Experience Bullets (STAR Method)
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-stone-500">
                 {exp.role} · {exp.company}
               </p>
             </div>
@@ -1012,31 +1008,31 @@ const ExperienceAIModal: React.FC<{
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="p-1 text-slate-400 hover:text-white rounded-lg transition-colors"
+            className="p-1.5 text-stone-400 hover:text-[#1C1917] hover:bg-[#FAF8F5] rounded-full transition-colors"
           >
             <X size={16} />
           </button>
         </div>
 
         {error && (
-          <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl text-xs text-amber-200 flex items-start gap-2">
-            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-400" />
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-800 flex items-start gap-2">
+            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-600" />
             <span>{error}</span>
           </div>
         )}
 
         <div>
-          <label className="text-xs font-medium text-slate-300 block mb-1">Current Bullets</label>
-          <div className="p-3 bg-[#0a0f1d] border border-white/[0.08] rounded-lg text-xs text-slate-300 leading-relaxed max-h-32 overflow-y-auto space-y-1">
+          <label className="text-xs font-bold text-stone-700 block mb-1">Current Bullets</label>
+          <div className="p-3.5 bg-[#FAF8F5] border border-[#E7DFD5] rounded-2xl text-xs text-stone-700 leading-relaxed max-h-32 overflow-y-auto space-y-1">
             {exp.bullets.filter(Boolean).length > 0 ? (
               exp.bullets.filter(Boolean).map((b, i) => (
                 <div key={i} className="flex gap-2">
-                  <span className="text-slate-500">•</span>
+                  <span className="text-stone-400">•</span>
                   <span>{b}</span>
                 </div>
               ))
             ) : (
-              <span className="italic text-slate-500">No bullets entered yet. Add draft bullets first.</span>
+              <span className="italic text-stone-400">No bullets entered yet. Add draft bullets first.</span>
             )}
           </div>
         </div>
@@ -1044,13 +1040,13 @@ const ExperienceAIModal: React.FC<{
         {result && (
           <div className="space-y-3 pt-2">
             <div>
-              <label className="text-xs font-semibold text-emerald-400 block mb-1">
+              <label className="text-xs font-bold text-amber-900 block mb-1">
                 Enhanced Action Bullets
               </label>
-              <div className="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-lg text-xs text-emerald-100 space-y-2">
+              <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-2xl text-xs text-stone-900 space-y-2">
                 {result.improvedBullets.map((bullet, i) => (
                   <div key={i} className="flex gap-2">
-                    <span className="text-emerald-400 font-bold">•</span>
+                    <span className="text-amber-700 font-bold">•</span>
                     <span>{bullet}</span>
                   </div>
                 ))}
@@ -1059,8 +1055,8 @@ const ExperienceAIModal: React.FC<{
 
             {result.tips && result.tips.length > 0 && (
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">Quantifiable Metrics Tips</label>
-                <ul className="list-disc list-inside space-y-1 text-xs text-slate-400 pl-1">
+                <label className="text-xs font-bold text-stone-700 block mb-1">Quantifiable Metrics Tips</label>
+                <ul className="list-disc list-inside space-y-1 text-xs text-stone-600 pl-1">
                   {result.tips.map((tip, i) => (
                     <li key={i}>{tip}</li>
                   ))}
@@ -1070,7 +1066,7 @@ const ExperienceAIModal: React.FC<{
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-2 border-t border-white/[0.08] pt-3">
+        <div className="flex items-center justify-end gap-2 border-t border-[#EFEAE2] pt-4">
           <Button variant="outline" size="sm" onClick={onClose}>
             Cancel
           </Button>
@@ -1153,30 +1149,30 @@ const JobMatchModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-      <div className="bg-[#0d1629] border border-white/[0.1] text-slate-100 rounded-2xl shadow-2xl shadow-black/80 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
-              <Sparkles size={16} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm">
+      <div className="bg-white border border-[#E7DFD5] text-[#1C1917] rounded-3xl shadow-2xl shadow-stone-400/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-4">
+        <div className="flex items-center justify-between border-b border-[#EFEAE2] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 flex items-center justify-center">
+              <Sparkles size={18} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">Job Description Match Analyzer</h3>
-              <p className="text-xs text-slate-400">Evaluate fit and ATS keyword coverage with Google Gemini</p>
+              <h3 className="text-base font-bold text-[#1C1917] font-serif">Job Description Match Analyzer</h3>
+              <p className="text-xs text-stone-500">Evaluate fit and ATS keyword coverage with Google Gemini</p>
             </div>
           </div>
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="p-1 text-slate-400 hover:text-white rounded-lg transition-colors"
+            className="p-1.5 text-stone-400 hover:text-[#1C1917] hover:bg-[#FAF8F5] rounded-full transition-colors"
           >
             <X size={16} />
           </button>
         </div>
 
         {error && (
-          <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl text-xs text-amber-200 flex items-start gap-2">
-            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-400" />
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-800 flex items-start gap-2">
+            <AlertCircle size={14} className="shrink-0 mt-0.5 text-amber-600" />
             <span>{error}</span>
           </div>
         )}
@@ -1192,29 +1188,29 @@ const JobMatchModal: React.FC<{
         </div>
 
         {result && (
-          <div className="space-y-4 pt-2 border-t border-white/[0.08]">
+          <div className="space-y-4 pt-2 border-t border-[#EFEAE2]">
             {/* Score & Gauge */}
-            <div className="flex items-center gap-4 p-4 bg-[#0a0f1d] border border-white/[0.08] rounded-xl">
+            <div className="flex items-center gap-4 p-4 bg-[#FAF8F5] border border-[#E7DFD5] rounded-2xl">
               <div
-                className={`w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold shrink-0 ${
+                className={`w-14 h-14 rounded-full flex items-center justify-center text-lg font-extrabold shrink-0 ${
                   result.matchScore >= 80
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                     : result.matchScore >= 60
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                    : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                    ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                    : 'bg-rose-100 text-rose-900 border border-rose-300'
                 }`}
               >
                 {result.matchScore}%
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">
+                <h4 className="text-sm font-bold text-[#1C1917]">
                   {result.matchScore >= 80
                     ? 'Strong Alignment'
                     : result.matchScore >= 60
                     ? 'Moderate Alignment'
                     : 'Low Initial Alignment'}
                 </h4>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-stone-500">
                   AI heuristic comparison of your resume skills, summary, and experience against the job description.
                 </p>
               </div>
@@ -1222,38 +1218,38 @@ const JobMatchModal: React.FC<{
 
             {/* Matching & Missing Skills */}
             <div className="grid sm:grid-cols-2 gap-3">
-              <div className="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-xl space-y-2">
-                <span className="text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+              <div className="p-3.5 bg-emerald-50/60 border border-emerald-200 rounded-2xl space-y-2">
+                <span className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
                   <CheckCircle2 size={13} />
                   Matching Skills ({result.matchingSkills?.length || 0})
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {result.matchingSkills && result.matchingSkills.length > 0 ? (
                     result.matchingSkills.map((s, i) => (
-                      <span key={i} className="text-[11px] px-2 py-0.5 bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 rounded-md font-medium">
+                      <span key={i} className="text-[11px] px-2.5 py-0.5 bg-white border border-emerald-200 text-emerald-800 rounded-md font-semibold">
                         {s}
                       </span>
                     ))
                   ) : (
-                    <span className="text-xs text-slate-500">None detected</span>
+                    <span className="text-xs text-stone-400">None detected</span>
                   )}
                 </div>
               </div>
 
-              <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl space-y-2">
-                <span className="text-xs font-semibold text-amber-300 flex items-center gap-1.5">
+              <div className="p-3.5 bg-amber-50/60 border border-amber-200 rounded-2xl space-y-2">
+                <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5">
                   <AlertCircle size={13} />
                   Missing / Key Desired Skills ({result.missingSkills?.length || 0})
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {result.missingSkills && result.missingSkills.length > 0 ? (
                     result.missingSkills.map((s, i) => (
-                      <span key={i} className="text-[11px] px-2 py-0.5 bg-amber-500/20 text-amber-200 border border-amber-500/30 rounded-md font-medium">
+                      <span key={i} className="text-[11px] px-2.5 py-0.5 bg-white border border-amber-200 text-amber-800 rounded-md font-semibold">
                         {s}
                       </span>
                     ))
                   ) : (
-                    <span className="text-xs text-slate-500">No major gaps identified</span>
+                    <span className="text-xs text-stone-400">No major gaps identified</span>
                   )}
                 </div>
               </div>
@@ -1261,9 +1257,9 @@ const JobMatchModal: React.FC<{
 
             {/* Suggestions */}
             {result.suggestions && result.suggestions.length > 0 && (
-              <div className="p-3 bg-[#0a0f1d] border border-white/[0.08] rounded-xl space-y-1.5">
-                <span className="text-xs font-semibold text-slate-200">Tailoring Recommendations:</span>
-                <ul className="list-disc list-inside space-y-1 text-xs text-slate-400 pl-1">
+              <div className="p-3.5 bg-[#FAF8F5] border border-[#E7DFD5] rounded-2xl space-y-1.5">
+                <span className="text-xs font-bold text-stone-800">Tailoring Recommendations:</span>
+                <ul className="list-disc list-inside space-y-1 text-xs text-stone-600 pl-1">
                   {result.suggestions.map((sug, i) => (
                     <li key={i}>{sug}</li>
                   ))}
@@ -1271,13 +1267,13 @@ const JobMatchModal: React.FC<{
               </div>
             )}
 
-            <p className="text-[10px] text-slate-500 italic">
+            <p className="text-[10px] text-stone-500 italic">
               {result.disclaimer}
             </p>
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-2 border-t border-white/[0.08] pt-3">
+        <div className="flex items-center justify-end gap-2 border-t border-[#EFEAE2] pt-4">
           <Button variant="outline" size="sm" onClick={onClose}>
             {result ? 'Done' : 'Cancel'}
           </Button>

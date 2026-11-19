@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from './AuthContext';
-import { Button, Card } from '../components/ui';
+import { Card, Button } from '../components/ui';
 import { Shield, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -13,8 +13,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (loading) {
     return (
       <div className="py-24 flex flex-col items-center justify-center gap-3">
-        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-slate-500">Checking authentication session...</p>
+        <div className="w-8 h-8 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+        <p className="text-xs text-stone-500 font-medium">Checking authentication session...</p>
       </div>
     );
   }
@@ -22,18 +22,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!isAuthenticated) {
     return (
       <div className="max-w-md mx-auto my-16 px-4">
-        <Card className="p-8 text-center space-y-6 shadow-sm border-slate-200">
-          <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto">
+        <Card className="p-8 text-center space-y-6 shadow-sm border-[#E7DFD5] bg-white">
+          <div className="w-14 h-14 bg-amber-50 text-amber-800 rounded-2xl flex items-center justify-center mx-auto border border-amber-200">
             <Lock size={26} />
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold font-serif text-[#1C1917]">
               Sign in to CloudResumeAI
             </h2>
-            <p className="text-sm text-slate-500">
-              Please authenticate with Microsoft Entra External ID to access your
-              resumes and personal workspace.
+            <p className="text-sm text-stone-600">
+              Please authenticate to access your resumes and personal workspace.
             </p>
           </div>
 
@@ -47,15 +46,24 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
           <div className="space-y-3">
             <Button
               className="w-full flex items-center justify-center gap-2 py-2.5 text-sm"
-              onClick={login}
+              onClick={() => {
+                void login();
+              }}
             >
               <Shield size={16} />
               <span>Sign in with Microsoft Entra</span>
               <ArrowRight size={14} />
             </Button>
 
+            <a
+              href="/login"
+              className="block w-full py-2.5 text-xs text-stone-600 hover:text-stone-900 border border-[#E7DFD5] rounded-full hover:bg-[#FAF7F2] transition-colors font-medium text-center"
+            >
+              Open Full Sign In & Demo Personas ↗
+            </a>
+
             {!isMsalConfigured && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-stone-400">
                 Running in local development identity mode.
               </p>
             )}
@@ -69,4 +77,3 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 };
 
 export default ProtectedRoute;
-

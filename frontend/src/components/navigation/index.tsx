@@ -39,19 +39,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
 
   return (
     <aside
-      className={`h-screen bg-[#0d1427]/90 backdrop-blur-xl border-r border-white/[0.08] flex flex-col transition-all duration-200 shrink-0 select-none ${
+      className={`h-screen bg-white border-r border-[#E7DFD5] flex flex-col transition-all duration-200 shrink-0 select-none ${
         collapsed ? 'w-16' : 'w-60'
       }`}
     >
       {/* Logo */}
-      <div className={`flex items-center h-16 border-b border-white/[0.08] px-4 gap-3 ${collapsed ? 'justify-center' : ''}`}>
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 p-[1px] shadow-glow-sm shadow-blue-500/20 shrink-0">
-          <div className="w-full h-full bg-[#0a0f1d] rounded-[7px] flex items-center justify-center">
-            <Cloud size={16} className="text-blue-400" />
+      <div className={`flex items-center h-16 border-b border-[#E7DFD5] px-4 gap-3 ${collapsed ? 'justify-center' : ''}`}>
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-600 p-[1px] shadow-sm shadow-amber-500/20 shrink-0">
+          <div className="w-full h-full bg-white rounded-[7px] flex items-center justify-center">
+            <Cloud size={16} className="text-amber-600" />
           </div>
         </div>
         {!collapsed && (
-          <span className="font-bold text-white text-sm tracking-tight font-sans">
+          <span className="font-bold text-[#1C1917] text-sm tracking-tight font-sans">
             CloudResumeAI
           </span>
         )}
@@ -72,11 +72,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
               title={collapsed ? item.label : undefined}
               className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
                 active
-                  ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-white border border-indigo-500/30 shadow-glow-sm shadow-blue-500/10'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                  ? 'bg-[#F5EFE6] text-amber-950 font-semibold border border-amber-300/40 shadow-sm'
+                  : 'text-stone-600 hover:text-[#1C1917] hover:bg-[#FAF7F2]'
               } ${collapsed ? 'justify-center' : ''}`}
             >
-              <span className={active ? 'text-indigo-400' : ''}>{item.icon}</span>
+              <span className={active ? 'text-amber-700' : 'text-stone-400'}>{item.icon}</span>
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -84,10 +84,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       </nav>
 
       {/* Bottom section */}
-      <div className="border-t border-white/[0.08] py-4 px-2 space-y-1">
+      <div className="border-t border-[#E7DFD5] py-4 px-2 space-y-1">
         <Link
           to="/profile"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white hover:bg-white/[0.04] transition-colors ${
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-stone-600 hover:text-[#1C1917] hover:bg-[#FAF7F2] transition-colors ${
             collapsed ? 'justify-center' : ''
           }`}
           title={collapsed ? 'Settings' : undefined}
@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         {isAuthenticated && (
           <button
             onClick={() => logout()}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 transition-colors ${
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-stone-600 hover:bg-rose-50 hover:text-rose-700 transition-colors ${
               collapsed ? 'justify-center' : ''
             }`}
             title={collapsed ? 'Sign out' : undefined}
@@ -110,10 +110,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       </div>
 
       {/* Collapse toggle */}
-      <div className="border-t border-white/[0.08] px-2 py-3 flex justify-end">
+      <div className="border-t border-[#E7DFD5] px-2 py-3 flex justify-end">
         <button
           onClick={() => onCollapse(!collapsed)}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+          className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-[#FAF7F2] transition-colors"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -131,7 +131,7 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
-  const { user, isAuthenticated, login } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const initials = user?.name
     ? user.name
         .split(' ')
@@ -142,9 +142,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
     : 'AM';
 
   return (
-    <header className="h-16 bg-[#0a0f1d]/85 backdrop-blur-xl border-b border-white/[0.08] flex items-center px-6 gap-4 shrink-0 select-none">
+    <header className="h-16 bg-white/90 backdrop-blur-xl border-b border-[#E7DFD5] flex items-center px-6 gap-4 shrink-0 select-none">
       {title && (
-        <h1 className="text-base font-semibold text-white flex-1">{title}</h1>
+        <h1 className="text-base font-bold text-[#1C1917] flex-1">{title}</h1>
       )}
       {!title && <div className="flex-1" />}
       {actions && <div className="flex items-center gap-3">{actions}</div>}
@@ -152,27 +152,34 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
       {isAuthenticated ? (
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex flex-col items-end">
-            <span className="text-xs font-semibold text-white">
+            <span className="text-xs font-semibold text-[#1C1917]">
               {user?.name || 'Authenticated User'}
             </span>
-            <span className="text-[10px] text-slate-400">
-              {user?.email || 'Entra ID'}
+            <span className="text-[10px] text-amber-800 font-medium bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60 mt-0.5">
+              {user?.role || user?.email || 'Cloud Member'}
             </span>
           </div>
           <div
-            className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-glow-sm shadow-blue-500/20 border border-white/20"
+            className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-600 via-orange-600 to-amber-700 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm border border-white"
             title={user?.email}
           >
             {initials}
           </div>
+          <button
+            onClick={() => logout()}
+            className="hidden sm:inline-flex text-xs px-2.5 py-1 text-stone-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200"
+            title="Sign out"
+          >
+            Sign out
+          </button>
         </div>
       ) : (
-        <button
-          onClick={() => login()}
-          className="text-xs px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-500 hover:to-indigo-500 transition-all shadow-glow-sm shadow-blue-500/20"
+        <Link
+          to="/login"
+          className="text-xs px-4 py-2 bg-[#1C1917] text-white rounded-full font-medium hover:bg-[#292524] transition-all shadow-sm"
         >
           Sign in
-        </button>
+        </Link>
       )}
     </header>
   );
@@ -213,66 +220,91 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => (
 
 export const PublicNav: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0a0f1d]/80 backdrop-blur-xl border-b border-white/[0.08] transition-all">
+    <header className="sticky top-0 z-50 bg-[#FBF9F5]/90 backdrop-blur-xl border-b border-[#E7DFD5] transition-all select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 p-[1px] shadow-glow-sm shadow-blue-500/20 group-hover:shadow-glow-md transition-all">
-            <div className="w-full h-full bg-[#0a0f1d] rounded-[11px] flex items-center justify-center">
-              <Cloud size={18} className="text-blue-400 group-hover:scale-110 transition-transform" />
-            </div>
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 shadow-sm group-hover:scale-105 transition-transform">
+            <Cloud size={20} className="text-amber-700" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-white text-base tracking-tight font-sans">
+            <span className="font-extrabold text-[#1C1917] text-base tracking-tight font-sans">
               CloudResumeAI
             </span>
-            <span className="text-[10px] text-slate-400 font-mono tracking-wider uppercase -mt-1 hidden sm:block">
-              Cloud-Native Engine
+            <span className="text-[10px] text-amber-800 font-mono tracking-wider uppercase -mt-0.5 hidden sm:block">
+              Golden Hour Architecture
             </span>
           </div>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 text-sm bg-white/[0.03] px-3 py-1.5 rounded-full border border-white/[0.08] backdrop-blur-md">
+        <nav className="hidden md:flex items-center gap-1 text-xs bg-[#F5EFE6] px-3 py-1.5 rounded-full border border-[#E7DFD5] shadow-inner">
           <Link
             to="/templates"
-            className="px-3.5 py-1.5 text-slate-300 hover:text-white rounded-full hover:bg-white/[0.06] transition-all"
+            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
           >
             Templates
           </Link>
           <a
             href="#features"
-            className="px-3.5 py-1.5 text-slate-300 hover:text-white rounded-full hover:bg-white/[0.06] transition-all"
+            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
           >
             Features
           </a>
           <a
             href="#how-it-works"
-            className="px-3.5 py-1.5 text-slate-300 hover:text-white rounded-full hover:bg-white/[0.06] transition-all"
+            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
           >
-            How it works
+            Architecture
           </a>
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/dashboard"
-            className="text-sm px-4 py-2 text-slate-300 hover:text-white font-medium hover:bg-white/[0.05] rounded-xl border border-transparent hover:border-white/10 transition-all"
-          >
-            Sign in
-          </Link>
-          <Link
-            to="/dashboard"
-            className="text-sm px-4 py-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-xl font-medium hover:from-blue-500 hover:to-violet-500 transition-all shadow-glow-sm shadow-blue-500/25 hover:shadow-glow-md hover:scale-[1.02] active:scale-[0.98] border border-white/15"
-          >
-            Get started free
-          </Link>
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2.5">
+              <Link
+                to="/dashboard"
+                className="text-xs px-3.5 py-1.5 bg-amber-100/70 border border-amber-300 text-amber-900 rounded-full font-semibold hover:bg-amber-100 transition-all"
+              >
+                {user?.name?.split(' ')[0] || 'My Workspace'}
+              </Link>
+              <Link
+                to="/dashboard"
+                className="text-xs px-4 py-2 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-medium transition-all shadow-sm"
+              >
+                Go to Dashboard
+              </Link>
+              <button
+                onClick={() => logout()}
+                className="text-xs text-stone-400 hover:text-stone-700 px-2 py-1"
+                title="Sign out"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-xs px-4 py-2 text-stone-700 hover:text-[#1C1917] font-semibold hover:bg-white rounded-full border border-[#DCD3C7] transition-all shadow-sm"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/login"
+                className="text-xs px-5 py-2.5 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-semibold transition-all shadow-sm hover:shadow active:scale-[0.98]"
+              >
+                Get started free ↗
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-slate-300 hover:text-white bg-white/[0.05] rounded-lg border border-white/10"
+          className="md:hidden p-2 text-stone-700 hover:text-[#1C1917] bg-white rounded-xl border border-[#E7DFD5]"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -284,39 +316,39 @@ export const PublicNav: React.FC = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-white/[0.08] bg-[#0a0f1d]/95 backdrop-blur-2xl px-6 py-4 space-y-2">
+        <div className="md:hidden border-t border-[#E7DFD5] bg-[#FBF9F5] px-6 py-4 space-y-2">
           <Link
             to="/templates"
-            className="block px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.05]"
+            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
             onClick={() => setOpen(false)}
           >
             Templates
           </Link>
           <a
             href="#features"
-            className="block px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.05]"
+            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
             onClick={() => setOpen(false)}
           >
             Features
           </a>
           <a
             href="#how-it-works"
-            className="block px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.05]"
+            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
             onClick={() => setOpen(false)}
           >
-            How it works
+            Architecture
           </a>
-          <div className="pt-3 flex flex-col gap-2 border-t border-white/[0.08]">
+          <div className="pt-3 flex flex-col gap-2 border-t border-[#E7DFD5]">
             <Link
-              to="/dashboard"
-              className="text-center text-sm py-2.5 border border-white/10 rounded-xl text-slate-300 hover:text-white font-medium bg-white/[0.03]"
+              to="/login"
+              className="text-center text-sm py-2.5 border border-[#DCD3C7] rounded-full text-stone-800 font-semibold bg-white"
               onClick={() => setOpen(false)}
             >
               Sign in
             </Link>
             <Link
-              to="/dashboard"
-              className="text-center text-sm py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium shadow-glow-sm"
+              to="/login"
+              className="text-center text-sm py-2.5 bg-[#1C1917] text-white rounded-full font-semibold shadow-sm"
               onClick={() => setOpen(false)}
             >
               Get started free

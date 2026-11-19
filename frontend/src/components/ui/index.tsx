@@ -19,25 +19,25 @@ export const Button: React.FC<ButtonProps> = ({
   ...rest
 }) => {
   const base =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+    'inline-flex items-center justify-center font-semibold rounded-full transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none';
 
   const variants = {
     primary:
-      'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 focus:ring-indigo-500 shadow-md shadow-indigo-500/20',
+      'bg-[#1C1917] text-white hover:bg-[#292524] focus:ring-stone-500 shadow-sm active:scale-[0.98]',
     secondary:
-      'bg-white/[0.08] text-slate-100 hover:bg-white/[0.14] border border-white/[0.1] focus:ring-slate-400',
+      'bg-white text-stone-800 hover:bg-[#FAF7F2] border border-[#DCD3C7] focus:ring-amber-500 shadow-2xs',
     ghost:
-      'text-slate-400 hover:bg-white/[0.06] hover:text-white focus:ring-slate-400',
+      'text-stone-600 hover:bg-[#F5EFE6] hover:text-[#1C1917] focus:ring-stone-400',
     danger:
-      'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm',
+      'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500 shadow-sm',
     outline:
-      'border border-white/[0.15] text-slate-200 hover:bg-white/[0.06] hover:text-white focus:ring-indigo-500',
+      'border border-[#DCD3C7] text-stone-800 hover:bg-[#FAF7F2] hover:text-[#1C1917] focus:ring-amber-500',
   };
 
   const sizes = {
-    sm: 'text-xs px-3 py-1.5 gap-1.5',
-    md: 'text-sm px-4 py-2 gap-2',
-    lg: 'text-sm px-5 py-2.5 gap-2',
+    sm: 'text-xs px-3.5 py-1.5 gap-1.5',
+    md: 'text-sm px-5 py-2.5 gap-2',
+    lg: 'text-sm px-6 py-3 gap-2',
   };
 
   return (
@@ -86,17 +86,17 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
 }) => {
   const variants = {
-    blue: 'bg-blue-50 text-blue-700 border-blue-200',
-    green: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    amber: 'bg-amber-50 text-amber-700 border-amber-200',
-    red: 'bg-red-50 text-red-700 border-red-200',
-    slate: 'bg-slate-100 text-slate-600 border-slate-200',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200',
+    blue: 'bg-blue-50 text-blue-800 border-blue-200',
+    green: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    amber: 'bg-amber-50 text-amber-800 border-amber-200',
+    red: 'bg-rose-50 text-rose-800 border-rose-200',
+    slate: 'bg-stone-100 text-stone-700 border-stone-200',
+    purple: 'bg-purple-50 text-purple-800 border-purple-200',
   };
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${variants[variant]} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${variants[variant]} ${className}`}
     >
       {children}
     </span>
@@ -120,9 +120,9 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-[#11192e]/80 border border-white/[0.08] text-slate-100 rounded-xl shadow-xl shadow-black/20 backdrop-blur-sm ${
+      className={`bg-white border border-[#E7DFD5] text-[#1C1917] rounded-3xl shadow-sm ${
         hover
-          ? 'hover:shadow-2xl hover:border-indigo-500/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer'
+          ? 'hover:shadow-md hover:border-amber-400 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer'
           : ''
       } ${className}`}
       onClick={onClick}
@@ -154,22 +154,22 @@ export const Input: React.FC<InputProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-medium text-slate-300"
+          className="block text-xs font-bold text-stone-700"
         >
           {label}
         </label>
       )}
       <input
         id={inputId}
-        className={`w-full px-3 py-2 text-sm border rounded-lg bg-[#0a0f1d]/90 text-slate-100 placeholder-slate-500 transition focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/80 ${
-          error ? 'border-red-400' : 'border-white/[0.12] hover:border-white/[0.2]'
+        className={`w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5] text-stone-900 placeholder-stone-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 focus:bg-white ${
+          error ? 'border-rose-400' : 'border-[#E7DFD5] hover:border-stone-400'
         } ${className}`}
         {...rest}
       />
       {hint && !error && (
-        <p className="text-xs text-slate-400">{hint}</p>
+        <p className="text-xs text-stone-500">{hint}</p>
       )}
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-rose-600">{error}</p>}
     </div>
   );
 };
@@ -195,19 +195,19 @@ export const Textarea: React.FC<TextareaProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-medium text-slate-300"
+          className="block text-xs font-bold text-stone-700"
         >
           {label}
         </label>
       )}
       <textarea
         id={inputId}
-        className={`w-full px-3 py-2 text-sm border rounded-lg bg-[#0a0f1d]/90 text-slate-100 placeholder-slate-500 transition focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/80 resize-none ${
-          error ? 'border-red-400' : 'border-white/[0.12] hover:border-white/[0.2]'
+        className={`w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5] text-stone-900 placeholder-stone-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 focus:bg-white resize-none ${
+          error ? 'border-rose-400' : 'border-[#E7DFD5] hover:border-stone-400'
         } ${className}`}
         {...rest}
       />
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-rose-600">{error}</p>}
     </div>
   );
 };
@@ -227,9 +227,9 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => (
   <div className="flex items-start justify-between gap-4">
     <div>
-      <h2 className="text-base font-semibold text-white">{title}</h2>
+      <h2 className="text-base font-bold text-[#1C1917] font-serif">{title}</h2>
       {subtitle && (
-        <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>
+        <p className="mt-0.5 text-xs text-stone-500">{subtitle}</p>
       )}
     </div>
     {action && <div className="flex-shrink-0">{action}</div>}
@@ -240,7 +240,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 
 export const Divider: React.FC<{ className?: string }> = ({
   className = '',
-}) => <hr className={`border-white/[0.08] ${className}`} />;
+}) => <hr className={`border-[#E7DFD5] ${className}`} />;
 
 // ─── Spinner ────────────────────────────────────────────────────────────────
 
@@ -248,7 +248,7 @@ export const Spinner: React.FC<{ className?: string }> = ({
   className = '',
 }) => (
   <svg
-    className={`animate-spin h-5 w-5 text-blue-600 ${className}`}
+    className={`animate-spin h-5 w-5 text-amber-700 ${className}`}
     viewBox="0 0 24 24"
     fill="none"
   >
@@ -284,11 +284,11 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   action,
 }) => (
   <div className="flex flex-col items-center justify-center py-16 text-center">
-    <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4">
+    <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700 mb-4 border border-amber-200">
       {icon}
     </div>
-    <h3 className="text-sm font-semibold text-slate-900 mb-1">{title}</h3>
-    <p className="text-sm text-slate-500 max-w-xs mb-6">{description}</p>
+    <h3 className="text-sm font-bold text-[#1C1917] mb-1">{title}</h3>
+    <p className="text-sm text-stone-500 max-w-xs mb-6">{description}</p>
     {action}
   </div>
 );
@@ -303,12 +303,12 @@ interface AtsScoreProps {
 export const AtsScore: React.FC<AtsScoreProps> = ({ score, size = 'md' }) => {
   const color =
     score >= 85
-      ? 'text-emerald-600'
+      ? 'text-emerald-700'
       : score >= 70
-      ? 'text-amber-600'
-      : 'text-red-500';
+      ? 'text-amber-700'
+      : 'text-rose-600';
 
-  const sizeClass = size === 'sm' ? 'text-sm font-bold' : 'text-xl font-bold';
+  const sizeClass = size === 'sm' ? 'text-sm font-extrabold' : 'text-xl font-extrabold';
 
   return (
     <span className={`${sizeClass} ${color} tabular-nums`}>{score}%</span>
@@ -316,4 +316,3 @@ export const AtsScore: React.FC<AtsScoreProps> = ({ score, size = 'md' }) => {
 };
 
 export { default as MeadowRiseFooter } from './meadow-rise-footer';
-

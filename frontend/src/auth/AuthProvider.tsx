@@ -104,6 +104,8 @@ const MsalAuthAdapter: React.FC<{ children: React.ReactNode }> = ({ children }) 
       error: authError,
       isMsalConfigured: true,
       login,
+      loginWithGoogle: login,
+      loginAsDemo: async () => login(),
       logout,
       getAccessToken,
     }),
@@ -114,33 +116,112 @@ const MsalAuthAdapter: React.FC<{ children: React.ReactNode }> = ({ children }) 
 };
 
 /**
- * Fallback Development Auth Provider used when MSAL environment variables are unconfigured.
+ * Fallback Development & Demo Auth Provider used when MSAL environment variables are unconfigured.
+ * Supports Google Sign-In simulation, custom credentials, and 1-click evaluator demo personas.
  */
-const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
-  const [user, setUser] = useState<AuthUser | null>({
-    id: 'dev-user-001',
+const DEMO_PERSONAS: Record<'student' | 'evaluator' | 'recruiter', AuthUser> = {
+  student: {
+    id: 'usr-student-001',
     name: 'Alex Mercer',
     email: 'alex.mercer@cloudresume.ai',
     username: 'alex.mercer',
+    role: 'Student / Cloud Engineer',
+    avatar: 'AM',
+  },
+  evaluator: {
+    id: 'usr-evaluator-002',
+    name: 'Prof. H. Sharma',
+    email: 'evaluator@university.edu',
+    username: 'prof.sharma',
+    role: 'Project Evaluator / Professor',
+    avatar: 'PS',
+  },
+  recruiter: {
+    id: 'usr-recruiter-003',
+    name: 'Sarah Jenkins',
+    email: 'sarah.jenkins@techcloud.io',
+    username: 'sarah.j',
+    role: 'Senior Technical Recruiter',
+    avatar: 'SJ',
+  },
+};
+
+const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    try {
+      const saved = localStorage.getItem('cloudresume_auth_user');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return DEMO_PERSONAS.student;
   });
 
-  const login = async () => {
-    setIsAuthenticated(true);
-    setUser({
-      id: 'dev-user-001',
-      name: 'Alex Mercer',
-      email: 'alex.mercer@cloudresume.ai',
-      username: 'alex.mercer',
-    });
-  };
+  const isAuthenticated = Boolean(user);
 
-  const logout = async () => {
-    setIsAuthenticated(false);
+  const login = useCallback(async (userOrType?: string | { email: string; name?: string; role?: string }) => {
+    let nextUser: AuthUser = DEMO_PERSONAS.student;
+    if (typeof userOrType === 'object' && userOrType?.email) {
+      const emailName = userOrType.name || userOrType.email.split('@')[0];
+      nextUser = {
+        id: `usr-${Date.now()}`,
+        name: emailName,
+        email: userOrType.email,
+        username: emailName.toLowerCase().replace(/\s+/g, '.'),
+        role: userOrType.role || 'Member',
+        avatar: emailName.slice(0, 2).toUpperCase(),
+      };
+    } else if (userOrType === 'evaluator') {
+      nextUser = DEMO_PERSONAS.evaluator;
+    } else if (userOrType === 'recruiter') {
+      nextUser = DEMO_PERSONAS.recruiter;
+    }
+    setUser(nextUser);
+    try {
+      localStorage.setItem('cloudresume_auth_user', JSON.stringify(nextUser));
+    } catch {
+      // ignore storage error
+    }
+  }, []);
+
+  const loginWithGoogle = useCallback(async () => {
+    // Simulated Google OAuth profile for GCP deployment
+    const googleUser: AuthUser = {
+      id: 'google-usr-94821',
+      name: 'Google Cloud Developer',
+      email: 'cloud.developer@gmail.com',
+      username: 'cloud.dev',
+      role: 'Google Cloud Verified',
+      avatar: 'GD',
+    };
+    setUser(googleUser);
+    try {
+      localStorage.setItem('cloudresume_auth_user', JSON.stringify(googleUser));
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const loginAsDemo = useCallback(async (persona: 'student' | 'evaluator' | 'recruiter' = 'student') => {
+    const selected = DEMO_PERSONAS[persona] || DEMO_PERSONAS.student;
+    setUser(selected);
+    try {
+      localStorage.setItem('cloudresume_auth_user', JSON.stringify(selected));
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
     setUser(null);
-  };
+    try {
+      localStorage.removeItem('cloudresume_auth_user');
+    } catch {
+      // ignore
+    }
+  }, []);
 
-  const getAccessToken = async () => null;
+  const getAccessToken = useCallback(async () => null, []);
 
   useEffect(() => {
     setGlobalTokenGetter(getAccessToken);
@@ -151,7 +232,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       setGlobalTokenGetter(null);
       setGlobalDevEmailGetter(null);
     };
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, getAccessToken]);
 
   const value: AuthContextType = useMemo(
     () => ({
@@ -161,10 +242,12 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       error: null,
       isMsalConfigured: false,
       login,
+      loginWithGoogle,
+      loginAsDemo,
       logout,
       getAccessToken,
     }),
-    [isAuthenticated, user]
+    [isAuthenticated, user, login, loginWithGoogle, loginAsDemo, logout, getAccessToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

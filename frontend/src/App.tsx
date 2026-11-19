@@ -15,6 +15,7 @@ import TemplatesPage from './pages/templates/TemplatesPage';
 import EditorPage from './pages/editor/EditorPage';
 import AIAssistantPage from './pages/ai/AIAssistantPage';
 import ProfilePage from './pages/profile/ProfilePage';
+import LoginPage from './pages/auth/LoginPage';
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<LandingPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
+            <Route path="/login" element={<LoginPage />} />
           </Route>
 
           {/* Protected Dashboard routes */}
