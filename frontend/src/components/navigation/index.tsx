@@ -13,6 +13,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { useAuth } from '../../auth/AuthContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface SidebarItem {
   label: string;
@@ -151,6 +152,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
 
       {isAuthenticated ? (
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <div className="hidden sm:flex flex-col items-end">
             <span className="text-xs font-semibold text-[#1C1917]">
               {user?.name || 'Authenticated User'}
@@ -262,6 +264,7 @@ export const PublicNav: React.FC = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           {isAuthenticated ? (
             <div className="flex items-center gap-2.5">
               <Link

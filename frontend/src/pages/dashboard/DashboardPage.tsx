@@ -13,6 +13,8 @@ import {
   Layers,
   RefreshCw,
   Sun,
+  ShieldCheck,
+  Briefcase,
 } from 'lucide-react';
 import {
   MOCK_RESUMES,
@@ -227,7 +229,7 @@ export const DashboardPage: React.FC = () => {
             </h1>
             <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-300">
               <Sun size={12} className="text-amber-700" />
-              Golden Hour Pro
+              {user?.role || 'Golden Hour Pro'}
             </span>
           </div>
           <p className="text-sm text-stone-600 mt-1">
@@ -252,6 +254,42 @@ export const DashboardPage: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      {/* Role-Specific Academic Evaluator Banner */}
+      {user?.role?.includes('Evaluator') && (
+        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-3xl text-xs text-emerald-900 flex items-start gap-3.5 shadow-sm animate-fadeIn">
+          <div className="w-9 h-9 rounded-2xl bg-emerald-100 border border-emerald-300 flex items-center justify-center shrink-0 text-emerald-700">
+            <ShieldCheck size={18} />
+          </div>
+          <div className="flex-1 space-y-1">
+            <div className="flex items-center gap-2">
+              <p className="font-bold text-sm text-emerald-950">Academic Evaluator & Examiner View Active</p>
+              <span className="text-[10px] bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded-full font-mono font-semibold">Prof. H. Sharma</span>
+            </div>
+            <p className="text-emerald-800 leading-relaxed">
+              Evaluating Cloud Computing Capstone Project. You can inspect candidate resume schemas, evaluate ATS score algorithms, test ReportLab vector PDF compilation, and verify multi-tenant data isolation.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Role-Specific Technical Recruiter Banner */}
+      {user?.role?.includes('Recruiter') && (
+        <div className="p-4 bg-purple-50 border border-purple-200 rounded-3xl text-xs text-purple-900 flex items-start gap-3.5 shadow-sm animate-fadeIn">
+          <div className="w-9 h-9 rounded-2xl bg-purple-100 border border-purple-300 flex items-center justify-center shrink-0 text-purple-700">
+            <Briefcase size={18} />
+          </div>
+          <div className="flex-1 space-y-1">
+            <div className="flex items-center gap-2">
+              <p className="font-bold text-sm text-purple-950">Technical Recruiter & Hiring Pipeline Active</p>
+              <span className="text-[10px] bg-purple-200/80 text-purple-900 px-2 py-0.5 rounded-full font-mono font-semibold">Sarah Jenkins</span>
+            </div>
+            <p className="text-purple-800 leading-relaxed">
+              Recruiter talent acquisition mode. Review candidate profiles, analyze 98% ATS score radar metrics, and screen resumes against target cloud engineer job postings.
+            </p>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-800 flex items-center justify-between shadow-2xs">

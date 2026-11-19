@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import {
   Mail,
   Lock,
+  User,
   Eye,
   EyeOff,
   ArrowRight,
@@ -14,10 +15,22 @@ import {
   GraduationCap,
   Briefcase,
   X,
+  Check,
 } from 'lucide-react';
+import { GoogleOAuthModal } from '../../components/auth/GoogleOAuthModal';
+import { PersonaModal, PersonaType } from '../../components/auth/PersonaModal';
+import { ThemeToggle } from '../../components/ui/ThemeToggle';
 
-export const LoginPage: React.FC = () => {
-  const { loginWithCredentials, loginWithGoogle, loginAsDemo, isAuthenticated } = useAuth();
+export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
+  initialMode = 'signin',
+}) => {
+  const {
+    loginWithCredentials,
+    registerUser,
+    loginWithGoogle,
+    loginAsDemo,
+    isAuthenticated,
+  } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,13 +43,36 @@ export const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // Tab State: 'signin' | 'signup'
+  const isDirectSignUp = location.pathname.includes('/signup') || location.pathname.includes('/register') || initialMode === 'signup';
+  const [tab, setTab] = useState<'signin' | 'signup'>(isDirectSignUp ? 'signup' : 'signin');
+
+  // Sync tab with URL if navigation occurs
+  useEffect(() => {
+    if (location.pathname.includes('/signup') || location.pathname.includes('/register')) {
+      setTab('signup');
+    } else if (location.pathname.includes('/login')) {
+      setTab('signin');
+    }
+  }, [location.pathname]);
+
+  // Form Fields
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+
+  // Status & Feedback
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Modals
+  const [showGoogleModal, setShowGoogleModal] = useState(false);
+  const [activePersona, setActivePersona] = useState<PersonaType | null>(null);
 
   // Forgot password modal state
   const [showForgotModal, setShowForgotModal] = useState(false);
@@ -44,7 +80,17 @@ export const LoginPage: React.FC = () => {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotStatus, setForgotStatus] = useState<string | null>(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  // Password strength checks for sign up
+  const passwordCriteria = useMemo(() => {
+    return {
+      hasLength: password.length >= 8,
+      hasLetter: /[a-zA-Z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasMatch: password.length > 0 && password === confirmPassword,
+    };
+  }, [password, confirmPassword]);
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
@@ -72,6 +118,60 @@ export const LoginPage: React.FC = () => {
     }
   };
 
+  const handleSignUpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!fullName.trim()) {
+      setErrorMessage('Please enter your full name.');
+      return;
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long.');
+      return;
+    }
+    if (!passwordCriteria.hasLetter || !passwordCriteria.hasNumber) {
+      setErrorMessage('Password must contain both letters and numbers.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match. Please re-check.');
+      return;
+    }
+
+    setLoading(true);
+    const result = await registerUser({
+      fullName: fullName.trim(),
+      email: email.trim(),
+      password,
+    });
+    setLoading(false);
+
+    if (result.success) {
+      setSuccessMessage('Account created successfully! Redirecting to your dashboard...');
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, 600);
+    } else {
+      setErrorMessage(result.error || 'Failed to create account. Please try again.');
+    }
+  };
+
+  const handleGoogleSelect = async (account: { name: string; email: string; avatar?: string }) => {
+    await loginWithGoogle(account);
+    navigate(from, { replace: true });
+  };
+
+  const handlePersonaSelect = async (persona: PersonaType) => {
+    await loginAsDemo(persona);
+    navigate(from, { replace: true });
+  };
+
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail.trim()) return;
@@ -92,153 +192,335 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 bg-[#F8FAFC]">
-      <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-10 shadow-xl shadow-slate-200/50 space-y-7">
+    <div className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-8 sm:py-12 bg-slate-50 dark:bg-slate-950 transition-colors">
+      {/* Top Header Controls: Theme Mode Switcher */}
+      <div className="max-w-md w-full flex items-center justify-between mb-4 px-2">
+        <Link
+          to="/"
+          className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors flex items-center gap-1"
+        >
+          <span>← Back to Home</span>
+        </Link>
+        <ThemeToggle />
+      </div>
+
+      {/* Main Authentication Card */}
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-7 sm:p-9 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-1">
-            <ShieldCheck size={14} className="text-blue-600" />
+        <div className="text-center space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 text-xs font-semibold mb-1">
+            <ShieldCheck size={14} className="text-blue-600 dark:text-blue-400" />
             <span>Secure Cloud Access</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Sign In to CloudResume
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-sans">
+            {tab === 'signin' ? 'Sign In to CloudResume' : 'Create Your Free Account'}
           </h1>
-          <p className="text-sm text-slate-500">
-            Enter your credentials to access your resumes and AI workspace
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            {tab === 'signin'
+              ? 'Enter your credentials to access your resumes and AI workspace'
+              : 'Join to craft ATS-optimized cloud resumes and get Gemini AI advice'}
           </p>
+        </div>
+
+        {/* Interactive Tab Switcher: Sign In vs Create Account */}
+        <div className="p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 flex gap-1 border border-slate-200/80 dark:border-slate-700">
+          <button
+            type="button"
+            onClick={() => {
+              setTab('signin');
+              setErrorMessage(null);
+            }}
+            className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
+              tab === 'signin'
+                ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setTab('signup');
+              setErrorMessage(null);
+            }}
+            className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
+              tab === 'signup'
+                ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            Create Account
+          </button>
         </div>
 
         {/* Error Notification */}
         {errorMessage && (
-          <div className="p-3.5 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-800 flex items-start gap-2.5 animate-fadeIn">
-            <AlertCircle size={16} className="text-red-600 shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-2xl text-xs text-red-800 dark:text-red-300 flex items-start gap-2.5 animate-fadeIn">
+            <AlertCircle size={16} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
             <span className="leading-relaxed">{errorMessage}</span>
           </div>
         )}
 
         {/* Success Notification */}
         {successMessage && (
-          <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 flex items-center gap-2.5 animate-fadeIn">
-            <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+          <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-2xl text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5 animate-fadeIn">
+            <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{successMessage}</span>
           </div>
         )}
 
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
-          {/* Email input */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-slate-700">
-              Email Address
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Mail size={16} />
+        {/* Forms Container */}
+        {tab === 'signin' ? (
+          /* Sign In Form */
+          <form onSubmit={handleLoginSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Mail size={16} />
+                </div>
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                />
               </div>
-              <input
-                type="email"
-                required
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              />
             </div>
-          </div>
 
-          {/* Password input */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold text-slate-700">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgotEmail(email);
+                    setShowForgotModal(true);
+                  }}
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                >
+                  Forgot password?
+                </button>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Lock size={16} />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full pl-10 pr-11 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-0.5">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                  Keep me signed in for 30 days
+                </span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 px-5 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </form>
+        ) : (
+          /* Sign Up Form */
+          <form onSubmit={handleSignUpSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Full Name
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <User size={16} />
+                </div>
+                <input
+                  type="text"
+                  required
+                  autoComplete="name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="e.g. Alex Mercer"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Mail size={16} />
+                </div>
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Password
               </label>
-              <button
-                type="button"
-                onClick={() => {
-                  setForgotEmail(email);
-                  setShowForgotModal(true);
-                }}
-                className="text-xs text-blue-600 hover:text-blue-700 font-medium hover:underline"
-              >
-                Forgot password?
-              </button>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Lock size={16} />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Lock size={16} />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 8 characters (letters & numbers)"
+                  className="w-full pl-10 pr-11 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                required
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className="w-full pl-10 pr-11 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              />
-              <button
-                type="button"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
             </div>
-          </div>
 
-          {/* Remember Me */}
-          <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-              />
-              <span className="text-xs text-slate-600 font-medium">
-                Keep me signed in for 30 days
-              </span>
-            </label>
-          </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <Lock size={16} />
+                </div>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  required
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter your password"
+                  className="w-full pl-10 pr-11 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                />
+                <button
+                  type="button"
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 px-5 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={16} className="animate-spin" />
-                <span>Signing in...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <ArrowRight size={16} />
-              </>
+            {password.length > 0 && (
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 rounded-2xl space-y-1 text-[11px] text-slate-600 dark:text-slate-400 animate-fadeIn">
+                <div className="grid grid-cols-2 gap-1.5">
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasLength ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasLength ? 'text-emerald-600' : 'text-slate-300'} />
+                    <span>8+ Characters</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasLetter ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasLetter ? 'text-emerald-600' : 'text-slate-300'} />
+                    <span>Has Letters</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasNumber ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasNumber ? 'text-emerald-600' : 'text-slate-300'} />
+                    <span>Has Numbers</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasMatch ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasMatch ? 'text-emerald-600' : 'text-slate-300'} />
+                    <span>Passwords Match</span>
+                  </div>
+                </div>
+              </div>
             )}
-          </button>
-        </form>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 px-5 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create Free Account</span>
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </form>
+        )}
 
         {/* Divider */}
         <div className="relative flex items-center justify-center">
-          <div className="border-t border-slate-200 w-full" />
-          <span className="bg-white px-3 text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
+          <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
+          <span className="bg-white dark:bg-slate-900 px-3 text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
             Or continue with
           </span>
         </div>
 
-        {/* Google One-Click Button */}
+        {/* Google One-Click Button (Opens Google Account Chooser Modal) */}
         <button
           type="button"
-          onClick={async () => {
-            await loginWithGoogle();
-            navigate(from, { replace: true });
-          }}
-          className="w-full py-2.5 px-4 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center justify-center gap-2.5 transition-all shadow-xs"
+          onClick={() => setShowGoogleModal(true)}
+          className="w-full py-2.5 px-4 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-2.5 transition-all shadow-xs"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -262,90 +544,118 @@ export const LoginPage: React.FC = () => {
         </button>
 
         {/* 1-Click Academic Demo Personas for Quick Evaluation */}
-        <div className="pt-2 border-t border-slate-100">
-          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-center mb-2">
+        <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-2">
             1-Click Academic Demo Personas
           </p>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={async () => {
-                await loginAsDemo('student');
-                navigate(from, { replace: true });
-              }}
-              className="p-2 rounded-xl border border-slate-200 hover:border-blue-400 bg-slate-50/70 hover:bg-blue-50/50 text-left transition-all group"
+              onClick={() => setActivePersona('student')}
+              className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-blue-50/50 dark:hover:bg-blue-950/40 text-left transition-all group"
             >
-              <div className="flex items-center gap-1.5 text-blue-700 font-bold text-[11px]">
-                <GraduationCap size={13} />
+              <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 font-bold text-[11px]">
+                <GraduationCap size={14} />
                 <span>Student</span>
               </div>
-              <p className="text-[10px] text-slate-500 truncate mt-0.5">Alex Mercer</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Alex Mercer</p>
             </button>
 
             <button
               type="button"
-              onClick={async () => {
-                await loginAsDemo('evaluator');
-                navigate(from, { replace: true });
-              }}
-              className="p-2 rounded-xl border border-slate-200 hover:border-blue-400 bg-slate-50/70 hover:bg-blue-50/50 text-left transition-all group"
+              onClick={() => setActivePersona('evaluator')}
+              className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-emerald-400 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/40 text-left transition-all group"
             >
-              <div className="flex items-center gap-1.5 text-blue-700 font-bold text-[11px]">
-                <ShieldCheck size={13} />
+              <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
+                <ShieldCheck size={14} />
                 <span>Evaluator</span>
               </div>
-              <p className="text-[10px] text-slate-500 truncate mt-0.5">Prof. Sharma</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Prof. Sharma</p>
             </button>
 
             <button
               type="button"
-              onClick={async () => {
-                await loginAsDemo('recruiter');
-                navigate(from, { replace: true });
-              }}
-              className="p-2 rounded-xl border border-slate-200 hover:border-blue-400 bg-slate-50/70 hover:bg-blue-50/50 text-left transition-all group"
+              onClick={() => setActivePersona('recruiter')}
+              className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-purple-400 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-purple-50/50 dark:hover:bg-purple-950/40 text-left transition-all group"
             >
-              <div className="flex items-center gap-1.5 text-blue-700 font-bold text-[11px]">
-                <Briefcase size={13} />
+              <div className="flex items-center gap-1.5 text-purple-700 dark:text-purple-400 font-bold text-[11px]">
+                <Briefcase size={14} />
                 <span>Recruiter</span>
               </div>
-              <p className="text-[10px] text-slate-500 truncate mt-0.5">Sarah Jenkins</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Sarah Jenkins</p>
             </button>
           </div>
         </div>
 
-        {/* Link to Sign Up */}
-        <div className="text-center pt-2">
-          <p className="text-xs text-slate-600">
-            Don't have an account yet?{' '}
-            <Link
-              to="/signup"
-              className="text-blue-600 hover:text-blue-700 font-bold hover:underline"
-            >
-              Sign Up for Free
-            </Link>
+        {/* Footer Toggle text */}
+        <div className="text-center pt-1 border-t border-slate-100 dark:border-slate-800">
+          <p className="text-xs text-slate-600 dark:text-slate-400">
+            {tab === 'signin' ? (
+              <>
+                Don't have an account yet?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTab('signup');
+                    setErrorMessage(null);
+                  }}
+                  className="text-blue-600 dark:text-blue-400 hover:underline font-bold"
+                >
+                  Sign Up for Free
+                </button>
+              </>
+            ) : (
+              <>
+                Already registered?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTab('signin');
+                    setErrorMessage(null);
+                  }}
+                  className="text-blue-600 dark:text-blue-400 hover:underline font-bold"
+                >
+                  Sign In Instead
+                </button>
+              </>
+            )}
           </p>
         </div>
       </div>
 
+      {/* Google OAuth Chooser Modal */}
+      <GoogleOAuthModal
+        isOpen={showGoogleModal}
+        onClose={() => setShowGoogleModal(false)}
+        onSelectAccount={handleGoogleSelect}
+      />
+
+      {/* Persona Detail Modal */}
+      <PersonaModal
+        isOpen={Boolean(activePersona)}
+        persona={activePersona}
+        onClose={() => setActivePersona(null)}
+        onConfirm={handlePersonaSelect}
+      />
+
       {/* Forgot Password Modal */}
       {showForgotModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900">Reset Password</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Reset Password</h3>
               <button
                 onClick={() => setShowForgotModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100"
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 <X size={18} />
               </button>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Enter your registered email address and we'll send you recovery instructions.
             </p>
             {forgotStatus ? (
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-800">
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-xl text-xs text-blue-800 dark:text-blue-300">
                 {forgotStatus}
               </div>
             ) : (
@@ -356,7 +666,7 @@ export const LoginPage: React.FC = () => {
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white"
                 />
                 <button
                   type="submit"

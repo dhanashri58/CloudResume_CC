@@ -323,14 +323,17 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     }
   }, []);
 
-  const loginWithGoogle = useCallback(async () => {
+  const loginWithGoogle = useCallback(async (customAccount?: { name: string; email: string; avatar?: string }) => {
+    const email = customAccount?.email || 'cloud.developer@gmail.com';
+    const name = customAccount?.name || 'Google Cloud Developer';
+    const avatar = customAccount?.avatar || (name ? name.slice(0, 2).toUpperCase() : 'GD');
     const googleUser: AuthUser = {
-      id: 'google-usr-94821',
-      name: 'Google Cloud Developer',
-      email: 'cloud.developer@gmail.com',
-      username: 'cloud.dev',
+      id: `google-${Date.now()}`,
+      name,
+      email,
+      username: email.split('@')[0],
       role: 'Google Cloud Verified',
-      avatar: 'GD',
+      avatar,
     };
     setUser(googleUser);
     try {
