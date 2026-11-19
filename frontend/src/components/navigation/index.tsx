@@ -293,7 +293,7 @@ export const PublicNav: React.FC = () => {
                 Sign in
               </Link>
               <Link
-                to="/login"
+                to="/signup"
                 className="text-xs px-5 py-2.5 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-semibold transition-all shadow-sm hover:shadow active:scale-[0.98]"
               >
                 Get started free ↗
@@ -347,7 +347,7 @@ export const PublicNav: React.FC = () => {
               Sign in
             </Link>
             <Link
-              to="/login"
+              to="/signup"
               className="text-center text-sm py-2.5 bg-[#1C1917] text-white rounded-full font-semibold shadow-sm"
               onClick={() => setOpen(false)}
             >

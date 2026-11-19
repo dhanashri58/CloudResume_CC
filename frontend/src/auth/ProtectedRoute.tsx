@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navigate, useLocation, useInRouterContext } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { Card, Button } from '../components/ui';
 import { Shield, Lock, AlertCircle, ArrowRight } from 'lucide-react';
@@ -7,8 +8,14 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
+const RouterRedirect: React.FC = () => {
+  const location = useLocation();
+  return <Navigate to="/login" state={{ from: location }} replace />;
+};
+
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading, login, isMsalConfigured, error } = useAuth();
+  const inRouter = useInRouterContext();
 
   if (loading) {
     return (
@@ -20,6 +27,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
+    if (!isMsalConfigured && inRouter) {
+      return <RouterRedirect />;
+    }
+
     return (
       <div className="max-w-md mx-auto my-16 px-4">
         <Card className="p-8 text-center space-y-6 shadow-sm border-[#E7DFD5] bg-white">

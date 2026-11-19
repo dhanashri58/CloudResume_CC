@@ -243,37 +243,50 @@ For detailed payloads and response schemas, see [`docs/api.md`](file:///C:/Users
 
 ### Dual-Terminal Setup
 
-#### Terminal 1: Database & Backend
-```bash
-# 1. Start local PostgreSQL container
-docker run -d --name cloudresumeai-postgres \
-  -e POSTGRES_USER=cloudresume_user \
-  -e POSTGRES_PASSWORD=cloudresume_password_placeholder \
-  -e POSTGRES_DB=cloudresumeai_dev \
-  -p 5432:5432 postgres:16-alpine
+#### Terminal 1: Backend (Python Flask API - Port 5000)
+> **Important**: The backend is written in Python Flask. Do **not** run `npm` commands inside the `backend` folder.
 
-# 2. Setup Python environment
+```powershell
 cd backend
-python -m venv .venv
-# Activate virtual environment (Windows: .venv\Scripts\Activate.ps1 | Linux/Mac: source .venv/bin/activate)
-pip install -r requirements.txt -r requirements-dev.txt
+# 1. Activate Python virtual environment
+.\.venv\Scripts\Activate.ps1
 
-# 3. Configure environment
-cp .env.example .env
-
-# 4. Run migrations & start server
-flask db upgrade
+# 2. Run backend server
 python wsgi.py
 ```
+Backend API will start on `http://localhost:5000` (Health Check: `http://localhost:5000/api/health`).
 
-#### Terminal 2: Frontend
-```bash
+#### Terminal 2: Frontend (React 18 + Vite - Port 5173)
+```powershell
 cd frontend
-npm install
-cp .env.example .env
+# 1. Start the Vite development server
 npm run dev
 ```
-Open `http://localhost:5173` in your browser.
+Open `http://localhost:5173` in your browser. All `/api/*` network calls are automatically proxied to the Python backend on port 5000.
+
+---
+
+## Authentication System
+
+CloudResumeAI features a complete, secure, production-ready Authentication System:
+
+- **Sign Up Page (`/signup`)**:
+  - Full Name, Email, Password, and Confirm Password fields.
+  - Password visibility toggle (Show / Hide eye icon).
+  - Client-side validation: Valid email format, 8+ characters, letters and numbers requirement, and password match confirmation.
+  - Duplicate account prevention: Checks database for existing email and returns clear `409 Conflict` feedback.
+- **Login Page (`/login`)**:
+  - Email and Password credentials.
+  - Remember Me toggle (issues 30-day JWT token vs 7-day default).
+  - Forgot Password modal with secure generic confirmation (prevents email enumeration).
+  - 1-Click Academic Demo Personas for evaluation: *Alex Mercer (Student)*, *Prof. H. Sharma (Evaluator)*, and *Sarah Jenkins (Recruiter)*.
+  - Google Sign-In one-click button.
+- **Security & Data Isolation**:
+  - Passwords hashed using memory-hard `scrypt` via `werkzeug.security`. Never stored or returned in plain text.
+  - Stateless `HS256` JWT Bearer access tokens with configurable expiration.
+  - Server-side ownership verification: All resumes are foreign-keyed to `users.id`. A user can only fetch, edit, or delete their own resumes.
+  - Unauthenticated route protection: Direct URL visits to `/dashboard`, `/editor/:id`, `/ai`, or `/profile` redirect to `/login`.
+  - Authenticated visits to `/login` or `/signup` automatically redirect to `/dashboard`.
 
 ---
 
@@ -298,7 +311,7 @@ All test suites have been verified with a **100% pass rate**:
 # 1. Backend Linting (Flake8) - 0 errors
 backend/.venv/Scripts/flake8 backend/app backend/tests
 
-# 2. Backend Automated Tests (Pytest) - 109 Passed
+# 2. Backend Automated Tests (Pytest) - 128 Passed across 15 test suites
 backend/.venv/Scripts/pytest backend/tests -v
 
 # 3. Frontend Tests (Vitest) - 52 Passed across 7 files

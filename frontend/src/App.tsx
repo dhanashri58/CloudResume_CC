@@ -16,6 +16,7 @@ import EditorPage from './pages/editor/EditorPage';
 import AIAssistantPage from './pages/ai/AIAssistantPage';
 import ProfilePage from './pages/profile/ProfilePage';
 import LoginPage from './pages/auth/LoginPage';
+import SignUpPage from './pages/auth/SignUpPage';
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,8 @@ const App: React.FC = () => {
             <Route path="/" element={<LandingPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/register" element={<SignUpPage />} />
           </Route>
 
           {/* Protected Dashboard routes */}

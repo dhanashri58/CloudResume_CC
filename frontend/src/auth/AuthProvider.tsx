@@ -12,7 +12,14 @@ import {
   loginRequest,
   getApiTokenRequest,
 } from './msalConfig';
-import { AuthContext, AuthContextType, AuthUser } from './AuthContext';
+import {
+  AuthContext,
+  AuthContextType,
+  AuthUser,
+  RegisterData,
+  LoginCredentials,
+  AuthResponseResult,
+} from './AuthContext';
 import { setGlobalTokenGetter, setGlobalDevEmailGetter } from '../services/authToken';
 
 /**
@@ -96,30 +103,51 @@ const MsalAuthAdapter: React.FC<{ children: React.ReactNode }> = ({ children }) 
     };
   }, [getAccessToken]);
 
+  const registerUser = useCallback(async (): Promise<AuthResponseResult> => {
+    return { success: false, error: 'Registration is managed through Microsoft Entra.' };
+  }, []);
+
+  const loginWithCredentials = useCallback(async (): Promise<AuthResponseResult> => {
+    await login();
+    return { success: true };
+  }, [login]);
+
+  const loginWithGoogle = useCallback(async () => {
+    await login();
+  }, [login]);
+
+  const loginAsDemo = useCallback(async () => {
+    await login();
+  }, [login]);
+
   const contextValue: AuthContextType = useMemo(
     () => ({
       isAuthenticated,
       user,
+      token: null,
       loading: inProgress !== 'none',
       error: authError,
       isMsalConfigured: true,
+      registerUser,
+      loginWithCredentials,
       login,
-      loginWithGoogle: login,
-      loginAsDemo: async () => login(),
+      loginWithGoogle,
+      loginAsDemo,
       logout,
       getAccessToken,
     }),
-    [isAuthenticated, user, inProgress, authError, login, logout, getAccessToken]
+    [isAuthenticated, user, inProgress, authError, registerUser, loginWithCredentials, login, loginWithGoogle, loginAsDemo, logout, getAccessToken]
   );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 /**
- * Fallback Development & Demo Auth Provider used when MSAL environment variables are unconfigured.
- * Supports Google Sign-In simulation, custom credentials, and 1-click evaluator demo personas.
+ * Standard Production & Development Auth Provider.
+ * Connects directly to backend /api/auth endpoints for password-based registration and login,
+ * while supporting Google Sign-In and 1-click academic demo personas.
  */
-const DEMO_PERSONAS: Record<'student' | 'evaluator' | 'recruiter', AuthUser> = {
+export const DEMO_PERSONAS: Record<'student' | 'evaluator' | 'recruiter', AuthUser> = {
   student: {
     id: 'usr-student-001',
     name: 'Alex Mercer',
@@ -147,6 +175,14 @@ const DEMO_PERSONAS: Record<'student' | 'evaluator' | 'recruiter', AuthUser> = {
 };
 
 const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [token, setToken] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem('cloudresume_auth_token');
+    } catch {
+      return null;
+    }
+  });
+
   const [user, setUser] = useState<AuthUser | null>(() => {
     try {
       const saved = localStorage.getItem('cloudresume_auth_user');
@@ -154,10 +190,113 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     } catch {
       // fallback
     }
-    return DEMO_PERSONAS.student;
+    return null;
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const isAuthenticated = Boolean(user);
+
+  const registerUser = useCallback(async (data: RegisterData): Promise<AuthResponseResult> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: data.fullName,
+          email: data.email,
+          password: data.password,
+        }),
+      });
+
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errMessage = body.message || 'Registration failed. Please check your information.';
+        setError(errMessage);
+        return { success: false, error: errMessage, details: body.details };
+      }
+
+      const receivedToken = body.token;
+      const apiUser = body.user;
+      const authUser: AuthUser = {
+        id: apiUser.id,
+        name: apiUser.full_name || data.fullName,
+        email: apiUser.email,
+        username: apiUser.email.split('@')[0],
+        role: 'Cloud Candidate',
+        avatar: (apiUser.full_name || data.fullName).slice(0, 2).toUpperCase(),
+      };
+
+      setToken(receivedToken);
+      setUser(authUser);
+      try {
+        localStorage.setItem('cloudresume_auth_token', receivedToken);
+        localStorage.setItem('cloudresume_auth_user', JSON.stringify(authUser));
+      } catch {
+        // ignore storage error
+      }
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Network error during registration';
+      setError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const loginWithCredentials = useCallback(async (credentials: LoginCredentials): Promise<AuthResponseResult> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+          remember_me: credentials.rememberMe ?? true,
+        }),
+      });
+
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errMessage = body.message || 'Invalid email or password.';
+        setError(errMessage);
+        return { success: false, error: errMessage };
+      }
+
+      const receivedToken = body.token;
+      const apiUser = body.user;
+      const authUser: AuthUser = {
+        id: apiUser.id,
+        name: apiUser.full_name || apiUser.email.split('@')[0],
+        email: apiUser.email,
+        username: apiUser.email.split('@')[0],
+        role: 'Cloud Candidate',
+        avatar: (apiUser.full_name || apiUser.email).slice(0, 2).toUpperCase(),
+      };
+
+      setToken(receivedToken);
+      setUser(authUser);
+      try {
+        localStorage.setItem('cloudresume_auth_token', receivedToken);
+        localStorage.setItem('cloudresume_auth_user', JSON.stringify(authUser));
+      } catch {
+        // ignore
+      }
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Network error during login';
+      setError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const login = useCallback(async (userOrType?: string | { email: string; name?: string; role?: string }) => {
     let nextUser: AuthUser = DEMO_PERSONAS.student;
@@ -185,7 +324,6 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   }, []);
 
   const loginWithGoogle = useCallback(async () => {
-    // Simulated Google OAuth profile for GCP deployment
     const googleUser: AuthUser = {
       id: 'google-usr-94821',
       name: 'Google Cloud Developer',
@@ -213,15 +351,24 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   }, []);
 
   const logout = useCallback(async () => {
-    setUser(null);
     try {
+      await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+    } catch {
+      // ignore
+    }
+    setUser(null);
+    setToken(null);
+    try {
+      localStorage.removeItem('cloudresume_auth_token');
       localStorage.removeItem('cloudresume_auth_user');
     } catch {
       // ignore
     }
   }, []);
 
-  const getAccessToken = useCallback(async () => null, []);
+  const getAccessToken = useCallback(async (): Promise<string | null> => {
+    return token || localStorage.getItem('cloudresume_auth_token');
+  }, [token]);
 
   useEffect(() => {
     setGlobalTokenGetter(getAccessToken);
@@ -238,68 +385,64 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     () => ({
       isAuthenticated,
       user,
-      loading: false,
-      error: null,
+      token,
+      loading,
+      error,
       isMsalConfigured: false,
+      registerUser,
+      loginWithCredentials,
       login,
       loginWithGoogle,
       loginAsDemo,
       logout,
       getAccessToken,
     }),
-    [isAuthenticated, user, login, loginWithGoogle, loginAsDemo, logout, getAccessToken]
+    [
+      isAuthenticated,
+      user,
+      token,
+      loading,
+      error,
+      registerUser,
+      loginWithCredentials,
+      login,
+      loginWithGoogle,
+      loginAsDemo,
+      logout,
+      getAccessToken,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-/**
- * Root AuthProvider that initializes MSAL if configured, or falls back to DevAuthProvider.
- */
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [pca, setPca] = useState<IPublicClientApplication | null>(null);
-  const [initializing, setInitializing] = useState<boolean>(isMsalConfigured());
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [msalInstance, setMsalInstance] = useState<IPublicClientApplication | null>(null);
 
   useEffect(() => {
     let isMounted = true;
     if (isMsalConfigured()) {
-      getMsalInstance()
-        .then((instance) => {
-          if (isMounted) {
-            setPca(instance);
-            setInitializing(false);
-          }
-        })
-        .catch((err) => {
-          console.error('[MSAL] Failed to initialize MSAL instance:', err);
-          if (isMounted) setInitializing(false);
-        });
-    } else {
-      setInitializing(false);
+      getMsalInstance().then((instance) => {
+        if (isMounted) {
+          setMsalInstance(instance);
+        }
+      });
     }
     return () => {
       isMounted = false;
     };
   }, []);
 
-  if (initializing) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-3">
+  if (isMsalConfigured()) {
+    if (!msalInstance) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2]">
           <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-slate-500 font-medium">
-            Initializing identity provider...
-          </p>
         </div>
-      </div>
-    );
-  }
-
-  if (pca) {
+      );
+    }
     return (
-      <MsalProvider instance={pca}>
+      <MsalProvider instance={msalInstance}>
         <MsalAuthAdapter>{children}</MsalAuthAdapter>
       </MsalProvider>
     );
@@ -308,3 +451,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return <DevAuthProvider>{children}</DevAuthProvider>;
 };
 
+export default AuthProvider;

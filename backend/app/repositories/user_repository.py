@@ -13,9 +13,50 @@ class UserRepository:
 
     @staticmethod
     def get_by_email(email: str) -> Optional[User]:
+        if not email:
+            return None
         return db.session.execute(
             db.select(User).where(User.email == email.lower().strip())
         ).scalar_one_or_none()
+
+    @staticmethod
+    def create_user_with_password(
+        email: str, password: str, full_name: str = ""
+    ) -> User:
+        """Create a registered user with securely hashed password and initial profile."""
+        clean_email = email.lower().strip()
+        user = User(
+            email=clean_email,
+            full_name=full_name.strip() if full_name else "",
+            auth_provider_id=f"local:{clean_email}",
+            is_active=True,
+        )
+        user.set_password(password)
+
+        parts = full_name.strip().split(" ", 1) if full_name else []
+        first_name = parts[0] if len(parts) > 0 else ""
+        last_name = parts[1] if len(parts) > 1 else ""
+
+        profile = UserProfile(
+            user=user,
+            first_name=first_name,
+            last_name=last_name,
+            headline="Cloud Professional",
+        )
+        db.session.add(user)
+        db.session.add(profile)
+        db.session.commit()
+        return user
+
+    @staticmethod
+    def authenticate(email: str, password: str) -> Optional[User]:
+        """Validate user credentials against stored hash."""
+        user = UserRepository.get_by_email(email)
+        if not user or not user.is_active:
+            return None
+        if not user.check_password(password):
+            return None
+        return user
 
     @staticmethod
     def get_by_auth_provider_id(auth_provider_id: str) -> Optional[User]:

@@ -1,5 +1,7 @@
 """Authentication and identity abstraction service."""
+from datetime import datetime, timedelta, timezone
 from functools import wraps
+import jwt
 from flask import request, current_app, jsonify, g
 from app.repositories.user_repository import UserRepository
 from app.services.token_verifier import TokenVerifier, TokenVerificationError
@@ -7,6 +9,21 @@ from app.services.token_verifier import TokenVerifier, TokenVerificationError
 
 class AuthService:
     """Manages identity resolution, JWT verification, and auth boundaries."""
+
+    @staticmethod
+    def generate_token(user, expires_in_seconds: int = 86400 * 7) -> str:
+        """Generate a signed HS256 JWT access token for an authenticated user."""
+        secret = current_app.config.get("SECRET_KEY", "dev-insecure-key-change-in-prod")
+        now = datetime.now(timezone.utc)
+        payload = {
+            "sub": str(user.id),
+            "email": user.email,
+            "name": getattr(user, "full_name", "") or "",
+            "type": "access_token",
+            "iat": now,
+            "exp": now + timedelta(seconds=expires_in_seconds),
+        }
+        return jwt.encode(payload, secret, algorithm="HS256")
 
     @staticmethod
     def get_current_user():
@@ -18,13 +35,35 @@ class AuthService:
         g.auth_error = None
         auth_header = request.headers.get("Authorization", "")
 
-        # 1. Bearer Token Verification (Production / OIDC path)
+        # 1. Bearer Token Verification
         if auth_header.startswith("Bearer "):
             token = auth_header[7:].strip()
             if not token:
                 g.auth_error = "Bearer token string is empty."
                 return None
 
+            # 1a. Try local application JWT (HS256) first
+            try:
+                secret = current_app.config.get(
+                    "SECRET_KEY", "dev-insecure-key-change-in-prod"
+                )
+                payload = jwt.decode(token, secret, algorithms=["HS256"])
+                user_id = payload.get("sub")
+                if user_id:
+                    user = UserRepository.get_by_id(user_id)
+                    if user and user.is_active:
+                        g.current_user = user
+                        return user
+                    g.auth_error = "User associated with token no longer exists or is inactive."
+                    return None
+            except jwt.ExpiredSignatureError:
+                g.auth_error = "Authorization token has expired. Please log in again."
+                return None
+            except (jwt.InvalidTokenError, Exception):
+                # Fall through to external OIDC verification (Entra / Google)
+                pass
+
+            # 1b. External OIDC Verification (RS256)
             try:
                 claims = TokenVerifier.verify_token(token)
                 user = UserRepository.get_or_create_from_entra_claims(claims)

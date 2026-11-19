@@ -1,7 +1,14 @@
 import os
 from app import create_app
+from app.extensions import db
 
 app = create_app()
+
+with app.app_context():
+    try:
+        db.create_all()
+    except Exception as e:
+        app.logger.warning(f"Database initialization note: {e}")
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))

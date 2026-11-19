@@ -43,11 +43,13 @@ def create_app(config_class=Config):
 
     # Register API blueprints
     from app.routes.health import health_bp
+    from app.routes.auth import auth_bp
     from app.routes.resumes import resumes_bp
     from app.routes.profile import profile_bp
     from app.routes.ai import ai_bp
 
     application.register_blueprint(health_bp, url_prefix="/api")
+    application.register_blueprint(auth_bp, url_prefix="/api")
     application.register_blueprint(resumes_bp, url_prefix="/api")
     application.register_blueprint(profile_bp, url_prefix="/api")
     application.register_blueprint(ai_bp, url_prefix="/api")

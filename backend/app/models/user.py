@@ -9,6 +9,8 @@ class User(TimestampMixin, db.Model):
     __tablename__ = "users"
 
     email = db.Column(db.String(255), unique=True, index=True, nullable=False)
+    full_name = db.Column(db.String(255), nullable=True)
+    password_hash = db.Column(db.String(255), nullable=True)
     auth_provider_id = db.Column(
         db.String(255), unique=True, index=True, nullable=True
     )
@@ -27,6 +29,32 @@ class User(TimestampMixin, db.Model):
         cascade="all, delete-orphan",
         order_by="desc(Resume.updated_at)"
     )
+
+    def set_password(self, password: str) -> None:
+        """Hash and store user password using secure scrypt algorithm."""
+        from werkzeug.security import generate_password_hash
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        """Verify candidate password against securely stored hash."""
+        if not self.password_hash:
+            return False
+        from werkzeug.security import check_password_hash
+        return check_password_hash(self.password_hash, password)
+
+    def to_dict(self) -> dict:
+        """Serialize safe public user dictionary (never exposing password hash)."""
+        display_name = self.full_name or ""
+        if not display_name and self.profile:
+            display_name = self.profile.full_name
+        return {
+            "id": self.id,
+            "email": self.email,
+            "full_name": display_name,
+            "is_active": self.is_active,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 
     def __repr__(self):
         return f"<User {self.email}>"

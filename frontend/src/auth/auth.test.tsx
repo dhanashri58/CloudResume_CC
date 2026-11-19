@@ -89,9 +89,12 @@ describe('ProtectedRoute component', () => {
   const createMockAuth = (overrides: Partial<AuthContextType> = {}): AuthContextType => ({
     isAuthenticated: true,
     user: { name: 'Alex Mercer', email: 'alex@example.com' },
+    token: null,
     loading: false,
     error: null,
     isMsalConfigured: true,
+    registerUser: vi.fn(),
+    loginWithCredentials: vi.fn(),
     login: vi.fn(),
     loginWithGoogle: vi.fn(),
     loginAsDemo: vi.fn(),
