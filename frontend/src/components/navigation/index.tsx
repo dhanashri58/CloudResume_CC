@@ -225,39 +225,39 @@ export const PublicNav: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FBF9F5]/90 backdrop-blur-xl border-b border-[#E7DFD5] transition-all select-none">
+    <header className="sticky top-0 z-50 bg-[var(--bg-page)]/90 backdrop-blur-xl border-b border-[var(--border-subtle)] transition-colors duration-250 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 shadow-sm group-hover:scale-105 transition-transform">
-            <Cloud size={20} className="text-amber-700" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 dark:text-amber-400 shadow-sm group-hover:scale-105 transition-transform">
+            <Cloud size={20} className="text-amber-700 dark:text-amber-400" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-[#1C1917] text-base tracking-tight font-sans">
+            <span className="font-extrabold text-[var(--text-primary)] text-base tracking-tight font-sans">
               CloudResumeAI
             </span>
-            <span className="text-[10px] text-amber-800 font-mono tracking-wider uppercase -mt-0.5 hidden sm:block">
+            <span className="text-[10px] text-amber-700 dark:text-amber-400 font-mono tracking-wider uppercase -mt-0.5 hidden sm:block">
               Golden Hour Architecture
             </span>
           </div>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 text-xs bg-[#F5EFE6] px-3 py-1.5 rounded-full border border-[#E7DFD5] shadow-inner">
+        <nav className="hidden md:flex items-center gap-1 text-xs bg-[var(--bg-subtle)] px-3 py-1.5 rounded-full border border-[var(--border-subtle)] shadow-inner">
           <Link
             to="/templates"
-            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
+            className="px-3.5 py-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-surface)] font-medium transition-all"
           >
             Templates
           </Link>
           <a
             href="#features"
-            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
+            className="px-3.5 py-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-surface)] font-medium transition-all"
           >
             Features
           </a>
           <a
             href="#how-it-works"
-            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
+            className="px-3.5 py-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-surface)] font-medium transition-all"
           >
             Architecture
           </a>
@@ -269,19 +269,19 @@ export const PublicNav: React.FC = () => {
             <div className="flex items-center gap-2.5">
               <Link
                 to="/dashboard"
-                className="text-xs px-3.5 py-1.5 bg-amber-100/70 border border-amber-300 text-amber-900 rounded-full font-semibold hover:bg-amber-100 transition-all"
+                className="text-xs px-3.5 py-1.5 bg-amber-100/70 dark:bg-amber-900/40 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 rounded-full font-semibold hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all"
               >
                 {user?.name?.split(' ')[0] || 'My Workspace'}
               </Link>
               <Link
                 to="/dashboard"
-                className="text-xs px-4 py-2 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-medium transition-all shadow-sm"
+                className="text-xs px-4 py-2 bg-[var(--text-primary)] hover:opacity-90 text-[var(--bg-page)] rounded-full font-medium transition-all shadow-sm"
               >
                 Go to Dashboard
               </Link>
               <button
                 onClick={() => logout()}
-                className="text-xs text-stone-400 hover:text-stone-700 px-2 py-1"
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] px-2 py-1"
                 title="Sign out"
               >
                 Sign out
@@ -291,13 +291,13 @@ export const PublicNav: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="text-xs px-4 py-2 text-stone-700 hover:text-[#1C1917] font-semibold hover:bg-white rounded-full border border-[#DCD3C7] transition-all shadow-sm"
+                className="text-xs px-4 py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-semibold hover:bg-[var(--bg-surface)] rounded-full border border-[var(--border-subtle)] transition-all shadow-sm"
               >
                 Sign in
               </Link>
               <Link
                 to="/signup"
-                className="text-xs px-5 py-2.5 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-semibold transition-all shadow-sm hover:shadow active:scale-[0.98]"
+                className="text-xs px-5 py-2.5 bg-[var(--text-primary)] hover:opacity-90 text-[var(--bg-page)] rounded-full font-semibold transition-all shadow-sm hover:shadow active:scale-[0.98]"
               >
                 Get started free ↗
               </Link>
@@ -307,7 +307,7 @@ export const PublicNav: React.FC = () => {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-stone-700 hover:text-[#1C1917] bg-white rounded-xl border border-[#E7DFD5]"
+          className="md:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -319,39 +319,43 @@ export const PublicNav: React.FC = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-[#E7DFD5] bg-[#FBF9F5] px-6 py-4 space-y-2">
+        <div className="md:hidden border-t border-[var(--border-subtle)] bg-[var(--bg-page)] px-6 py-4 space-y-2">
           <Link
             to="/templates"
-            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
+            className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
             onClick={() => setOpen(false)}
           >
             Templates
           </Link>
           <a
             href="#features"
-            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
+            className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
             onClick={() => setOpen(false)}
           >
             Features
           </a>
           <a
             href="#how-it-works"
-            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
+            className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
             onClick={() => setOpen(false)}
           >
             Architecture
           </a>
-          <div className="pt-3 flex flex-col gap-2 border-t border-[#E7DFD5]">
+          <div className="pt-3 flex flex-col gap-2 border-t border-[var(--border-subtle)]">
+            <div className="flex items-center justify-between pb-2">
+              <span className="text-xs text-[var(--text-muted)]">Theme</span>
+              <ThemeToggle />
+            </div>
             <Link
               to="/login"
-              className="text-center text-sm py-2.5 border border-[#DCD3C7] rounded-full text-stone-800 font-semibold bg-white"
+              className="text-center text-sm py-2.5 border border-[var(--border-subtle)] rounded-full text-[var(--text-primary)] font-semibold bg-[var(--bg-surface)]"
               onClick={() => setOpen(false)}
             >
               Sign in
             </Link>
             <Link
               to="/signup"
-              className="text-center text-sm py-2.5 bg-[#1C1917] text-white rounded-full font-semibold shadow-sm"
+              className="text-center text-sm py-2.5 bg-[var(--text-primary)] text-[var(--bg-page)] rounded-full font-semibold shadow-sm"
               onClick={() => setOpen(false)}
             >
               Get started free
