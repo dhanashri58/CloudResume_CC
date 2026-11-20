@@ -278,6 +278,9 @@ const LandingPage: React.FC = () => {
               <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
               <span className="font-bold text-blue-600 dark:text-blue-400 text-[11px] flex items-center gap-0.5">
                 ★ Live Deployment
+              <span className="font-bold text-amber-700 dark:text-amber-400 text-[11px] flex items-center gap-1">
+                <Sparkles size={11} className="text-amber-600 dark:text-amber-400" />
+                <span>Live Deployment</span>
               </span>
             </div>
 

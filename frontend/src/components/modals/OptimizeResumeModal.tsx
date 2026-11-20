@@ -642,6 +642,15 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 <span className="text-blue-500 font-bold">✦✦✦✦✦</span>
                 <span>Automated ATS Scoring &amp; Optimization</span>
                 <span className="font-semibold text-blue-600 dark:text-blue-400">★ Google Gemini AI</span>
+              <div className="flex items-center justify-center gap-2 mt-1.5 text-xs text-[var(--text-secondary)]">
+                <span className="font-bold text-[var(--text-primary)]">AI-POWERED</span>
+                <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+                <span>Automated ATS Scoring &amp; Optimization</span>
+                <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+                <span className="font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                  <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+                  <span>Google Gemini AI</span>
+                </span>
               </div>
             </div>
 
@@ -803,18 +812,22 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                     <div className="flex items-center gap-2.5">
                       <img
                         src="/avatars/candidate-avatar.png"
-                        alt="Tanmay Kumbhare"
+                        alt={parsedData?.personal_info?.name || "Tanmay Kumbhare"}
                         className="w-8 h-8 rounded-lg object-cover border border-white/40 shrink-0"
                       />
                       <div>
                         <h4
-                          className="font-black uppercase tracking-wider leading-none"
+                          className="font-black uppercase tracking-wider leading-none font-sans"
                           style={{ fontSize: `${headingSize}px` }}
                         >
                           {parsedData?.personal_info?.name || "TANMAY KUMBHARE"}
                         </h4>
                         <p className="text-[10px] text-white/80 mt-1">
                           {parsedData?.personal_info?.title || "Senior Full-Stack & Cloud Engineer"} · {parsedData?.personal_info?.location || "Pune, India"}
+                          {parsedData?.personal_info?.name || 'TANMAY KUMBHARE'}
+                        </h4>
+                        <p className="text-[10px] text-white/80 mt-1">
+                          {parsedData?.personal_info?.title || 'Senior Full-Stack & Cloud Engineer'} · {parsedData?.personal_info?.location || 'Pune, India'}
                         </p>
                       </div>
                     </div>
