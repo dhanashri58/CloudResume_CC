@@ -58,7 +58,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
   };
 
   const handleUseSample = () => {
-    setSelectedFile('aarav_sharma_cloud_engineer_resume.pdf');
+    setSelectedFile('tanmay_kumbhare_cloud_engineer_resume.pdf');
   };
 
   const handleProceedToStep2 = () => {
@@ -224,10 +224,10 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 Here's how to get hired 2x as fast¹
               </h2>
               <div className="flex items-center justify-center gap-2 mt-1 text-xs text-[var(--text-secondary)]">
-                <span className="font-bold text-[var(--text-primary)]">EXCELLENT</span>
-                <span className="text-emerald-500 font-bold">★★★★★</span>
-                <span>4.5 out of 5 based on 19,914 reviews</span>
-                <span className="font-semibold text-emerald-600">★ Trustpilot</span>
+                <span className="font-bold text-[var(--text-primary)]">AI-POWERED</span>
+                <span className="text-blue-500 font-bold">✦✦✦✦✦</span>
+                <span>Automated ATS Scoring &amp; Optimization</span>
+                <span className="font-semibold text-blue-600 dark:text-blue-400">★ Google Gemini AI</span>
               </div>
             </div>
 
@@ -384,16 +384,23 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                     className="p-3 -mx-5 -mt-5 mb-4 rounded-t-xl text-white flex items-center justify-between transition-colors duration-200"
                     style={{ backgroundColor: activeColor }}
                   >
-                    <div>
-                      <h4
-                        className="font-black uppercase tracking-wider leading-none"
-                        style={{ fontSize: `${headingSize}px` }}
-                      >
-                        AARAV SHARMA
-                      </h4>
-                      <p className="text-[10px] text-white/80 mt-1">
-                        Senior Full-Stack &amp; Cloud Engineer · New Delhi, India
-                      </p>
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src="/avatars/candidate-avatar.png"
+                        alt="Tanmay Kumbhare"
+                        className="w-8 h-8 rounded-lg object-cover border border-white/40 shrink-0"
+                      />
+                      <div>
+                        <h4
+                          className="font-black uppercase tracking-wider leading-none"
+                          style={{ fontSize: `${headingSize}px` }}
+                        >
+                          TANMAY KUMBHARE
+                        </h4>
+                        <p className="text-[10px] text-white/80 mt-1">
+                          Senior Full-Stack &amp; Cloud Engineer · Pune, India
+                        </p>
+                      </div>
                     </div>
                     <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/20 font-bold">
                       ATS 98%
