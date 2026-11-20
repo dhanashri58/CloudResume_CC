@@ -637,11 +637,6 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--text-primary)] font-sans">
                 Here's how to get hired 2x as fast¹
               </h2>
-              <div className="flex items-center justify-center gap-2 mt-1 text-xs text-[var(--text-secondary)]">
-                <span className="font-bold text-[var(--text-primary)]">AI-POWERED</span>
-                <span className="text-blue-500 font-bold">✦✦✦✦✦</span>
-                <span>Automated ATS Scoring &amp; Optimization</span>
-                <span className="font-semibold text-blue-600 dark:text-blue-400">★ Google Gemini AI</span>
               <div className="flex items-center justify-center gap-2 mt-1.5 text-xs text-[var(--text-secondary)]">
                 <span className="font-bold text-[var(--text-primary)]">AI-POWERED</span>
                 <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
@@ -824,10 +819,6 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                         </h4>
                         <p className="text-[10px] text-white/80 mt-1">
                           {parsedData?.personal_info?.title || "Senior Full-Stack & Cloud Engineer"} · {parsedData?.personal_info?.location || "Pune, India"}
-                          {parsedData?.personal_info?.name || 'TANMAY KUMBHARE'}
-                        </h4>
-                        <p className="text-[10px] text-white/80 mt-1">
-                          {parsedData?.personal_info?.title || 'Senior Full-Stack & Cloud Engineer'} · {parsedData?.personal_info?.location || 'Pune, India'}
                         </p>
                       </div>
                     </div>
