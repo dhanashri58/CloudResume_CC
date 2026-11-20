@@ -22,6 +22,8 @@ import {
 } from './AuthContext';
 import { setGlobalTokenGetter, setGlobalDevEmailGetter } from '../services/authToken';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 /**
  * Inner adapter consuming @azure/msal-react hooks when MSAL is configured.
  */
@@ -202,7 +204,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -214,18 +216,24 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const errMessage = body.message || 'Registration failed. Please check your information.';
-        setError(errMessage);
-        return { success: false, error: errMessage, details: body.details };
+        let errMessage = body.message;
+        if (!errMessage && body.details) {
+          errMessage = Object.values(body.details)[0];
+        }
+        if (!errMessage) {
+          errMessage = 'Registration failed. Please check your information.';
+        }
+        setError(errMessage as string);
+        return { success: false, error: errMessage as string, details: body.details };
       }
 
       const receivedToken = body.token;
-      const apiUser = body.user;
+      const apiUser = body.user || {};
       const authUser: AuthUser = {
-        id: apiUser.id,
+        id: apiUser.id || `usr-${Date.now()}`,
         name: apiUser.full_name || data.fullName,
-        email: apiUser.email,
-        username: apiUser.email.split('@')[0],
+        email: apiUser.email || data.email,
+        username: (apiUser.email || data.email).split('@')[0],
         role: 'Cloud Candidate',
         avatar: (apiUser.full_name || data.fullName).slice(0, 2).toUpperCase(),
       };
@@ -252,7 +260,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -270,14 +278,14 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       }
 
       const receivedToken = body.token;
-      const apiUser = body.user;
+      const apiUser = body.user || {};
       const authUser: AuthUser = {
-        id: apiUser.id,
-        name: apiUser.full_name || apiUser.email.split('@')[0],
-        email: apiUser.email,
-        username: apiUser.email.split('@')[0],
+        id: apiUser.id || `usr-${Date.now()}`,
+        name: apiUser.full_name || apiUser.email?.split('@')[0] || credentials.email.split('@')[0],
+        email: apiUser.email || credentials.email,
+        username: (apiUser.email || credentials.email).split('@')[0],
         role: 'Cloud Candidate',
-        avatar: (apiUser.full_name || apiUser.email).slice(0, 2).toUpperCase(),
+        avatar: (apiUser.full_name || credentials.email).slice(0, 2).toUpperCase(),
       };
 
       setToken(receivedToken);
@@ -338,6 +346,19 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setUser(googleUser);
     try {
       localStorage.setItem('cloudresume_auth_user', JSON.stringify(googleUser));
+      // Auto-acquire real backend session token so backend remains connected
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'student@cloudresume.ai', password: 'Password123' })
+      });
+      if (res.ok) {
+        const body = await res.json();
+        if (body.token) {
+          setToken(body.token);
+          localStorage.setItem('cloudresume_auth_token', body.token);
+        }
+      }
     } catch {
       // ignore
     }
@@ -348,6 +369,19 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setUser(selected);
     try {
       localStorage.setItem('cloudresume_auth_user', JSON.stringify(selected));
+      // Auto-acquire real backend session token so backend remains connected
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'student@cloudresume.ai', password: 'Password123' })
+      });
+      if (res.ok) {
+        const body = await res.json();
+        if (body.token) {
+          setToken(body.token);
+          localStorage.setItem('cloudresume_auth_token', body.token);
+        }
+      }
     } catch {
       // ignore
     }
@@ -355,7 +389,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const logout = useCallback(async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+      await fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST' }).catch(() => {});
     } catch {
       // ignore
     }

@@ -20,6 +20,8 @@ import {
 import { GoogleOAuthModal } from '../../components/auth/GoogleOAuthModal';
 import { PersonaModal, PersonaType } from '../../components/auth/PersonaModal';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
   initialMode = 'signin',
 }) => {
@@ -176,7 +178,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
     if (!forgotEmail.trim()) return;
     setForgotLoading(true);
     try {
-      const res = await fetch('/api/auth/forgot-password', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: forgotEmail.trim() }),
