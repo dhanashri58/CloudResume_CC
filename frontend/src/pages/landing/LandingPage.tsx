@@ -11,7 +11,6 @@ import {
   Globe,
   TrendingUp,
   ArrowUpRight,
-  Star,
   Zap,
 } from 'lucide-react';
 import OptimizeResumeModal from '../../components/modals/OptimizeResumeModal';

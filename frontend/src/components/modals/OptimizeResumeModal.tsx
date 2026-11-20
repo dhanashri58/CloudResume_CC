@@ -17,7 +17,6 @@ import {
   AlertCircle,
   Loader2,
   Trash2,
-  Star,
   ExternalLink,
 } from 'lucide-react';
 
@@ -644,7 +643,6 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 <span>Automated ATS Scoring &amp; Optimization</span>
                 <span className="font-semibold text-blue-600 dark:text-blue-400">★ Google Gemini AI</span>
               </div>
-              </div>
             </div>
 
             {/* Workspace: Left Steps + Center Editor Preview */}
@@ -819,7 +817,6 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                           {parsedData?.personal_info?.title || "Senior Full-Stack & Cloud Engineer"} · {parsedData?.personal_info?.location || "Pune, India"}
                         </p>
                       </div>
-                    </div>
                     </div>
                     <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-white/20 font-bold border border-white/30">
                       ATS {parsedData?.ats_score || 96}%
