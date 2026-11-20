@@ -10,7 +10,7 @@ import {
   Eye,
   Download,
   Wand2,
-  Sparkles,
+  Bot,
   ArrowLeft,
   RefreshCw,
   Check,
@@ -567,7 +567,7 @@ const EditorPage: React.FC = () => {
 
           <Link to="/ai">
             <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)] transition-colors">
-              <Sparkles size={13} className="text-[var(--accent-primary)]" />
+              <Bot size={13} className="text-[var(--accent-primary)]" />
               AI assist
             </button>
           </Link>
@@ -672,7 +672,7 @@ const EditorPage: React.FC = () => {
                   onClick={() => setIsSummaryModalOpen(true)}
                   className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  <Sparkles size={12} />
+                  <Wand2 size={12} />
                   Improve with AI
                 </button>
               </div>
@@ -780,7 +780,7 @@ const EditorPage: React.FC = () => {
                         onClick={() => setAiExpTarget(exp)}
                         className="flex items-center gap-1 text-[11px] text-amber-700 hover:text-amber-800 font-bold"
                       >
-                        <Sparkles size={11} />
+                        <Wand2 size={11} />
                         Enhance with AI
                       </button>
                     </div>
@@ -1234,7 +1234,7 @@ const SummaryAIModal: React.FC<{
         <div className="flex items-center justify-between border-b border-[#EFEAE2] pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 flex items-center justify-center">
-              <Sparkles size={18} />
+              <Wand2 size={18} />
             </div>
             <div>
               <h3 className="text-base font-bold text-[#1C1917] font-serif">Improve Summary with AI</h3>
@@ -1303,7 +1303,7 @@ const SummaryAIModal: React.FC<{
           </Button>
           {!result ? (
             <Button size="sm" onClick={handleGenerate} loading={loading} disabled={loading || !currentSummary.trim()}>
-              <Sparkles size={13} className="mr-1" />
+              <Wand2 size={13} className="mr-1" />
               Generate Improvement
             </Button>
           ) : (
@@ -1372,7 +1372,7 @@ const ExperienceAIModal: React.FC<{
         <div className="flex items-center justify-between border-b border-[#EFEAE2] pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 flex items-center justify-center">
-              <Sparkles size={18} />
+              <Wand2 size={18} />
             </div>
             <div>
               <h3 className="text-base font-bold text-[#1C1917] font-serif">
@@ -1450,7 +1450,7 @@ const ExperienceAIModal: React.FC<{
           </Button>
           {!result ? (
             <Button size="sm" onClick={handleGenerate} loading={loading} disabled={loading || !currentText.trim()}>
-              <Sparkles size={13} className="mr-1" />
+              <Wand2 size={13} className="mr-1" />
               Enhance with AI
             </Button>
           ) : (
@@ -1532,7 +1532,7 @@ const JobMatchModal: React.FC<{
         <div className="flex items-center justify-between border-b border-[#EFEAE2] pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 flex items-center justify-center">
-              <Sparkles size={18} />
+              <Wand2 size={18} />
             </div>
             <div>
               <h3 className="text-base font-bold text-[#1C1917] font-serif">Job Description Match Analyzer</h3>
@@ -1656,7 +1656,7 @@ const JobMatchModal: React.FC<{
             {result ? 'Done' : 'Cancel'}
           </Button>
           <Button size="sm" onClick={handleAnalyze} loading={loading} disabled={loading || !jobDescription.trim()}>
-            <Sparkles size={13} className="mr-1" />
+            <Wand2 size={13} className="mr-1" />
             {result ? 'Re-analyze' : 'Analyze Match'}
           </Button>
         </div>

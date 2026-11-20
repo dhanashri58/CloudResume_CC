@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   X,
   Wand2,
-  Sparkles,
   Sliders,
   Download,
   Printer,
@@ -449,7 +448,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 >
                   <div className="flex items-center gap-2.5">
                     <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                      <Sparkles size={14} />
+                      <Wand2 size={14} />
                     </div>
                     <span>Use Sample Tech Resume</span>
                   </div>
@@ -669,7 +668,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 {/* Step Pill 2 */}
                 <div className="p-3.5 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                    <Sparkles size={16} />
+                    <Wand2 size={16} />
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[var(--text-primary)]">Add content with AI</p>

@@ -66,14 +66,14 @@ export const MOCK_RESUMES: ResumeCard[] = [
 
 export const SAMPLE_RESUME_DATA: ResumeData = {
   personalInfo: {
-    fullName: 'Alex Mercer',
-    email: 'alex.mercer@example.com',
-    phone: '+1 (415) 555-0192',
-    location: 'San Francisco, CA',
-    website: 'alexmercer.dev',
-    linkedin: 'linkedin.com/in/alexmercer',
-    github: 'github.com/alexmercer',
-    headline: 'Senior Product Manager · Builder · Strategist',
+    fullName: 'Tanmay Kumbhare',
+    email: 'tanmay.kumbhare24@vit.edu',
+    phone: '+91 98765 43210',
+    location: 'Pune, Maharashtra, India',
+    website: 'tanmay.dev',
+    linkedin: 'linkedin.com/in/tanmaykumbhare',
+    github: 'github.com/Tanmay-Kumbhare',
+    headline: 'Senior Cloud Solutions Architect & Systems Engineer',
   },
   summary:
     'Product leader with 8+ years scaling B2B SaaS products from 0 to $50M ARR. ' +

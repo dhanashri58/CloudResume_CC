@@ -17,10 +17,22 @@ const DEFAULT_ACCOUNTS: GoogleAccount[] = [
     avatarText: 'TK',
   },
   {
-    name: 'Aarav Sharma',
-    email: 'aarav.sharma@gmail.com',
+    name: 'Khushi Ghumare',
+    email: 'khushi.ghumare24@vit.edu',
     avatarBg: 'bg-gradient-to-tr from-amber-500 to-orange-600',
-    avatarText: 'AS',
+    avatarText: 'KG',
+  },
+  {
+    name: 'Dhanashri Khode',
+    email: 'dhanashri.khode24@vit.edu',
+    avatarBg: 'bg-gradient-to-tr from-purple-500 to-pink-600',
+    avatarText: 'DK',
+  },
+  {
+    name: 'Hemantkumar Lakhane',
+    email: 'hemantkumar.lakhane24@vit.edu',
+    avatarBg: 'bg-gradient-to-tr from-emerald-500 to-teal-600',
+    avatarText: 'HL',
   },
 ];
 

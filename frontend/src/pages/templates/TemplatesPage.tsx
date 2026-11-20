@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
   ArrowRight,
-  Sparkles,
+  Zap,
   ChevronDown,
   Check,
   Eye,
@@ -126,7 +126,7 @@ export const TemplatesPage: React.FC = () => {
         {/* ─── PAGE HEADER ─────────────────────────────────────────────────── */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3 border border-amber-500/20">
-            <Sparkles size={13} className="text-amber-600 dark:text-amber-400" />
+            <Layers size={13} className="text-amber-600 dark:text-amber-400" />
             <span>28 Production-Grade Engineered Architectures</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-[var(--text-primary)] tracking-tight font-sans">
@@ -361,7 +361,7 @@ export const TemplatesPage: React.FC = () => {
                         </span>
                       ) : template.popular ? (
                         <span className="shrink-0 text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-800 dark:text-amber-300 flex items-center gap-0.5">
-                          <Sparkles size={8} className="text-amber-600 dark:text-amber-400" />
+                          <Zap size={8} className="text-amber-600 dark:text-amber-400" />
                           <span>Popular</span>
                         </span>
                       ) : template.atsScore && template.atsScore >= 98 ? (
