@@ -13,8 +13,6 @@ import pytest
 from app.services.storage_service import (
     GoogleCloudStorageProvider,
     StorageService,
-    StorageError,
-    StorageConfigurationError,
 )
 from app.services.keyvault_service import KeyVaultService
 from app.services.token_verifier import TokenVerifier
@@ -206,4 +204,3 @@ def test_gcp_deploy_workflow_structure():
     assert "google-github-actions/setup-gcloud@v2" in content
     assert "gcloud run deploy" in content
     assert "/api/health" in content
-
