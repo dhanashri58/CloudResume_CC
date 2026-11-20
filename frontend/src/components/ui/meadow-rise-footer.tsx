@@ -1229,7 +1229,7 @@ export default function MeadowRiseFooter({
   mist = 0.55,
   drift = 1,
   interactive = true,
-  scrollParallax = true,
+  scrollParallax = false,
   botanicals = true,
   height = "920px",
   heroHeight = "clamp(440px, 52vh, 560px)",
@@ -1242,8 +1242,8 @@ export default function MeadowRiseFooter({
   const heroRef = React.useRef<HTMLDivElement | null>(null);
   const sceneRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
-  const revealAt = React.useRef<number | null>(null);
-  const [inView, setInView] = React.useState(false);
+  const revealAt = React.useRef<number | null>(-1e9);
+  const [inView, setInView] = React.useState(true);
   const [dark, setDark] = React.useState(true);
   const [email, setEmail] = React.useState("");
   const [formState, setFormState] = React.useState("idle");

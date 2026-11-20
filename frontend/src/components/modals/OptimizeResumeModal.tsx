@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 import {
   UploadCloud,
   FileText,
@@ -248,7 +250,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
         const formData = new FormData();
         formData.append('file', fileObj);
 
-        const response = await fetch('/api/resumes/upload-optimize', {
+        const response = await fetch(`${API_BASE_URL}/api/resumes/upload-optimize`, {
           method: 'POST',
           body: formData,
         });
@@ -265,7 +267,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
           ? SAMPLE_TECH_RESUME_TEXT
           : `Resume imported from ${importSource || 'cloud'}: ${selectedFileName}\n${SAMPLE_TECH_RESUME_TEXT}`;
 
-        const response = await fetch('/api/resumes/upload-optimize', {
+        const response = await fetch(`${API_BASE_URL}/api/resumes/upload-optimize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -636,20 +638,12 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--text-primary)] font-sans">
                 Here's how to get hired 2x as fast¹
               </h2>
-              <div className="flex items-center justify-center gap-2 mt-1.5 text-xs text-[var(--text-secondary)]">
-                <span className="font-bold text-[var(--text-primary)] uppercase">EXCELLENT</span>
-                <div className="flex items-center gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <span key={s} className="w-3.5 h-3.5 bg-emerald-600 text-white rounded-[2px] flex items-center justify-center">
-                      <Star size={9} className="fill-white text-white" />
-                    </span>
-                  ))}
-                </div>
-                <span className="text-[11px]">4.5 out of 5 based on 19,914 reviews</span>
-                <span className="font-bold text-emerald-700 dark:text-emerald-400 text-[11px] flex items-center gap-1">
-                  <Star size={10} className="fill-emerald-600 text-emerald-600" />
-                  <span>Trustpilot</span>
-                </span>
+              <div className="flex items-center justify-center gap-2 mt-1 text-xs text-[var(--text-secondary)]">
+                <span className="font-bold text-[var(--text-primary)]">AI-POWERED</span>
+                <span className="text-blue-500 font-bold">✦✦✦✦✦</span>
+                <span>Automated ATS Scoring &amp; Optimization</span>
+                <span className="font-semibold text-blue-600 dark:text-blue-400">★ Google Gemini AI</span>
+              </div>
               </div>
             </div>
 
@@ -808,16 +802,24 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                     className="p-3 -mx-5 -mt-5 mb-4 rounded-t-2xl text-white flex items-center justify-between transition-colors duration-200"
                     style={{ backgroundColor: activeColor }}
                   >
-                    <div>
-                      <h4
-                        className="font-black uppercase tracking-wider leading-none font-sans"
-                        style={{ fontSize: `${headingSize}px` }}
-                      >
-                        {parsedData?.personal_info?.name || 'AARAV SHARMA'}
-                      </h4>
-                      <p className="text-[10px] text-white/80 mt-1">
-                        {parsedData?.personal_info?.title || 'Senior Full-Stack & Cloud Engineer'} · {parsedData?.personal_info?.location || 'New Delhi, India'}
-                      </p>
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src="/avatars/candidate-avatar.png"
+                        alt="Tanmay Kumbhare"
+                        className="w-8 h-8 rounded-lg object-cover border border-white/40 shrink-0"
+                      />
+                      <div>
+                        <h4
+                          className="font-black uppercase tracking-wider leading-none"
+                          style={{ fontSize: `${headingSize}px` }}
+                        >
+                          {parsedData?.personal_info?.name || "TANMAY KUMBHARE"}
+                        </h4>
+                        <p className="text-[10px] text-white/80 mt-1">
+                          {parsedData?.personal_info?.title || "Senior Full-Stack & Cloud Engineer"} · {parsedData?.personal_info?.location || "Pune, India"}
+                        </p>
+                      </div>
+                    </div>
                     </div>
                     <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-white/20 font-bold border border-white/30">
                       ATS {parsedData?.ats_score || 96}%

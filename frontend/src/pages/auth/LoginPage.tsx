@@ -373,7 +373,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   autoComplete="name"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Alex Mercer"
+                  placeholder="e.g. Tanmay Kumbhare"
                   className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
               </div>
