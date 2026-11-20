@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, SlidersHorizontal, Star, Lock, ArrowRight, Sun } from 'lucide-react';
+import { Search, SlidersHorizontal, Star, Lock, ArrowRight, Sparkles } from 'lucide-react';
 import { RESUME_TEMPLATES } from '../../data/mockData';
 import { Button } from '../../components/ui';
 import type { TemplateCategory, ResumeTemplate } from '../../types';
@@ -25,16 +25,16 @@ const TemplateCard: React.FC<{
 
   return (
     <div
-      className={`group relative rounded-3xl border overflow-hidden bg-white transition-all duration-300 cursor-pointer shadow-sm ${
+      className={`group relative rounded-3xl border overflow-hidden bg-[var(--bg-surface)] transition-all duration-300 cursor-pointer shadow-xs ${
         selected
           ? 'border-amber-500 shadow-md ring-2 ring-amber-500/20'
-          : 'border-[#E7DFD5] hover:border-amber-400 hover:shadow-md hover:-translate-y-0.5'
+          : 'border-[var(--border-subtle)] hover:border-[var(--accent-primary)] hover:shadow-md hover:-translate-y-0.5'
       }`}
       onClick={() => onSelect(template.id)}
     >
       {/* Premium badge */}
       {template.premium && (
-        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-0.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-800">
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 rounded-full text-xs font-semibold text-amber-800 dark:text-amber-300">
           <Lock size={10} />
           Pro
         </div>
@@ -42,7 +42,7 @@ const TemplateCard: React.FC<{
 
       {/* Popular badge */}
       {template.popular && !template.premium && (
-        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-0.5 bg-amber-100 border border-amber-300/80 rounded-full text-xs font-bold text-amber-900 shadow-2xs">
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-0.5 bg-amber-500/15 border border-amber-500/30 rounded-full text-xs font-bold text-amber-800 dark:text-amber-300 shadow-2xs">
           <Star size={10} className="fill-amber-600 text-amber-600" />
           Popular
         </div>
@@ -96,7 +96,7 @@ const TemplateCard: React.FC<{
         </div>
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/5 transition-colors">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/30 transition-colors">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity">
             <Button size="sm" className="shadow-md">
               Use template
@@ -106,9 +106,9 @@ const TemplateCard: React.FC<{
 
         {/* Selected indicator */}
         {selected && (
-          <div className="absolute inset-0 flex items-center justify-center bg-amber-600/10 backdrop-blur-[1px]">
-            <div className="w-7 h-7 bg-amber-600 rounded-full flex items-center justify-center shadow-md">
-              <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 text-white fill-current">
+          <div className="absolute inset-0 flex items-center justify-center bg-amber-600/15 backdrop-blur-[1px]">
+            <div className="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center shadow-md">
+              <svg viewBox="0 0 12 12" className="w-4 h-4 text-white fill-current">
                 <path d="M10 3L5 9 2 6" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
               </svg>
             </div>
@@ -117,11 +117,11 @@ const TemplateCard: React.FC<{
       </div>
 
       {/* Card footer */}
-      <div className="p-4 border-t border-[#EFEAE2]">
+      <div className="p-4 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-sm font-bold text-[#1C1917] font-serif">{template.name}</p>
-            <p className="text-xs text-stone-500 mt-0.5 line-clamp-2">
+            <p className="text-sm font-bold text-[var(--text-primary)] font-serif">{template.name}</p>
+            <p className="text-xs text-[var(--text-muted)] mt-0.5 line-clamp-2">
               {template.description}
             </p>
           </div>
@@ -130,7 +130,7 @@ const TemplateCard: React.FC<{
           {template.tags.map((tag) => (
             <span
               key={tag}
-              className="text-[11px] px-2 py-0.5 bg-[#FAF8F5] border border-[#E7DFD5] text-stone-600 rounded-md font-medium"
+              className="text-[11px] px-2 py-0.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-secondary)] rounded-md font-medium"
             >
               {tag}
             </span>
@@ -164,17 +164,17 @@ const TemplatesPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6">
+    <div className="max-w-6xl mx-auto py-8 sm:py-12 px-4 sm:px-6">
       {/* Page header */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold mb-2">
-          <Sun size={12} className="text-amber-700" />
+      <div className="mb-6 sm:mb-8">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-2 border border-amber-500/20">
+          <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
           <span>Curated Color Palettes</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1C1917] mb-2 font-serif tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--text-primary)] mb-2 font-serif tracking-tight">
           Resume Templates
         </h1>
-        <p className="text-stone-600 text-sm">
+        <p className="text-[var(--text-secondary)] text-sm">
           {RESUME_TEMPLATES.length} professionally crafted templates engineered for ATS compatibility and vector ReportLab PDF export.
         </p>
       </div>
@@ -185,14 +185,14 @@ const TemplatesPage: React.FC = () => {
         <div className="relative flex-1 max-w-xs">
           <Search
             size={15}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
           />
           <input
             type="text"
             placeholder="Search templates…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 text-xs border border-[#E7DFD5] rounded-full bg-white text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 shadow-2xs"
+            className="w-full pl-9 pr-3.5 py-2 text-xs border border-[var(--border-subtle)] rounded-full bg-[var(--bg-surface)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] shadow-2xs transition-colors"
           />
         </div>
 
@@ -204,8 +204,8 @@ const TemplatesPage: React.FC = () => {
               onClick={() => setCategory(cat.value)}
               className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all ${
                 category === cat.value
-                  ? 'bg-[#1C1917] text-white shadow-sm'
-                  : 'bg-white border border-[#DCD3C7] text-stone-600 hover:bg-[#FAF7F2] hover:text-[#1C1917]'
+                  ? 'bg-[var(--text-primary)] text-[var(--bg-page)] shadow-xs'
+                  : 'bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-primary)]/50'
               }`}
             >
               {cat.label}
@@ -215,11 +215,11 @@ const TemplatesPage: React.FC = () => {
       </div>
 
       {/* Results count */}
-      <div className="flex items-center justify-between mb-5">
-        <p className="text-xs text-stone-500 font-medium">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-xs text-[var(--text-muted)] font-medium">
           {filtered.length} template{filtered.length !== 1 ? 's' : ''} available
         </p>
-        <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] font-medium">
           <SlidersHorizontal size={13} />
           Sort: Recommended first
         </div>
@@ -227,12 +227,12 @@ const TemplatesPage: React.FC = () => {
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16 text-stone-500 bg-white rounded-3xl border border-[#E7DFD5] p-8">
-          <p className="text-sm font-semibold mb-1 text-stone-800">No templates found</p>
+        <div className="text-center py-14 text-[var(--text-muted)] bg-[var(--bg-surface)] rounded-3xl border border-[var(--border-subtle)] p-8">
+          <p className="text-sm font-semibold mb-1 text-[var(--text-primary)]">No templates found</p>
           <p className="text-xs">Try a different search query or category filter.</p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {filtered.map((t) => (
             <TemplateCard
               key={t.id}
@@ -246,12 +246,12 @@ const TemplatesPage: React.FC = () => {
 
       {/* CTA when template selected */}
       {selectedId && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white border border-[#E7DFD5] shadow-2xl rounded-full px-6 py-3.5 flex items-center gap-4">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-2xl rounded-full px-6 py-3.5 flex items-center gap-4 animate-fadeIn">
           <div>
-            <p className="text-xs font-bold text-[#1C1917]">
+            <p className="text-xs font-bold text-[var(--text-primary)]">
               {RESUME_TEMPLATES.find((t) => t.id === selectedId)?.name} selected
             </p>
-            <p className="text-[11px] text-stone-500">
+            <p className="text-[11px] text-[var(--text-muted)]">
               Ready to craft your resume?
             </p>
           </div>

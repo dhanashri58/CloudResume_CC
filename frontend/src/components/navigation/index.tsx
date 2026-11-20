@@ -223,6 +223,23 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => (
 export const PublicNav: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+
+  const isTemplates = location.pathname === '/templates';
+  const isFeatures = location.hash === '#features';
+  const isArch = location.hash === '#architecture';
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${id}`);
+      }
+    }
+    setOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--bg-page)]/90 backdrop-blur-xl border-b border-[var(--border-subtle)] transition-colors duration-250 select-none">
@@ -242,22 +259,36 @@ export const PublicNav: React.FC = () => {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 text-xs bg-[var(--bg-subtle)] px-3 py-1.5 rounded-full border border-[var(--border-subtle)] shadow-inner">
+        <nav className="hidden md:flex items-center gap-1 text-xs bg-[var(--bg-subtle)] px-2.5 py-1 rounded-full border border-[var(--border-subtle)] shadow-inner">
           <Link
             to="/templates"
-            className="px-3.5 py-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-surface)] font-medium transition-all"
+            className={`px-3.5 py-1.5 rounded-full font-semibold transition-all ${
+              isTemplates
+                ? 'bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-xs border border-[var(--border-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+            }`}
           >
             Templates
           </Link>
           <a
-            href="#features"
-            className="px-3.5 py-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-surface)] font-medium transition-all"
+            href="/#features"
+            onClick={(e) => handleNavClick(e, 'features')}
+            className={`px-3.5 py-1.5 rounded-full font-semibold transition-all ${
+              isFeatures
+                ? 'bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-xs border border-[var(--border-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+            }`}
           >
             Features
           </a>
           <a
-            href="#how-it-works"
-            className="px-3.5 py-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-surface)] font-medium transition-all"
+            href="/#architecture"
+            onClick={(e) => handleNavClick(e, 'architecture')}
+            className={`px-3.5 py-1.5 rounded-full font-semibold transition-all ${
+              isArch
+                ? 'bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-xs border border-[var(--border-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+            }`}
           >
             Architecture
           </a>
@@ -328,16 +359,16 @@ export const PublicNav: React.FC = () => {
             Templates
           </Link>
           <a
-            href="#features"
+            href="/#features"
             className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
-            onClick={() => setOpen(false)}
+            onClick={(e) => handleNavClick(e, 'features')}
           >
             Features
           </a>
           <a
-            href="#how-it-works"
+            href="/#architecture"
             className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
-            onClick={() => setOpen(false)}
+            onClick={(e) => handleNavClick(e, 'architecture')}
           >
             Architecture
           </a>

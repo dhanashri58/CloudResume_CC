@@ -786,23 +786,24 @@ const MRF_CSS = `
 .mrf-hero {
   position: relative;
   z-index: 2;
-  height: var(--mrf-hero);
+  min-height: var(--mrf-hero);
+  height: auto;
   flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(64px, 13%, 132px) 20px 0;
+  padding: clamp(48px, 8vw, 84px) 20px clamp(40px, 6vw, 64px);
   text-align: center;
   transform: translate3d(0, calc((1 - var(--mrf-k, 1)) * 56px), 0);
 }
 .mrf-h {
   margin: 0;
-  max-width: 15ch;
+  max-width: 22ch;
   font-family: var(--mrf-sans);
-  font-weight: 450;
-  font-size: clamp(38px, 6.3vw, 92px);
-  line-height: 1.02;
-  letter-spacing: -0.042em;
+  font-weight: 500;
+  font-size: clamp(28px, 4.2vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: var(--mrf-ink);
   text-wrap: balance;
 }

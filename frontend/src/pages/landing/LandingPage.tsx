@@ -16,6 +16,12 @@ import {
   Award,
   Layers,
   Lock,
+  Cloud,
+  Database,
+  KeyRound,
+  FileCode2,
+  Workflow,
+  Server,
 } from 'lucide-react';
 import { RESUME_TEMPLATES } from '../../data/mockData';
 import MeadowRiseFooter, { MeadowTheme } from '../../components/ui/meadow-rise-footer';
@@ -170,11 +176,11 @@ const HeroGlassPreview: React.FC = () => {
   );
 };
 
-// ─── Bento Grid Feature Cards ─────────────────────────────────────────────────
+// ─── Bento Grid Feature Cards (Features Section) ──────────────────────────────
 
 const BentoFeaturesSection: React.FC = () => {
   return (
-    <section id="features" className="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto relative">
+    <section id="features" className="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto relative scroll-mt-20">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3">
@@ -313,6 +319,207 @@ const BentoFeaturesSection: React.FC = () => {
   );
 };
 
+// ─── Dedicated Google Cloud Architecture Section ─────────────────────────────
+
+const CloudArchitectureSection: React.FC = () => {
+  const [activeTier, setActiveTier] = useState<string>('compute');
+
+  const ARCH_SERVICES = [
+    {
+      id: 'compute',
+      name: 'Google Cloud Run',
+      badge: 'Compute & Microservices',
+      icon: <Server className="text-blue-500" size={20} />,
+      role: 'Stateless Python Flask backend containerized with Docker and Gunicorn WSGI. Automatically scales from 0 to N instances on demand.',
+      specs: [
+        { label: 'Container Image', val: 'Distroless Python 3.11' },
+        { label: 'Scaling Profile', val: '0 to 100 Auto-Instances' },
+        { label: 'Latency', val: '<120ms P95 Response' },
+      ],
+      tag: 'Serverless Autoscaling',
+    },
+    {
+      id: 'ai',
+      name: 'Google Gemini 2.5 / 3.5 Flash',
+      badge: 'AI Intelligence Engine',
+      icon: <Sparkles className="text-amber-500" size={20} />,
+      role: 'Vertex AI & Google Generative Language SDK. Rewrites passive experience bullets into XYZ metrics and extracts resume ATS keywords.',
+      specs: [
+        { label: 'Model', val: 'gemini-2.5-flash / lite' },
+        { label: 'Methodology', val: 'Google XYZ Impact Formula' },
+        { label: 'Context Window', val: '1M+ Tokens Support' },
+      ],
+      tag: 'GenAI Vertex Pipeline',
+    },
+    {
+      id: 'pdf',
+      name: 'Python ReportLab Vector Engine',
+      badge: 'Document Rendering',
+      icon: <FileCode2 className="text-emerald-500" size={20} />,
+      role: 'Server-side vector compiler that writes directly into in-memory `io.BytesIO` streams. Two-pass NumberedCanvas computes total pages without disk writes.',
+      specs: [
+        { label: 'Compilation', val: 'Pure In-Memory Streams' },
+        { label: 'Output Fidelity', val: '100% Vector PDF' },
+        { label: 'Disk Footprint', val: '0 KB Temporary Files' },
+      ],
+      tag: 'In-Memory Stream',
+    },
+    {
+      id: 'data',
+      name: 'Google Cloud SQL & Storage',
+      badge: 'Persistence & Buckets',
+      icon: <Database className="text-purple-500" size={20} />,
+      role: 'Managed PostgreSQL instances with private IP VPC peering. Cloud Storage buckets archive compiled vector PDFs with secure signed URLs.',
+      specs: [
+        { label: 'Database', val: 'PostgreSQL 15 via SQLAlchemy' },
+        { label: 'Encryption', val: 'AES-256 at Rest & TLS Transit' },
+        { label: 'Multi-Tenant', val: 'Strict User ID Scoping' },
+      ],
+      tag: 'Managed ACID Storage',
+    },
+    {
+      id: 'security',
+      name: 'Secret Manager & OIDC Auth',
+      badge: 'Zero-Trust Security',
+      icon: <KeyRound className="text-rose-500" size={20} />,
+      role: 'Centralized runtime secret fetching with IAM role permissions. OIDC JWT verification validates RS256 token signatures against public Google JWKS.',
+      specs: [
+        { label: 'Credentials', val: 'Secret Manager Zero Hardcoding' },
+        { label: 'Token Spec', val: 'RS256 JWT Signed' },
+        { label: 'Password Hash', val: 'Scrypt via Werkzeug' },
+      ],
+      tag: 'Zero-Trust Perimeter',
+    },
+    {
+      id: 'frontend',
+      name: 'Modern Cloud SPA Client',
+      badge: 'Frontend Client Tier',
+      icon: <Cloud className="text-cyan-500" size={20} />,
+      role: 'React 18 single-page application built with Vite and Tailwind CSS. Features optimistic state updates, live AST scoring, and responsive theme engine.',
+      specs: [
+        { label: 'Framework', val: 'React 18 + Vite SPA' },
+        { label: 'Styling', val: 'Dynamic Themed Tailwind CSS' },
+        { label: 'Build Size', val: '<180 KB Gzip Bundle' },
+      ],
+      tag: 'Edge Client Tier',
+    },
+  ];
+
+  return (
+    <section id="architecture" className="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[var(--border-subtle)] scroll-mt-20">
+      {/* Section Header */}
+      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-3 border border-blue-500/20">
+          <Workflow size={13} />
+          System Design & Cloud Architecture
+        </div>
+        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight mb-3 font-serif">
+          Production Google Cloud Platform Stack
+        </h2>
+        <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
+          CloudResumeAI is architected from the ground up for serverless scale, sub-second latency, zero disk-write vulnerabilities, and strict multi-tenant isolation.
+        </p>
+
+        {/* Service selector tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-6">
+          {ARCH_SERVICES.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setActiveTier(s.id)}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                activeTier === s.id
+                  ? 'bg-[var(--text-primary)] text-[var(--bg-page)] shadow-xs'
+                  : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)]'
+              }`}
+            >
+              <span>{s.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Architecture Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        {ARCH_SERVICES.map((svc) => {
+          const isSelected = activeTier === svc.id;
+          return (
+            <div
+              key={svc.id}
+              onClick={() => setActiveTier(svc.id)}
+              className={`p-5 rounded-3xl border bg-[var(--bg-surface)] cursor-pointer transition-all duration-200 flex flex-col justify-between shadow-xs ${
+                isSelected
+                  ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-primary)]/20 shadow-md -translate-y-0.5'
+                  : 'border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/60'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center">
+                    {svc.icon}
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-muted)] font-bold">
+                    {svc.tag}
+                  </span>
+                </div>
+
+                <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 mb-0.5">
+                  {svc.badge}
+                </div>
+                <h3 className="text-base font-bold text-[var(--text-primary)] mb-2 tracking-tight">
+                  {svc.name}
+                </h3>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
+                  {svc.role}
+                </p>
+              </div>
+
+              {/* Technical specs block */}
+              <div className="pt-3 border-t border-[var(--border-subtle)] space-y-1.5 bg-[var(--bg-subtle)]/50 p-2.5 rounded-xl">
+                {svc.specs.map((sp, i) => (
+                  <div key={i} className="flex items-center justify-between text-[11px]">
+                    <span className="text-[var(--text-muted)] font-medium">{sp.label}:</span>
+                    <span className="text-[var(--text-primary)] font-mono font-semibold">{sp.val}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Cloud Data Pipeline Flow Strip */}
+      <div className="mt-8 p-4 sm:p-5 rounded-3xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)]">
+        <div className="text-xs font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2">
+          <Zap size={14} className="text-amber-600 dark:text-amber-400" />
+          End-to-End Request Execution Pipeline
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-center text-xs">
+          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <span className="block font-bold text-[var(--text-primary)]">1. React SPA</span>
+            <span className="text-[10px] text-[var(--text-muted)]">OIDC Auth Token</span>
+          </div>
+          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <span className="block font-bold text-[var(--text-primary)]">2. Cloud Run API</span>
+            <span className="text-[10px] text-[var(--text-muted)]">Flask + Gunicorn</span>
+          </div>
+          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <span className="block font-bold text-[var(--text-primary)]">3. Gemini AI</span>
+            <span className="text-[10px] text-[var(--text-muted)]">XYZ Prompt Tuning</span>
+          </div>
+          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <span className="block font-bold text-[var(--text-primary)]">4. ReportLab PDF</span>
+            <span className="text-[10px] text-[var(--text-muted)]">In-Memory Buffer</span>
+          </div>
+          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <span className="block font-bold text-[var(--text-primary)]">5. Vector Export</span>
+            <span className="text-[10px] text-[var(--text-muted)]">&lt;1.2s Delivery</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // ─── Template Preview Card ───────────────────────────────────────────────────
 
 const DarkTemplatePreviewCard: React.FC<{
@@ -321,12 +528,12 @@ const DarkTemplatePreviewCard: React.FC<{
   accent: string;
   category?: string;
 }> = ({ name, primary, accent, category }) => (
-  <div className="group rounded-3xl border border-[var(--border-subtle)] overflow-hidden bg-[var(--bg-surface)] hover:border-[var(--accent-primary)] hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-lg">
+  <div className="group rounded-3xl border border-[var(--border-subtle)] overflow-hidden bg-[var(--bg-surface)] hover:border-[var(--accent-primary)] hover:-translate-y-1 transition-all duration-300 shadow-xs hover:shadow-lg">
     {/* Colored header line */}
     <div className="h-2 w-full" style={{ background: accent }} />
     <div className="p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">{name}</p>
+        <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight font-serif">{name}</p>
         {category && (
           <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-muted)] font-semibold">
             {category}
@@ -436,7 +643,7 @@ const LandingPage: React.FC = () => {
       {/* ─── Hero Section ─────────────────────────────────────────────────── */}
       <section className="pt-10 sm:pt-16 pb-8 sm:pb-12 px-4 sm:px-6 max-w-6xl mx-auto text-center relative">
         {/* Release Pill with Sun Icon */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs font-semibold mb-6 hover:border-[var(--accent-primary)] transition-colors shadow-2xs">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs font-semibold mb-6 hover:border-[var(--accent-primary)] transition-colors shadow-2xs">
           <Sun size={13} className="text-amber-600 dark:text-amber-400" />
           <span className="tracking-wide">ENGINEERED FOR GOOGLE CLOUD & GEMINI AI</span>
           <ArrowRight size={12} className="text-[var(--text-muted)]" />
@@ -472,7 +679,7 @@ const LandingPage: React.FC = () => {
           </Link>
         </div>
 
-        {/* Live Metrics Ticker Banner - Eliminates barren emptiness & builds instant credibility */}
+        {/* Live Metrics Ticker Banner */}
         <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 p-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-xs">
           <div className="text-center p-2 rounded-xl bg-[var(--bg-subtle)]">
             <div className="flex items-center justify-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
@@ -520,6 +727,9 @@ const LandingPage: React.FC = () => {
 
       {/* ─── Bento Grid Feature Section ───────────────────────────────────── */}
       <BentoFeaturesSection />
+
+      {/* ─── Dedicated Cloud Architecture Section ─────────────────────────── */}
+      <CloudArchitectureSection />
 
       {/* ─── Template Gallery Previews ────────────────────────────────────── */}
       <section className="py-10 sm:py-14 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[var(--border-subtle)]">
@@ -577,7 +787,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* ─── How It Works (Step Workflow Pipeline) ────────────────────────── */}
-      <section id="how-it-works" className="py-10 sm:py-14 px-4 sm:px-6 bg-[var(--bg-subtle)] border-y border-[var(--border-subtle)]">
+      <section id="how-it-works" className="py-10 sm:py-14 px-4 sm:px-6 bg-[var(--bg-subtle)] border-y border-[var(--border-subtle)] scroll-mt-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
             <span className="text-xs font-mono uppercase tracking-widest text-amber-700 dark:text-amber-400 mb-1.5 block font-semibold">
@@ -691,6 +901,7 @@ const LandingPage: React.FC = () => {
       <MeadowRiseFooter
         name="CloudResumeAI"
         preset={footerPreset}
+        heading="Engineering High-Impact Cloud Careers with Gemini AI"
         tagline="Next-generation cloud resume engineering powered by Google Cloud Platform & Gemini AI."
         subheading="Optimize for ATS scanners, craft impact bullets, and export vector PDFs in milliseconds."
         cta={{ label: "Start Building Free", href: "/dashboard" }}
