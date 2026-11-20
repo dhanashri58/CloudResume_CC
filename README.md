@@ -7,29 +7,30 @@ An enterprise-ready, AI-orchestrated cloud resume engineering platform designed 
 ---
 
 ## Table of Contents
+
 1. [Project Overview](#project-overview)
-2. [Problem Statement & Objectives](#problem-statement--objectives)
+2. [Problem Statement &amp; Objectives](#problem-statement--objectives)
 3. [Key Features](#key-features)
 4. [Technology Stack](#technology-stack)
 5. [System Architecture](#system-architecture)
 6. [Subsystems Deep Dive](#subsystems-deep-dive)
    - [Frontend Architecture](#frontend-architecture)
    - [Backend REST API](#backend-rest-api)
-   - [Database & Data Isolation](#database--data-isolation)
+   - [Database &amp; Data Isolation](#database--data-isolation)
    - [Google Gemini AI Integration](#google-gemini-ai-integration)
    - [ReportLab PDF Generation](#reportlab-pdf-generation)
    - [Microsoft Entra ID Authentication](#microsoft-entra-id-authentication)
    - [Azure Cloud Infrastructure](#azure-cloud-infrastructure)
-   - [Monitoring & Security Auditing](#monitoring--security-auditing)
-   - [CI/CD & Infrastructure as Code](#cicd--infrastructure-as-code)
+   - [Monitoring &amp; Security Auditing](#monitoring--security-auditing)
+   - [CI/CD &amp; Infrastructure as Code](#cicd--infrastructure-as-code)
 7. [API Endpoint Summary](#api-endpoint-summary)
-8. [Local Installation & Setup](#local-installation--setup)
+8. [Local Installation &amp; Setup](#local-installation--setup)
 9. [Docker Setup](#docker-setup)
-10. [Testing & Verification](#testing--verification)
+10. [Testing &amp; Verification](#testing--verification)
 11. [User Interface Screenshots](#user-interface-screenshots)
-12. [Project Limitations & Future Scope](#project-limitations--future-scope)
+12. [Project Limitations &amp; Future Scope](#project-limitations--future-scope)
 13. [Documentation Index](#documentation-index)
-14. [Contributors & License](#contributors--license)
+14. [Contributors &amp; License](#contributors--license)
 
 ---
 
@@ -38,6 +39,7 @@ An enterprise-ready, AI-orchestrated cloud resume engineering platform designed 
 **CloudResumeAI** bridges the gap between modern cloud-native engineering and real-world job application workflows. Job seekers can draft, customize, and maintain multiple resumes, evaluate their resumes against target job descriptions using **Google Gemini AI**, and download pixel-perfect, ATS-friendly vector PDFs.
 
 The entire project is built following strict cloud-native architectural patterns:
+
 - **Zero Secrets in Code**: All sensitive credentials are strictly managed through environment variables and Azure Key Vault.
 - **Least-Privilege Security**: Managed identities and role-based access control (RBAC) govern cloud access.
 - **Cost-Optimized Cloud Footprint**: Built to run on Azure serverless tiers with scale-to-zero in development environments.
@@ -47,10 +49,12 @@ The entire project is built following strict cloud-native architectural patterns
 ## Problem Statement & Objectives
 
 ### Problem Statement
+
 1. **Applicant Tracking System (ATS) Barriers**: Up to 75% of qualified resumes are eliminated by automated scanning systems due to poor formatting or missing role-specific keywords.
 2. **Cloud Architecture Educational Gap**: Traditional student projects often rely on unscalable monoliths with hardcoded credentials and manual deployments, failing to reflect modern cloud-native industry standards.
 
 ### Project Objectives
+
 - Engineer a high-performance **React 18** Single Page Application with dynamic resume previewing and ATS scoring.
 - Implement a robust **Python 3.12 Flask REST API** backed by an ACID-compliant **PostgreSQL 16** database.
 - Integrate Google Gemini (`gemini-3.5-flash-lite`) with sub-second response times, exponential retry backoff, and gateway timeout protection.
@@ -78,18 +82,18 @@ The entire project is built following strict cloud-native architectural patterns
 
 ## Technology Stack
 
-| Layer | Technology | Details |
-| :--- | :--- | :--- |
-| **Frontend SPA** | React 18, TypeScript, Vite 5 | Tailwind CSS, Lucide Icons, Dev Auth & Google / OIDC |
-| **Backend REST API** | Python 3.12, Flask 3.0, Gunicorn | Application Factory, SQLAlchemy ORM, Pydantic v2 |
-| **Database** | PostgreSQL 16 | Google Cloud SQL / Azure Database / Local PostgreSQL |
-| **AI Model** | Google Gemini (`gemini-3.5-flash-lite`)| Official Google GenAI SDK, 20s timeout, exponential backoff |
-| **PDF Engine** | Python ReportLab 4.x | In-memory canvas rendering, vector typography |
-| **Storage** | Google Cloud Storage (GCS), Azure Blob & Local | Private buckets/containers, user partition isolation |
-| **Identity (IAM)** | Google Identity / Entra ID / Dev Auth | OAuth 2.0 / OIDC, JWKS caching, dev auth fallback |
-| **IaC & Cloud** | Google Cloud Platform (GCP) & Azure | **Terraform** (`infra/terraform`), **Google Cloud Run**, Secret Manager |
-| **CI / CD** | GitHub Actions | Flake8, Pytest, Vitest, Docker build, Cloud Run deploy |
-| **Monitoring** | Cloud Logging & OpenTelemetry | `X-Request-ID` tracing, `Server-Timing`, Log Analytics |
+| Layer                      | Technology                                     | Details                                                                               |
+| :------------------------- | :--------------------------------------------- | :------------------------------------------------------------------------------------ |
+| **Frontend SPA**     | React 18, TypeScript, Vite 5                   | Tailwind CSS, Lucide Icons, Dev Auth & Google / OIDC                                  |
+| **Backend REST API** | Python 3.12, Flask 3.0, Gunicorn               | Application Factory, SQLAlchemy ORM, Pydantic v2                                      |
+| **Database**         | PostgreSQL 16                                  | Google Cloud SQL / Azure Database / Local PostgreSQL                                  |
+| **AI Model**         | Google Gemini (`gemini-3.5-flash-lite`)      | Official Google GenAI SDK, 20s timeout, exponential backoff                           |
+| **PDF Engine**       | Python ReportLab 4.x                           | In-memory canvas rendering, vector typography                                         |
+| **Storage**          | Google Cloud Storage (GCS), Azure Blob & Local | Private buckets/containers, user partition isolation                                  |
+| **Identity (IAM)**   | Google Identity / Entra ID / Dev Auth          | OAuth 2.0 / OIDC, JWKS caching, dev auth fallback                                     |
+| **IaC & Cloud**      | Google Cloud Platform (GCP) & Azure            | **Terraform** (`infra/terraform`), **Google Cloud Run**, Secret Manager |
+| **CI / CD**          | GitHub Actions                                 | Flake8, Pytest, Vitest, Docker build, Cloud Run deploy                                |
+| **Monitoring**       | Cloud Logging & OpenTelemetry                  | `X-Request-ID` tracing, `Server-Timing`, Log Analytics                            |
 
 ---
 
@@ -147,53 +151,62 @@ graph TD
 ## Subsystems Deep Dive
 
 ### Frontend Architecture
+
 - Built with **React 18** and **TypeScript** using **Vite**.
 - Uses an authentication context wrapping `@azure/msal-react` for Microsoft Entra ID login.
 - Features modular component architecture: resume sections (Experiences, Education, Projects, Skills), ATS match indicator, template switchers, and AI coach side-panel.
 
 ### Backend REST API
+
 - Organized via Flask **Application Factory** pattern (`app/__init__.py`).
 - Clear separation into **Routes** (HTTP handling), **Schemas** (Pydantic validation), **Services** (business logic), and **Repositories** (database operations).
 - Emits structured error envelopes with HTTP status codes and `X-Request-ID` trace headers.
 
 ### Database & Data Isolation
+
 - Relational schema in PostgreSQL 16 with UUID primary keys and cascading deletions.
 - Data tenancy is enforced on every query (`WHERE user_id = :current_user_id`).
 - Unauthorized cross-user access attempts return HTTP 404 (preventing ID enumeration) and trigger security audit events.
-- See [`docs/database.md`](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/database.md) for full ER diagrams.
+- See [`docs/database.md`](docs/database.md) for full ER diagrams.
 
 ### Google Gemini AI Integration
+
 - Powered by `gemini-3.5-flash-lite` for optimal response latency (typically 800ms - 1.4s).
 - SDK timeout configured via `types.HttpOptions(timeout=20000)`.
 - Handles rate-limiting (HTTP 429) via exponential backoff; maps server timeouts to `504 Gateway Timeout`.
 - Emits performance metrics via `Server-Timing: gemini;dur=<ms>`.
 
 ### ReportLab PDF Generation
+
 - Compiles resume data into high-resolution vector PDF streams directly in memory.
 - Renders multiple template styles with precise typography, custom margins, and bullet formatting.
 - Caches PDFs in object storage using partition naming: `users/{user_id}/resumes/{resume_id}.pdf`.
 
 ### Microsoft Entra ID Authentication
+
 - Dual-mode authentication:
   - **Production**: Validates JWT Bearer tokens against Microsoft's public JWKS endpoints with in-memory RSA key caching.
   - **Development**: Controlled `X-Dev-User-Email` header, strictly blocked in production environments (`FLASK_ENV=production`).
 - Implements Just-in-Time (JIT) provisioning for new users on initial login.
 
 ### Azure Cloud Infrastructure
+
 - Declarative **Azure Bicep** templates provision all cloud resources.
 - Configured with a **User-Assigned Managed Identity** adhering to least-privilege RBAC:
   - `Storage Blob Data Contributor` (scoped only to the resume blob storage account).
   - `Key Vault Secrets User` (scoped only to application secrets).
   - `AcrPull` (scoped only to Azure Container Registry).
-- Detailed cloud architecture guide in [`infra/README.md`](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/infra/README.md).
+- Detailed cloud architecture guide in [`infra/README.md`](infra/README.md).
 
 ### Monitoring & Security Auditing
+
 - **Structured Logging**: Timestamps formatted in ISO UTC, request IDs, and module names.
 - **SensitiveDataFilter**: Scrubs Bearer tokens, Gemini keys, and passwords before logging.
 - **Security Monitor**: Tracks failed authentication attempts; raises alerts when >= 5 failures occur in 5 minutes.
 - **Probes**: `/api/health` (comprehensive), `/api/health/live` (liveness), and `/api/health/ready` (readiness).
 
 ### CI/CD & Infrastructure as Code
+
 - **CI Workflow (`ci.yml`)**: Triggered on push and pull requests; executes Flake8, Pytest (109 tests), Vitest (52 tests), TypeScript typechecking, and Docker builds.
 - **Deploy Workflow (`deploy.yml`)**: Manual deployment using OIDC federated credentials, deploying Bicep templates and updating Container Apps revisions.
 
@@ -201,67 +214,103 @@ graph TD
 
 ## API Endpoint Summary
 
-| Method | Endpoint | Auth | Purpose |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | Public | Comprehensive health check (DB + Storage) |
-| `GET` | `/api/health/live` | Public | Fast container liveness probe |
-| `GET` | `/api/health/ready` | Public | Container readiness probe (returns 503 if DB disconnected) |
-| `GET` | `/api/resumes` | Required | List all resumes belonging to authenticated user |
-| `POST`| `/api/resumes` | Required | Create a new resume with nested sections |
-| `GET` | `/api/resumes/<id>` | Required | Retrieve full resume details |
-| `PUT` | `/api/resumes/<id>` | Required | Update resume details and sections |
-| `DELETE`| `/api/resumes/<id>`| Required | Delete resume and associated cached PDF |
-| `POST`| `/api/resumes/<id>/export-pdf`| Required | Generate and download ReportLab PDF |
-| `GET` | `/api/resumes/<id>/export-pdf`| Required | Download cached PDF |
-| `GET` | `/api/profile` | Required | Retrieve current user profile settings |
-| `PUT` | `/api/profile` | Required | Update user profile information |
-| `GET` | `/api/ai/status` | Public | Check if Gemini API is ready & verify model |
-| `POST`| `/api/ai/improve-summary` | Required | AI career summary enhancement |
-| `POST`| `/api/ai/improve-experience`| Required | AI experience bullet point optimizer (XYZ formula)|
-| `POST`| `/api/ai/match-job` | Required | Calculate ATS match score & keyword gaps |
-| `POST`| `/api/ai/chat` | Required | Conversational AI resume coaching |
+| Method     | Endpoint                         | Auth     | Purpose                                                    |
+| :--------- | :------------------------------- | :------- | :--------------------------------------------------------- |
+| `GET`    | `/api/health`                  | Public   | Comprehensive health check (DB + Storage)                  |
+| `GET`    | `/api/health/live`             | Public   | Fast container liveness probe                              |
+| `GET`    | `/api/health/ready`            | Public   | Container readiness probe (returns 503 if DB disconnected) |
+| `GET`    | `/api/resumes`                 | Required | List all resumes belonging to authenticated user           |
+| `POST`   | `/api/resumes`                 | Required | Create a new resume with nested sections                   |
+| `GET`    | `/api/resumes/<id>`            | Required | Retrieve full resume details                               |
+| `PUT`    | `/api/resumes/<id>`            | Required | Update resume details and sections                         |
+| `DELETE` | `/api/resumes/<id>`            | Required | Delete resume and associated cached PDF                    |
+| `POST`   | `/api/resumes/<id>/export-pdf` | Required | Generate and download ReportLab PDF                        |
+| `GET`    | `/api/resumes/<id>/export-pdf` | Required | Download cached PDF                                        |
+| `GET`    | `/api/profile`                 | Required | Retrieve current user profile settings                     |
+| `PUT`    | `/api/profile`                 | Required | Update user profile information                            |
+| `GET`    | `/api/ai/status`               | Public   | Check if Gemini API is ready & verify model                |
+| `POST`   | `/api/ai/improve-summary`      | Required | AI career summary enhancement                              |
+| `POST`   | `/api/ai/improve-experience`   | Required | AI experience bullet point optimizer (XYZ formula)         |
+| `POST`   | `/api/ai/match-job`            | Required | Calculate ATS match score & keyword gaps                   |
+| `POST`   | `/api/ai/chat`                 | Required | Conversational AI resume coaching                          |
 
-For detailed payloads and response schemas, see [`docs/api.md`](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/api.md).
+For detailed payloads and response schemas, see [`docs/api.md`](docs/api.md).
 
 ---
 
 ## Local Installation & Setup
 
-### GitHub Repository
-- **Repository Name**: `CLOUDRESUME_CC`
-- **Clone Command**:
-  ```bash
-  git clone https://github.com/<your-username>/CLOUDRESUME_CC.git
-  cd CLOUDRESUME_CC
-  ```
+### 1-Click Quickstart (`start.bat`) 🚀
 
-### Prerequisites
+For zero-configuration startup on Windows:
+
+```cmd
+start.bat
+```
+*(Simply double-click `start.bat` or run it from the command line).*
+
+The launcher automatically:
+1. Verifies Python 3.12/3.13 and Node.js v20+ installations.
+2. Checks/initializes the backend Python virtual environment (`backend/venv`) and installs dependencies.
+3. Checks/installs frontend npm packages (`frontend/node_modules`).
+4. Ensures `.env` files are in place with instant SQLite support and dev authentication enabled.
+5. Initializes the database tables.
+6. Launches the **Backend API** (port 5000) and **Frontend Vite SPA** (port 5173) in dedicated titled terminal windows.
+7. Opens `http://localhost:5173` automatically in your browser.
+
+#### Service & Endpoint Reference Table
+
+| Service / Component | URL / Endpoint | Purpose / Description |
+| :--- | :--- | :--- |
+| **Frontend Web App** | `http://localhost:5173` | React 18 Single Page Application |
+| **Backend REST API** | `http://localhost:5000` | Flask Application Factory Root |
+| **Health & Diagnostics** | `http://localhost:5000/api/health` | Service health, DB check & uptime |
+| **User Authentication** | `http://localhost:5000/api/auth/login` | Login, JWT generation & JIT sync |
+| **User Registration** | `http://localhost:5000/api/auth/register` | Create new email/password account |
+| **Resume Management** | `http://localhost:5000/api/resumes` | CRUD resumes & PDF generation |
+| **AI Resume Coach** | `http://localhost:5000/api/ai/analyze-resume` | Gemini AI ATS scoring & analysis |
+
+#### Default Test Identities (1-Click Demo Personas)
+
+On the login page (`http://localhost:5173/login`), click any demo button to log in instantly:
+- **Student Persona**: `alex.mercer@cloudresume.ai` (Alex Mercer)
+- **Evaluator Persona**: `evaluator@university.edu` (Prof. H. Sharma)
+- **Recruiter Persona**: `sarah.jenkins@techcloud.io` (Sarah Jenkins)
+
+---
+
+### Manual Dual-Terminal Setup
+
+#### Prerequisites
+
 - Node.js `v20+` and npm
-- Python `3.12`
-- Docker & Docker Compose
+- Python `3.12` or `3.13`
+- Docker & Docker Compose (optional for containerized mode)
 - Git
 
-### Dual-Terminal Setup
-
 #### Terminal 1: Backend (Python Flask API - Port 5000)
+
 > **Important**: The backend is written in Python Flask. Do **not** run `npm` commands inside the `backend` folder.
 
 ```powershell
 cd backend
 # 1. Activate Python virtual environment
-.\.venv\Scripts\Activate.ps1
+.\venv\Scripts\activate
 
 # 2. Run backend server
 python wsgi.py
 ```
+
 Backend API will start on `http://localhost:5000` (Health Check: `http://localhost:5000/api/health`).
 
 #### Terminal 2: Frontend (React 18 + Vite - Port 5173)
+
 ```powershell
 cd frontend
 # 1. Start the Vite development server
 npm run dev
 ```
+
 Open `http://localhost:5173` in your browser. All `/api/*` network calls are automatically proxied to the Python backend on port 5000.
 
 ---
@@ -297,6 +346,7 @@ To run the complete containerized application in a single command:
 ```bash
 docker-compose up --build
 ```
+
 - Frontend: `http://localhost:3000`
 - Backend API: `http://localhost:5000`
 - Health Check: `http://localhost:3000/api/health`
@@ -324,7 +374,7 @@ npm --prefix frontend run build
 docker-compose config
 ```
 
-Full testing documentation available in [`docs/testing.md`](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/testing.md).
+Full testing documentation available in [`docs/testing.md`](docs/testing.md).
 
 ---
 
@@ -361,11 +411,13 @@ Full testing documentation available in [`docs/testing.md`](file:///C:/Users/hp/
 ## Project Limitations & Future Scope
 
 ### Honest Project Limitations
+
 1. **Live Azure Deployment Status**: The infrastructure templates (Bicep) and GitHub Actions deploy workflows are fully implemented and verified via automated tests, but live deployment to Azure was not executed to avoid incurring student cloud billing.
 2. **Microsoft Entra ID Tenant Verification**: Live corporate tenant login requires active tenant admin consent; in local development, an authenticated test identity is simulated via controlled development headers.
 3. **Application Insights Live Ingestion**: OpenTelemetry is configured with zero-crash fallback and remains dormant locally until an active connection string is supplied.
 
 ### Realistic Future Enhancements
+
 - Asynchronous task worker for bulk resume exports.
 - Resume parsing via OCR or document intelligence to import existing PDF resumes.
 - Multi-lingual resume generation and international date/format localization.
@@ -374,17 +426,18 @@ Full testing documentation available in [`docs/testing.md`](file:///C:/Users/hp/
 
 ## Documentation Index
 
-Comprehensive engineering guides are available in the [`docs/`](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/) directory:
-- [Google Cloud Platform (GCP) Architecture & Migration Guide](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/GCP_MIGRATION_AND_ARCHITECTURE.md)
-- [System Architecture & Design Diagrams](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/architecture.md)
-- [Database Schema & ER Documentation](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/database.md)
-- [REST API Endpoint Specification](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/api.md)
-- [Cloud Computing Concept Mapping](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/cloud-computing-concepts.md)
-- [Setup & Deployment Manual](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/setup-and-deployment.md)
-- [Testing & Quality Assurance Report](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/testing.md)
-- [Student Viva & Oral Exam Guide](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/viva-questions.md)
-- [Project Presentation Guide](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/docs/project-presentation.md)
-- [Azure Target Architecture Guide](file:///C:/Users/hp/.gemini/antigravity/scratch/CloudResumeAI/infra/README.md)
+Comprehensive engineering guides are available in the [`docs/`](docs/) directory:
+
+- [Google Cloud Platform (GCP) Architecture & Migration Guide](docs/GCP_MIGRATION_AND_ARCHITECTURE.md)
+- [System Architecture & Design Diagrams](docs/architecture.md)
+- [Database Schema & ER Documentation](docs/database.md)
+- [REST API Endpoint Specification](docs/api.md)
+- [Cloud Computing Concept Mapping](docs/cloud-computing-concepts.md)
+- [Setup & Deployment Manual](docs/setup-and-deployment.md)
+- [Testing & Quality Assurance Report](docs/testing.md)
+- [Student Viva & Oral Exam Guide](docs/viva-questions.md)
+- [Project Presentation Guide](docs/project-presentation.md)
+- [Azure Target Architecture Guide](infra/README.md)
 
 ---
 
