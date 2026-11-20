@@ -273,6 +273,11 @@ const DashboardPage: React.FC = () => {
               <ShieldCheck size={13} />
               {user?.role || 'Google Cloud Verified'}
             </span>
+            {user?.email && (
+              <span className="text-xs text-[var(--text-muted)] font-mono bg-[var(--bg-subtle)] px-2.5 py-0.5 rounded-full border border-[var(--border-subtle)]">
+                {user.email}
+              </span>
+            )}
           </div>
           <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1">
             {activePersonaView === 'evaluator'

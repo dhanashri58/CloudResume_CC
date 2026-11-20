@@ -151,17 +151,26 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
       {isAuthenticated ? (
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <div className="hidden sm:flex flex-col items-end">
-            <span className="text-xs font-semibold text-[var(--text-primary)]">
-              {user?.name || 'Authenticated User'}
-            </span>
-            <span className="text-[10px] text-[var(--text-muted)] font-medium bg-[var(--bg-subtle)] px-2 py-0.5 rounded-full border border-[var(--border-subtle)] mt-0.5">
-              {user?.role || user?.email || 'Cloud Member'}
-            </span>
+          <div className="hidden sm:flex flex-col items-end leading-tight">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-bold text-[var(--text-primary)]">
+                {user?.name || 'Authenticated User'}
+              </span>
+              {user?.role && (
+                <span className="text-[9px] text-amber-700 dark:text-amber-400 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded-full border border-amber-500/20">
+                  {user.role}
+                </span>
+              )}
+            </div>
+            {user?.email && (
+              <span className="text-[11px] text-[var(--text-muted)] font-medium mt-0.5">
+                {user.email}
+              </span>
+            )}
           </div>
           <div
             className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-xs border border-[var(--border-subtle)]"
-            title={user?.email}
+            title={user?.email || user?.name}
           >
             {initials}
           </div>

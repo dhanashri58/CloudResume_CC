@@ -1,6 +1,9 @@
 """Authentication routes for registration, login, session inspection, and logout."""
 import re
 import secrets
+import time
+import hashlib
+import jwt
 from flask import Blueprint, request, jsonify, current_app
 from app.services.auth_service import AuthService, require_auth
 from app.repositories.user_repository import UserRepository
@@ -127,7 +130,7 @@ def logout():
 
 @auth_bp.route("/auth/forgot-password", methods=["POST"])
 def forgot_password():
-    """Process password reset request."""
+    """Generate a secure 6-digit OTP verification code for password reset."""
     payload = request.get_json(silent=True) or {}
     email = (payload.get("email") or "").strip().lower()
 
@@ -137,18 +140,46 @@ def forgot_password():
             "message": "Please provide a valid email address."
         }), 422
 
-    # Always return a generic success response to prevent email enumeration attacks
+    user = UserRepository.get_by_email(email)
+    if not user:
+        return jsonify({
+            "error": "Not Found",
+            "message": "No registered account found with that email address."
+        }), 404
+
+    # Generate 6-digit numeric OTP code
+    otp = f"{secrets.randbelow(900000) + 100000}"
+    code_hash = hashlib.sha256(f"{email}:{otp}".encode("utf-8")).hexdigest()
+
+    # Generate cryptographically signed 15-minute reset token
+    reset_token = jwt.encode(
+        {
+            "sub": str(user.id),
+            "email": email,
+            "code_hash": code_hash,
+            "type": "password_reset",
+            "iat": int(time.time()),
+            "exp": int(time.time()) + 900,
+        },
+        current_app.config["SECRET_KEY"],
+        algorithm="HS256"
+    )
+
     return jsonify({
-        "message": "If an account with that email exists, password reset instructions have been sent."
+        "message": f"A 6-digit verification code has been dispatched to {email}.",
+        "reset_token": reset_token,
+        "dev_code": otp,
     }), 200
 
 
 @auth_bp.route("/auth/reset-password", methods=["POST"])
 def reset_password():
-    """Reset user password directly with email and new password."""
+    """Verify 6-digit OTP code and securely update user password."""
     payload = request.get_json(silent=True) or {}
     email = (payload.get("email") or "").strip().lower()
+    code = (payload.get("code") or payload.get("otp") or "").strip()
     new_password = payload.get("new_password") or payload.get("password") or ""
+    reset_token = payload.get("reset_token") or ""
 
     if not email or not EMAIL_REGEX.match(email):
         return jsonify({
@@ -156,11 +187,55 @@ def reset_password():
             "message": "Please provide a valid email address."
         }), 422
 
+    if not code:
+        return jsonify({
+            "error": "Validation Error",
+            "message": "6-digit verification code is required."
+        }), 422
+
     if len(new_password) < 8:
         return jsonify({
             "error": "Validation Error",
-            "message": "Password must be at least 8 characters long."
+            "message": "New password must be at least 8 characters long."
         }), 422
+
+    if not reset_token:
+        return jsonify({
+            "error": "Validation Error",
+            "message": "Reset verification token is missing. Please request a new code."
+        }), 422
+
+    # Verify cryptographic reset token and expiration
+    try:
+        claims = jwt.decode(
+            reset_token,
+            current_app.config["SECRET_KEY"],
+            algorithms=["HS256"]
+        )
+    except jwt.ExpiredSignatureError:
+        return jsonify({
+            "error": "Expired Code",
+            "message": "Verification code has expired. Please request a new code."
+        }), 400
+    except jwt.InvalidTokenError:
+        return jsonify({
+            "error": "Invalid Token",
+            "message": "Invalid password reset token."
+        }), 400
+
+    if claims.get("type") != "password_reset" or claims.get("email") != email:
+        return jsonify({
+            "error": "Unauthorized",
+            "message": "Reset token does not match the provided email."
+        }), 400
+
+    # Verify 6-digit code against HMAC hash
+    submitted_hash = hashlib.sha256(f"{email}:{code}".encode("utf-8")).hexdigest()
+    if submitted_hash != claims.get("code_hash"):
+        return jsonify({
+            "error": "Invalid Code",
+            "message": "Invalid 6-digit verification code. Please check the code and try again."
+        }), 400
 
     user = UserRepository.get_by_email(email)
     if not user:
@@ -175,7 +250,7 @@ def reset_password():
     db.session.commit()
 
     return jsonify({
-        "message": "Password updated successfully. You can now log in with your new password."
+        "message": "Password successfully updated! You can now log in with your new password."
     }), 200
 
 

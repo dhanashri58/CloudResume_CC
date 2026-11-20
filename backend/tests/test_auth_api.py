@@ -238,20 +238,29 @@ def test_user_data_isolation(client):
 
 
 def test_forgot_password_and_logout(client):
-    """Forgot password and logout endpoints return clean success payloads."""
+    """Forgot password generates OTP for registered user, and logout succeeds."""
+    client.post(
+        "/api/auth/register",
+        json={
+            "full_name": "FP User",
+            "email": "fp.user@example.com",
+            "password": "Password123!",
+        },
+    )
     fp_res = client.post(
         "/api/auth/forgot-password",
-        json={"email": "anyone@example.com"},
+        json={"email": "fp.user@example.com"},
     )
     assert fp_res.status_code == 200
-    assert "instructions have been sent" in fp_res.get_json()["message"]
+    assert "verification code" in fp_res.get_json()["message"]
+    assert "reset_token" in fp_res.get_json()
 
     logout_res = client.post("/api/auth/logout")
     assert logout_res.status_code == 200
 
 
 def test_reset_password_success(client):
-    """User can reset password and log in with the new password."""
+    """User requests 6-digit OTP, verifies it, and resets password successfully."""
     client.post(
         "/api/auth/register",
         json={
@@ -261,18 +270,30 @@ def test_reset_password_success(client):
         },
     )
 
-    # Reset password
+    # 1. Request OTP code
+    fp_res = client.post(
+        "/api/auth/forgot-password",
+        json={"email": "reset.user@example.com"},
+    )
+    assert fp_res.status_code == 200
+    fp_data = fp_res.get_json()
+    code = fp_data["dev_code"]
+    reset_token = fp_data["reset_token"]
+
+    # 2. Reset with valid code
     res = client.post(
         "/api/auth/reset-password",
         json={
             "email": "reset.user@example.com",
+            "code": code,
+            "reset_token": reset_token,
             "new_password": "BrandNewPassword456!",
         },
     )
     assert res.status_code == 200
-    assert "Password updated successfully" in res.get_json()["message"]
+    assert "successfully updated" in res.get_json()["message"]
 
-    # Old password fails
+    # 3. Old password fails
     old_res = client.post(
         "/api/auth/login",
         json={
@@ -282,7 +303,7 @@ def test_reset_password_success(client):
     )
     assert old_res.status_code == 401
 
-    # New password succeeds
+    # 4. New password succeeds
     new_res = client.post(
         "/api/auth/login",
         json={

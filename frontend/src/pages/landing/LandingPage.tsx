@@ -266,22 +266,6 @@ const LandingPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Authentic Project Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] shadow-xs">
-              <span className="font-bold text-[var(--text-primary)] uppercase text-[11px] tracking-wide">
-                VIT PUNE
-              </span>
-              <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
-              <span className="text-[11px] font-medium text-[var(--text-secondary)]">
-                Cloud Computing Course Project (CP)
-              </span>
-              <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
-              <span className="font-bold text-amber-700 dark:text-amber-400 text-[11px] flex items-center gap-1">
-                <Sparkles size={11} className="text-amber-600 dark:text-amber-400" />
-                <span>Live Deployment</span>
-              </span>
-            </div>
-
           </div>
 
           {/* Right Column: Hero Resume Preview Canvas */}
