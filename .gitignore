@@ -51,6 +51,13 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+pyrightconfig.json
+.aws/
+.ruff_cache/
+.mypy_cache/
+*.pem
+*.key
+local_storage/
 
 # Docker volume mounts / scratch
 docker-compose.override.yml
