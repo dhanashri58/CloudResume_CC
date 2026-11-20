@@ -175,7 +175,7 @@ const ResumeRow: React.FC<{
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
-  const [resumes, setResumes] = useState<ResumeCard[]>(MOCK_RESUMES);
+  const [resumes, setResumes] = useState<ResumeCard[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -197,10 +197,8 @@ const DashboardPage: React.FC = () => {
     setError(null);
     try {
       const data = await listResumes();
-      if (data && data.length > 0) {
+      if (data) {
         setResumes(data);
-      } else {
-        setResumes(MOCK_RESUMES);
       }
     } catch {
       setError('Backend offline or disconnected: Showing cached local resumes.');
@@ -232,7 +230,7 @@ const DashboardPage: React.FC = () => {
       : 0;
   const totalViews = resumes.reduce((acc, r) => acc + (r.views || 0), 0);
 
-  const firstName = user?.name ? user.name.split(' ')[0] : 'Alex';
+  const firstName = user?.name ? user.name.split(' ')[0] : 'User';
 
   // Sample Candidates for Recruiter Pipeline
   const RECRUITER_CANDIDATES = [

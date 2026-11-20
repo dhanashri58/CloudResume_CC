@@ -144,24 +144,28 @@ class UserRepository:
 
     @staticmethod
     def get_or_create_dev_user(
-        email: str = "alex.mercer@example.com",
-        first_name: str = "Alex",
-        last_name: str = "Mercer"
+        email: str = "dev@cloudresume.ai",
+        first_name: str = "",
+        last_name: str = ""
     ) -> User:
         """Fetch or initialize default development user with profile."""
         clean_email = email.lower().strip()
         user = UserRepository.get_by_email(clean_email)
         if not user:
+            name_part = clean_email.split('@')[0].replace('.', ' ').title()
+            parts = name_part.split(' ')
+            derived_first = first_name or (parts[0] if parts else "Dev")
+            derived_last = last_name or (parts[1] if len(parts) > 1 else "User")
             user = User(email=clean_email)
             profile = UserProfile(
                 user=user,
-                first_name=first_name,
-                last_name=last_name,
-                headline="Senior Product Manager",
-                location="San Francisco, CA",
-                website="alexmercer.dev",
-                linkedin="linkedin.com/in/alexmercer",
-                github="github.com/alexmercer"
+                first_name=derived_first,
+                last_name=derived_last,
+                headline="Cloud Engineer",
+                location="Remote",
+                website="",
+                linkedin="",
+                github=""
             )
             db.session.add(user)
             db.session.add(profile)

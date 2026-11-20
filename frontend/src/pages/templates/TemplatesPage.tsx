@@ -41,9 +41,9 @@ const RealisticResumeMini: React.FC<{
   template: ResumeTemplate;
   accentColor: string;
 }> = ({ template, accentColor }) => {
-  const candidateName = 'DIYA AGARWAL';
-  const candidateInitials = 'DA';
-  const candidateRole = 'Retail Sales Associate / Cloud Specialist';
+  const candidateName = 'TANMAY KUMBHARE';
+  const candidateInitials = 'TK';
+  const candidateRole = 'Senior Full-Stack & Cloud Engineer';
 
   // Determine layout style according to template ID
   const isDarkBanner = template.id === 'executive' || template.id === 'pulse';
@@ -60,12 +60,14 @@ const RealisticResumeMini: React.FC<{
             className="p-2 -mx-3 -mt-3 mb-2 flex items-center gap-2 text-white transition-colors duration-200"
             style={{ backgroundColor: accentColor || '#1E293B' }}
           >
-            <div className="w-6 h-6 rounded-md border border-white/30 bg-white/10 flex items-center justify-center font-bold text-[8px] shrink-0">
-              {candidateInitials}
-            </div>
+            <img
+              src="/avatars/candidate-avatar.png"
+              alt={candidateName}
+              className="w-6 h-6 rounded-md object-cover border border-white/40 shrink-0"
+            />
             <div className="min-w-0">
               <p className="font-extrabold tracking-wider text-[9px] uppercase leading-none">{candidateName}</p>
-              <p className="text-[6px] text-white/80 mt-0.5 truncate">New Delhi, India · +91 11 5555 5555</p>
+              <p className="text-[6px] text-white/80 mt-0.5 truncate">Pune, India · tanmay.kumbhare24@vit.edu</p>
             </div>
           </div>
 
@@ -123,7 +125,7 @@ const RealisticResumeMini: React.FC<{
             <p className="font-serif font-black tracking-wide text-[10px] text-slate-900 uppercase">
               {candidateName}
             </p>
-            <p className="text-[6px] text-slate-400">daya.agarwal@example.com · New Delhi, India</p>
+            <p className="text-[6px] text-slate-400">tanmay.kumbhare24@vit.edu · Pune, India</p>
             <div className="w-12 h-0.5 mt-1 transition-colors" style={{ backgroundColor: accentColor }} />
           </div>
 
@@ -163,19 +165,21 @@ const RealisticResumeMini: React.FC<{
               className="w-10 h-10 rounded-md border overflow-hidden p-0.5 mb-1.5 shrink-0 transition-colors"
               style={{ borderColor: accentColor }}
             >
-              <div className="w-full h-full rounded bg-gradient-to-tr from-amber-600 via-rose-500 to-indigo-600 flex items-center justify-center text-white font-bold text-[8px]">
-                {candidateInitials}
-              </div>
+              <img
+                src="/avatars/candidate-avatar.png"
+                alt={candidateName}
+                className="w-full h-full rounded object-cover"
+              />
             </div>
 
             <p className="text-[6px] font-bold text-slate-800">CONTACT</p>
             <p className="text-[5.5px] text-slate-500 truncate w-full flex items-center justify-center gap-0.5">
               <MapPin size={6} className="shrink-0" />
-              <span>New Delhi</span>
+              <span>Pune, India</span>
             </p>
             <p className="text-[5.5px] text-slate-500 truncate w-full flex items-center justify-center gap-0.5">
               <Mail size={6} className="shrink-0" />
-              <span>example.com</span>
+              <span>vit.edu</span>
             </p>
 
             <div className="mt-2 text-left w-full">

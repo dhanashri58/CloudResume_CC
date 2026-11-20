@@ -15,7 +15,6 @@ import {
   AlertCircle,
   Loader2,
   Trash2,
-  Star,
   ExternalLink,
 } from 'lucide-react';
 
@@ -637,18 +636,13 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 Here's how to get hired 2x as fast¹
               </h2>
               <div className="flex items-center justify-center gap-2 mt-1.5 text-xs text-[var(--text-secondary)]">
-                <span className="font-bold text-[var(--text-primary)] uppercase">EXCELLENT</span>
-                <div className="flex items-center gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <span key={s} className="w-3.5 h-3.5 bg-emerald-600 text-white rounded-[2px] flex items-center justify-center">
-                      <Star size={9} className="fill-white text-white" />
-                    </span>
-                  ))}
-                </div>
-                <span className="text-[11px]">4.5 out of 5 based on 19,914 reviews</span>
-                <span className="font-bold text-emerald-700 dark:text-emerald-400 text-[11px] flex items-center gap-1">
-                  <Star size={10} className="fill-emerald-600 text-emerald-600" />
-                  <span>Trustpilot</span>
+                <span className="font-bold text-[var(--text-primary)]">AI-POWERED</span>
+                <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+                <span>Automated ATS Scoring &amp; Optimization</span>
+                <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+                <span className="font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                  <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+                  <span>Google Gemini AI</span>
                 </span>
               </div>
             </div>
@@ -808,16 +802,23 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                     className="p-3 -mx-5 -mt-5 mb-4 rounded-t-2xl text-white flex items-center justify-between transition-colors duration-200"
                     style={{ backgroundColor: activeColor }}
                   >
-                    <div>
-                      <h4
-                        className="font-black uppercase tracking-wider leading-none font-sans"
-                        style={{ fontSize: `${headingSize}px` }}
-                      >
-                        {parsedData?.personal_info?.name || 'AARAV SHARMA'}
-                      </h4>
-                      <p className="text-[10px] text-white/80 mt-1">
-                        {parsedData?.personal_info?.title || 'Senior Full-Stack & Cloud Engineer'} · {parsedData?.personal_info?.location || 'New Delhi, India'}
-                      </p>
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src="/avatars/candidate-avatar.png"
+                        alt={parsedData?.personal_info?.name || "Tanmay Kumbhare"}
+                        className="w-8 h-8 rounded-lg object-cover border border-white/40 shrink-0"
+                      />
+                      <div>
+                        <h4
+                          className="font-black uppercase tracking-wider leading-none font-sans"
+                          style={{ fontSize: `${headingSize}px` }}
+                        >
+                          {parsedData?.personal_info?.name || 'TANMAY KUMBHARE'}
+                        </h4>
+                        <p className="text-[10px] text-white/80 mt-1">
+                          {parsedData?.personal_info?.title || 'Senior Full-Stack & Cloud Engineer'} · {parsedData?.personal_info?.location || 'Pune, India'}
+                        </p>
+                      </div>
                     </div>
                     <span className="text-[9px] px-2.5 py-0.5 rounded-full bg-white/20 font-bold border border-white/30">
                       ATS {parsedData?.ats_score || 96}%

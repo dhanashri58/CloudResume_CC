@@ -11,7 +11,6 @@ import {
   Globe,
   TrendingUp,
   ArrowUpRight,
-  Star,
   Zap,
 } from 'lucide-react';
 import OptimizeResumeModal from '../../components/modals/OptimizeResumeModal';
@@ -88,15 +87,17 @@ const HeroResumeDocument: React.FC<{
           style={{ backgroundColor: activeColor }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl border border-white/30 bg-white/10 flex items-center justify-center font-extrabold text-xs shrink-0">
-              AS
-            </div>
+            <img
+              src="/avatars/candidate-avatar.png"
+              alt="Tanmay Kumbhare"
+              className="w-11 h-11 rounded-xl object-cover border-2 border-white/40 shadow-sm shrink-0"
+            />
             <div>
               <h3 className="text-base sm:text-lg font-black tracking-wider uppercase leading-none font-sans">
-                AARAV SHARMA
+                TANMAY KUMBHARE
               </h3>
               <p className="text-[10px] text-white/80 mt-1">
-                New Delhi, India · +91 98765 43210 · aarav.sharma@example.com
+                Pune, India · tanmay.kumbhare24@vit.edu · Cloud Engineer
               </p>
             </div>
           </div>
@@ -265,27 +266,19 @@ const LandingPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Trustpilot Rating Pill */}
+            {/* Authentic Project Pill */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] shadow-xs">
-              <span className="font-bold text-[var(--text-primary)] uppercase text-[11px]">
-                EXCELLENT
+              <span className="font-bold text-[var(--text-primary)] uppercase text-[11px] tracking-wide">
+                VIT PUNE
               </span>
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <span
-                    key={s}
-                    className="w-3.5 h-3.5 bg-emerald-600 text-white rounded-[2px] flex items-center justify-center"
-                  >
-                    <Star size={9} className="fill-white text-white" />
-                  </span>
-                ))}
-              </div>
+              <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
               <span className="text-[11px] font-medium text-[var(--text-secondary)]">
-                4.5 out of 5 based on 19,826 reviews
+                Cloud Computing Course Project (CP)
               </span>
-              <span className="font-bold text-emerald-700 dark:text-emerald-400 text-[11px] flex items-center gap-1">
-                <Star size={10} className="fill-emerald-600 text-emerald-600" />
-                <span>Trustpilot</span>
+              <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
+              <span className="font-bold text-amber-700 dark:text-amber-400 text-[11px] flex items-center gap-1">
+                <Sparkles size={11} className="text-amber-600 dark:text-amber-400" />
+                <span>Live Deployment</span>
               </span>
             </div>
 
@@ -523,11 +516,11 @@ const LandingPage: React.FC = () => {
                 </div>
                 <div className="p-2.5 space-y-1">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-600 to-orange-600 text-white flex items-center justify-center font-bold text-[8.5px]">
-                      AS
+                    <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-amber-500/30">
+                      <img src="/avatars/candidate-avatar.png" alt="Tanmay Kumbhare" className="w-full h-full object-cover" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800 dark:text-white">Aarav Sharma</p>
+                      <p className="font-bold text-slate-800 dark:text-white">Tanmay Kumbhare</p>
                       <p className="text-[8px] text-slate-500 dark:text-slate-400">Cloud Portfolio</p>
                     </div>
                   </div>
@@ -577,6 +570,7 @@ const LandingPage: React.FC = () => {
       <MeadowRiseFooter
         name="CloudResumeAI"
         brandHref="/"
+        scrollParallax={false}
         preset={footerPreset}
         height="920px"
         heroHeight="clamp(440px, 50vh, 560px)"

@@ -10,16 +10,16 @@ interface GoogleAccount {
 
 const DEFAULT_ACCOUNTS: GoogleAccount[] = [
   {
-    name: 'Dhanashri',
-    email: 'dhanashri.cloud@gmail.com',
-    avatarBg: 'bg-gradient-to-tr from-rose-500 to-amber-500',
-    avatarText: 'D',
+    name: 'Tanmay Kumbhare',
+    email: 'tanmay.kumbhare24@vit.edu',
+    avatarBg: 'bg-gradient-to-tr from-blue-600 to-indigo-600',
+    avatarText: 'TK',
   },
   {
-    name: 'Alex Mercer',
-    email: 'alex.mercer.tech@gmail.com',
-    avatarBg: 'bg-gradient-to-tr from-blue-600 to-indigo-600',
-    avatarText: 'AM',
+    name: 'Hemant Lakhane',
+    email: 'lakhanehemant@gmail.com',
+    avatarBg: 'bg-gradient-to-tr from-emerald-500 to-teal-600',
+    avatarText: 'HL',
   },
 ];
 
