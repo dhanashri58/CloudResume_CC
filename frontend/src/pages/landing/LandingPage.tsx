@@ -11,6 +11,8 @@ import {
   Globe,
   TrendingUp,
   ArrowUpRight,
+  Star,
+  Zap,
 } from 'lucide-react';
 import OptimizeResumeModal from '../../components/modals/OptimizeResumeModal';
 import MeadowRiseFooter, { MeadowPreset } from '../../components/ui/meadow-rise-footer';
@@ -62,7 +64,7 @@ const HeroResumeDocument: React.FC<{
       <div className="hidden sm:block absolute -left-8 top-44 z-30 w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-amber-300 dark:border-amber-700/60 shadow-xl rounded-2xl p-3 text-[10px] text-slate-700 dark:text-slate-300 leading-tight">
         <div className="flex items-start gap-1.5 mb-1.5">
           <div className="w-4 h-4 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 flex items-center justify-center font-bold text-[9px] shrink-0">
-            ✓
+            <Check size={9} />
           </div>
           <p className="font-bold text-slate-900 dark:text-white">
             Google XYZ recommendations:
@@ -72,7 +74,8 @@ const HeroResumeDocument: React.FC<{
           Hand-crafted bullet points for maximum recruiter impact.
         </p>
         <div className="mt-2 pt-1.5 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 pl-1 text-[9px] text-amber-700 dark:text-amber-400 font-semibold">
-          <span>⚡ Hand-crafted for maximum ATS scoring</span>
+          <Zap size={10} className="text-amber-500 shrink-0" />
+          <span>Hand-crafted for maximum ATS scoring</span>
         </div>
       </div>
 
@@ -271,17 +274,18 @@ const LandingPage: React.FC = () => {
                 {[1, 2, 3, 4, 5].map((s) => (
                   <span
                     key={s}
-                    className="w-3.5 h-3.5 bg-emerald-600 text-white rounded-[2px] flex items-center justify-center text-[9px] font-bold"
+                    className="w-3.5 h-3.5 bg-emerald-600 text-white rounded-[2px] flex items-center justify-center"
                   >
-                    ★
+                    <Star size={9} className="fill-white text-white" />
                   </span>
                 ))}
               </div>
               <span className="text-[11px] font-medium text-[var(--text-secondary)]">
                 4.5 out of 5 based on 19,826 reviews
               </span>
-              <span className="font-bold text-emerald-700 dark:text-emerald-400 text-[11px] flex items-center gap-0.5">
-                ★ Trustpilot
+              <span className="font-bold text-emerald-700 dark:text-emerald-400 text-[11px] flex items-center gap-1">
+                <Star size={10} className="fill-emerald-600 text-emerald-600" />
+                <span>Trustpilot</span>
               </span>
             </div>
 
@@ -574,6 +578,8 @@ const LandingPage: React.FC = () => {
         name="CloudResumeAI"
         brandHref="/"
         preset={footerPreset}
+        height="920px"
+        heroHeight="clamp(440px, 50vh, 560px)"
         heading={"Engineering\nHigh-Impact Cloud\nCareers with Gemini AI"}
         subheading="Optimize for ATS scanners, craft impact bullets, and export vector PDFs in milliseconds."
         tagline="Next-generation cloud resume engineering powered by Google Cloud Platform & Gemini AI."

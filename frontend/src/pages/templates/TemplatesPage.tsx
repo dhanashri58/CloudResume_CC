@@ -8,6 +8,8 @@ import {
   Sparkles,
   ChevronDown,
   Check,
+  MapPin,
+  Mail,
 } from 'lucide-react';
 import { RESUME_TEMPLATES } from '../../data/mockData';
 import { Button } from '../../components/ui';
@@ -167,8 +169,14 @@ const RealisticResumeMini: React.FC<{
             </div>
 
             <p className="text-[6px] font-bold text-slate-800">CONTACT</p>
-            <p className="text-[5.5px] text-slate-500 truncate w-full">📍 New Delhi</p>
-            <p className="text-[5.5px] text-slate-500 truncate w-full">✉️ example.com</p>
+            <p className="text-[5.5px] text-slate-500 truncate w-full flex items-center justify-center gap-0.5">
+              <MapPin size={6} className="shrink-0" />
+              <span>New Delhi</span>
+            </p>
+            <p className="text-[5.5px] text-slate-500 truncate w-full flex items-center justify-center gap-0.5">
+              <Mail size={6} className="shrink-0" />
+              <span>example.com</span>
+            </p>
 
             <div className="mt-2 text-left w-full">
               <p className="text-[6px] font-bold text-slate-800 mb-0.5">SKILLS</p>

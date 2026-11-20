@@ -245,6 +245,63 @@ const EditorPage: React.FC = () => {
           // Keep mock sample as fallback
         })
         .finally(() => setLoading(false));
+    } else if (id === 'new') {
+      try {
+        const stored = sessionStorage.getItem('cloudresume_parsed_resume') || localStorage.getItem('cloudresume_parsed_resume');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && (parsed.personal_info || parsed.personalInfo)) {
+            const pi = parsed.personal_info || parsed.personalInfo || {};
+            setTitle(`${pi.name || 'Aarav Sharma'} - Cloud Resume`);
+            setData((prev) => ({
+              ...prev,
+              personalInfo: {
+                fullName: pi.name || prev.personalInfo.fullName,
+                email: pi.email || prev.personalInfo.email,
+                phone: pi.phone || prev.personalInfo.phone,
+                location: pi.location || prev.personalInfo.location,
+                headline: pi.title || prev.personalInfo.headline,
+                website: pi.linkedin || prev.personalInfo.website,
+              },
+              summary: parsed.ai_improved_summary || parsed.summary || prev.summary,
+              experience: (parsed.experience && parsed.experience.length > 0)
+                ? parsed.experience.map((exp: any, idx: number) => ({
+                    id: `exp-${Date.now()}-${idx}`,
+                    company: exp.company || 'Tech Company',
+                    role: exp.title || 'Software Engineer',
+                    startDate: exp.period?.split('–')[0]?.trim() || '2021',
+                    endDate: exp.period?.split('–')[1]?.trim() || 'Present',
+                    current: exp.period?.toLowerCase().includes('present') ?? true,
+                    location: exp.location || 'New Delhi, India',
+                    bullets: exp.ai_improved_bullets || exp.bullets || [],
+                  }))
+                : prev.experience,
+              skills: parsed.skills && Array.isArray(parsed.skills)
+                ? [
+                    {
+                      id: 'sg-cloud',
+                      category: 'Core Competencies',
+                      skills: parsed.skills,
+                    },
+                  ]
+                : prev.skills,
+              education: (parsed.education && parsed.education.length > 0)
+                ? parsed.education.map((edu: any, idx: number) => ({
+                    id: `edu-${Date.now()}-${idx}`,
+                    institution: edu.institution || 'University',
+                    degree: edu.degree || 'B.Tech in Computer Science',
+                    field: 'Computer Science',
+                    startDate: '2017',
+                    endDate: edu.year || '2021',
+                    gpa: edu.gpa || '8.9 / 10.0',
+                  }))
+                : prev.education,
+            }));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to initialize editor from parsed resume:', err);
+      }
     }
   }, [id]);
 

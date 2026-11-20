@@ -773,7 +773,7 @@ const MRF_CSS = `
 .mrf-scene {
   position: absolute;
   inset: 0 0 auto 0;
-  height: var(--mrf-hero);
+  height: var(--mrf-hero, 480px);
   z-index: 0;
   pointer-events: none;
 }
@@ -786,7 +786,7 @@ const MRF_CSS = `
 .mrf-hero {
   position: relative;
   z-index: 2;
-  min-height: var(--mrf-hero);
+  min-height: var(--mrf-hero, 480px);
   height: auto;
   flex: none;
   display: flex;
@@ -1231,8 +1231,8 @@ export default function MeadowRiseFooter({
   interactive = true,
   scrollParallax = true,
   botanicals = true,
-  height = "860px",
-  heroHeight = "clamp(420px, 55svh, 580px)",
+  height = "920px",
+  heroHeight = "clamp(440px, 52vh, 560px)",
   maxWidth = "1240px",
   fontFamily = SANS_STACK,
   serifFamily = SERIF_STACK,
