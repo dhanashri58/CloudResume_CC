@@ -18,6 +18,21 @@ import AIAssistantPage from './pages/ai/AIAssistantPage';
 import ProfilePage from './pages/profile/ProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage';
+import { useAuth } from './auth/AuthContext';
+
+/**
+ * Adaptive layout for Templates view:
+ * When authenticated, preserves the DashboardLayout (sidebar, header, user profile, settings)
+ * so the user stays in their workflow.
+ * When unauthenticated, displays the clean PublicLayout with landing navbar.
+ */
+const TemplatesAdaptiveRoute: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) {
+    return <DashboardLayout />;
+  }
+  return <PublicLayout />;
+};
 
 const App: React.FC = () => {
   return (
@@ -25,10 +40,14 @@ const App: React.FC = () => {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Adaptive Templates route */}
+            <Route element={<TemplatesAdaptiveRoute />}>
+              <Route path="/templates" element={<TemplatesPage />} />
+            </Route>
+
             {/* Public routes */}
             <Route element={<PublicLayout />}>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/templates" element={<TemplatesPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/register" element={<SignUpPage />} />

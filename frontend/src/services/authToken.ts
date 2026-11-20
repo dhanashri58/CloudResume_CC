@@ -37,7 +37,7 @@ export const isDevAuthEnabled = (): boolean => {
 };
 
 export const getAuthHeaders = async (): Promise<Record<string, string>> => {
-  // 1. Bearer Token (Production / Microsoft Entra path)
+  // 1. Bearer Token via registered getter
   if (globalTokenGetter) {
     try {
       const token = await globalTokenGetter();
@@ -49,7 +49,17 @@ export const getAuthHeaders = async (): Promise<Record<string, string>> => {
     }
   }
 
-  // 2. Development Authentication Fallback (strictly guarded)
+  // 2. Direct localStorage Token Fallback (handles immediate post-login queries and page reloads)
+  try {
+    const localToken = localStorage.getItem('cloudresume_auth_token');
+    if (localToken) {
+      return { Authorization: `Bearer ${localToken}` };
+    }
+  } catch {
+    // ignore storage access errors
+  }
+
+  // 3. Development Authentication Fallback (strictly guarded)
   if (isDevAuthEnabled() && globalDevEmailGetter) {
     try {
       const devEmail = globalDevEmailGetter();

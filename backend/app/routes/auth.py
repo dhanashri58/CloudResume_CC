@@ -143,6 +143,42 @@ def forgot_password():
     }), 200
 
 
+@auth_bp.route("/auth/reset-password", methods=["POST"])
+def reset_password():
+    """Reset user password directly with email and new password."""
+    payload = request.get_json(silent=True) or {}
+    email = (payload.get("email") or "").strip().lower()
+    new_password = payload.get("new_password") or payload.get("password") or ""
+
+    if not email or not EMAIL_REGEX.match(email):
+        return jsonify({
+            "error": "Validation Error",
+            "message": "Please provide a valid email address."
+        }), 422
+
+    if len(new_password) < 8:
+        return jsonify({
+            "error": "Validation Error",
+            "message": "Password must be at least 8 characters long."
+        }), 422
+
+    user = UserRepository.get_by_email(email)
+    if not user:
+        return jsonify({
+            "error": "Not Found",
+            "message": "No account found with that email address."
+        }), 404
+
+    from werkzeug.security import generate_password_hash
+    user.password_hash = generate_password_hash(new_password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Password updated successfully. You can now log in with your new password."
+    }), 200
+
+
 @auth_bp.route("/auth/google", methods=["POST"])
 def google_auth():
     """Authenticate or provision user with Google Identity Services credentials."""

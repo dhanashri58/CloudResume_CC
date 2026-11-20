@@ -164,8 +164,11 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
   // Forgot password modal state
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotNewPassword, setForgotNewPassword] = useState('');
+  const [forgotConfirmPassword, setForgotConfirmPassword] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotStatus, setForgotStatus] = useState<string | null>(null);
+  const [forgotError, setForgotError] = useState<string | null>(null);
 
   // Password strength checks for sign up
   const passwordCriteria = useMemo(() => {
@@ -257,18 +260,43 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!forgotEmail.trim()) return;
+    setForgotError(null);
+    setForgotStatus(null);
+
+    if (!forgotEmail.trim()) {
+      setForgotError('Please enter your email address.');
+      return;
+    }
+    if (forgotNewPassword.length < 8) {
+      setForgotError('New password must be at least 8 characters long.');
+      return;
+    }
+    if (forgotNewPassword !== forgotConfirmPassword) {
+      setForgotError('Passwords do not match. Please verify.');
+      return;
+    }
+
     setForgotLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+      const res = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: forgotEmail.trim() }),
+        body: JSON.stringify({
+          email: forgotEmail.trim(),
+          new_password: forgotNewPassword,
+        }),
       });
       const data = await res.json().catch(() => ({}));
-      setForgotStatus(data.message || 'If an account exists with that email, reset instructions have been sent.');
+      if (res.ok) {
+        setForgotStatus(data.message || 'Password updated successfully! You can now log in.');
+        setEmail(forgotEmail.trim());
+        setPassword(forgotNewPassword);
+        setTab('signin');
+      } else {
+        setForgotError(data.message || 'Failed to reset password. Please check your email.');
+      }
     } catch {
-      setForgotStatus('Network error. Please try again later.');
+      setForgotError('Network error. Please try again later.');
     } finally {
       setForgotLoading(false);
     }
@@ -710,42 +738,100 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
         onConfirm={handlePersonaSelect}
       />
 
-      {/* Forgot Password Modal */}
+      {/* Forgot / Reset Password Modal */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn">
           <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">Reset Password</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Reset Account Password</h3>
               <button
-                onClick={() => setShowForgotModal(false)}
+                onClick={() => {
+                  setShowForgotModal(false);
+                  setForgotStatus(null);
+                  setForgotError(null);
+                }}
                 className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 <X size={18} />
               </button>
             </div>
+
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Enter your registered email address and we'll send you recovery instructions.
+              Set a new password for your registered account to regain immediate access.
             </p>
+
             {forgotStatus ? (
-              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-xl text-xs text-blue-800 dark:text-blue-300">
-                {forgotStatus}
+              <div className="space-y-3">
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-xl text-xs text-emerald-800 dark:text-emerald-300">
+                  {forgotStatus}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotModal(false);
+                    setForgotStatus(null);
+                    setForgotError(null);
+                  }}
+                  className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-full transition-all shadow-sm"
+                >
+                  Sign In with New Password
+                </button>
               </div>
             ) : (
               <form onSubmit={handleForgotPassword} className="space-y-3">
-                <input
-                  type="email"
-                  required
-                  value={forgotEmail}
-                  onChange={(e) => setForgotEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full px-3.5 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white"
-                />
+                {forgotError && (
+                  <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs text-rose-700 dark:text-rose-300">
+                    {forgotError}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    Registered Email
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full px-3.5 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    New Password (min. 8 characters)
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    value={forgotNewPassword}
+                    onChange={(e) => setForgotNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    className="w-full px-3.5 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    value={forgotConfirmPassword}
+                    onChange={(e) => setForgotConfirmPassword(e.target.value)}
+                    placeholder="Re-enter new password"
+                    className="w-full px-3.5 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 dark:text-white"
+                  />
+                </div>
+
                 <button
                   type="submit"
                   disabled={forgotLoading}
                   className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-full transition-all shadow-sm disabled:opacity-60"
                 >
-                  {forgotLoading ? 'Sending...' : 'Send Reset Link'}
+                  {forgotLoading ? 'Updating Password...' : 'Update Password & Sign In'}
                 </button>
               </form>
             )}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
   SlidersHorizontal,
@@ -10,6 +10,8 @@ import {
   Check,
   MapPin,
   Mail,
+  Eye,
+  X,
 } from 'lucide-react';
 import { RESUME_TEMPLATES } from '../../data/mockData';
 import { Button } from '../../components/ui';
@@ -269,9 +271,11 @@ const RealisticResumeMini: React.FC<{
 const TemplateCard: React.FC<{
   template: ResumeTemplate;
   onSelect: (id: string) => void;
+  onPreview: (template: ResumeTemplate) => void;
   selected: boolean;
   activeColor: string;
-}> = ({ template, onSelect, selected, activeColor }) => {
+}> = ({ template, onSelect, onPreview, selected, activeColor }) => {
+  const navigate = useNavigate();
   const isRecommended = template.popular || template.id === 'clarity' || template.id === 'horizon';
 
   return (
@@ -305,9 +309,28 @@ const TemplateCard: React.FC<{
       />
 
       {/* Hover Overlay Button */}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/25 dark:group-hover:bg-black/45 transition-colors pointer-events-none">
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:scale-105 duration-200 pointer-events-auto flex items-center gap-2">
-          <Button size="sm" className="shadow-lg">
+      <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 dark:group-hover:bg-black/55 transition-colors pointer-events-none">
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:scale-100 duration-200 pointer-events-auto flex items-center gap-2 px-3">
+          <Button
+            size="sm"
+            variant="secondary"
+            className="shadow-md bg-white/95 dark:bg-slate-800/95 text-slate-900 dark:text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview(template);
+            }}
+          >
+            <Eye size={13} className="mr-1" />
+            Preview
+          </Button>
+          <Button
+            size="sm"
+            className="shadow-md"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/editor/new?template=${template.id}&color=${encodeURIComponent(activeColor || template.colorScheme.accent)}`);
+            }}
+          >
             Use template
           </Button>
         </div>
@@ -350,9 +373,11 @@ const TemplateCard: React.FC<{
 // ─── Templates Page Component ────────────────────────────────────────────────
 
 const TemplatesPage: React.FC = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<TemplateCategory>('all');
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<ResumeTemplate | null>(null);
 
   // Filters from Screenshot
   const [headshotFilter, setHeadshotFilter] = useState<string>('all');
@@ -550,6 +575,7 @@ const TemplatesPage: React.FC = () => {
               template={t}
               selected={selectedId === t.id}
               onSelect={handleSelect}
+              onPreview={setPreviewTemplate}
               activeColor={activeColor}
             />
           ))}
@@ -558,7 +584,7 @@ const TemplatesPage: React.FC = () => {
 
       {/* ─── Selected Template Bottom Floating Bar ─────────────────────────── */}
       {selectedId && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-2xl rounded-full px-6 py-3.5 flex items-center gap-4 animate-fadeIn">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-2xl rounded-full px-6 py-3.5 flex items-center gap-4 animate-fadeIn">
           <div>
             <p className="text-xs font-bold text-[var(--text-primary)]">
               {RESUME_TEMPLATES.find((t) => t.id === selectedId)?.name} selected
@@ -567,12 +593,86 @@ const TemplatesPage: React.FC = () => {
               Ready to craft your resume?
             </p>
           </div>
-          <Link to={`/editor/new?template=${selectedId}`}>
+          <Link to={`/editor/new?template=${selectedId}&color=${encodeURIComponent(activeColor)}`}>
             <Button size="sm">
               Use this template
-              <ArrowRight size={14} />
+              <ArrowRight size={14} className="ml-1" />
             </Button>
           </Link>
+        </div>
+      )}
+
+      {/* ─── Interactive Template Preview Modal ────────────────────────────── */}
+      {previewTemplate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 sm:p-6 animate-fadeIn">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-3xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-[var(--text-primary)] font-serif">
+                  {previewTemplate.name}
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                  {previewTemplate.description}
+                </p>
+              </div>
+              <button
+                onClick={() => setPreviewTemplate(null)}
+                className="p-1.5 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors"
+                aria-label="Close preview"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body: Palette selector & Full Preview */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+              {/* Color Swatch Picker */}
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)]">
+                <span className="text-xs font-semibold text-[var(--text-secondary)]">Accent Color:</span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {SWATCH_COLORS.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      title={c.name}
+                      onClick={() => setActiveColor(c.hex)}
+                      className={`w-6 h-6 rounded-full transition-transform ${
+                        activeColor === c.hex ? 'ring-2 ring-offset-2 ring-blue-500 scale-110' : 'hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: c.hex }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Realistic Resume Preview Canvas */}
+              <div className="border border-[var(--border-subtle)] rounded-2xl overflow-hidden shadow-md max-w-sm mx-auto">
+                <RealisticResumeMini
+                  template={previewTemplate}
+                  accentColor={activeColor || previewTemplate.colorScheme.accent}
+                />
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-[var(--border-subtle)] flex items-center justify-end gap-3 bg-[var(--bg-subtle)]">
+              <Button variant="secondary" size="sm" onClick={() => setPreviewTemplate(null)}>
+                Close
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  const targetTpl = previewTemplate.id;
+                  setPreviewTemplate(null);
+                  navigate(`/editor/new?template=${targetTpl}&color=${encodeURIComponent(activeColor || previewTemplate.colorScheme.accent)}`);
+                }}
+              >
+                Use this template
+                <ArrowRight size={14} className="ml-1" />
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

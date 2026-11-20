@@ -250,6 +250,50 @@ def test_forgot_password_and_logout(client):
     assert logout_res.status_code == 200
 
 
+def test_reset_password_success(client):
+    """User can reset password and log in with the new password."""
+    client.post(
+        "/api/auth/register",
+        json={
+            "full_name": "Reset User",
+            "email": "reset.user@example.com",
+            "password": "OldPassword123!",
+        },
+    )
+
+    # Reset password
+    res = client.post(
+        "/api/auth/reset-password",
+        json={
+            "email": "reset.user@example.com",
+            "new_password": "BrandNewPassword456!",
+        },
+    )
+    assert res.status_code == 200
+    assert "Password updated successfully" in res.get_json()["message"]
+
+    # Old password fails
+    old_res = client.post(
+        "/api/auth/login",
+        json={
+            "email": "reset.user@example.com",
+            "password": "OldPassword123!",
+        },
+    )
+    assert old_res.status_code == 401
+
+    # New password succeeds
+    new_res = client.post(
+        "/api/auth/login",
+        json={
+            "email": "reset.user@example.com",
+            "password": "BrandNewPassword456!",
+        },
+    )
+    assert new_res.status_code == 200
+    assert "token" in new_res.get_json()
+
+
 def test_google_auth_provision_and_login(client):
     """Google authentication route provisions new user and returns valid token."""
     res = client.post(
