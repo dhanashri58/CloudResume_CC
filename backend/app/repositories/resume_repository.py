@@ -1,7 +1,9 @@
 """Resume repository handling CRUD and relational synchronization."""
 from typing import List, Optional
+from flask import has_request_context, request
 from app.extensions import db
 from app.models.resume import Resume, Experience, Education, Project, Skill
+from app.services.security_monitor import SecurityMonitor
 
 
 class ResumeRepository:
@@ -32,9 +34,6 @@ class ResumeRepository:
                 db.select(Resume.id).where(Resume.id == resume_id)
             ).scalar_one_or_none()
             if other_user_resume:
-                from app.services.security_monitor import SecurityMonitor
-                from flask import has_request_context, request
-
                 ip = (
                     request.remote_addr if has_request_context() else "unknown"
                 )
