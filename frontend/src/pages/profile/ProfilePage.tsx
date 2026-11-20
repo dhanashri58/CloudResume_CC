@@ -30,19 +30,19 @@ interface ProfileFormData {
 }
 
 const defaultFormData: ProfileFormData = {
-  firstName: 'Alex',
-  lastName: 'Mercer',
-  headline: 'Senior Cloud Architect & Engineering Lead',
-  email: 'alex.mercer@cloudresume.ai',
-  phone: '+1 (555) 234-5678',
-  location: 'San Francisco, CA',
-  website: 'https://alexmercer.cloud',
-  linkedin: 'linkedin.com/in/alexmercer',
-  github: 'github.com/alexmercer',
+  firstName: '',
+  lastName: '',
+  headline: '',
+  email: '',
+  phone: '',
+  location: '',
+  website: '',
+  linkedin: '',
+  github: '',
 };
 
 const ProfilePage: React.FC = () => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [formData, setFormData] = useState<ProfileFormData>(defaultFormData);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -67,10 +67,10 @@ const ProfilePage: React.FC = () => {
         const data = await getProfile();
         if (isMounted && data) {
           setFormData({
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
+            firstName: data.firstName || user?.name?.split(' ')[0] || '',
+            lastName: data.lastName || user?.name?.split(' ').slice(1).join(' ') || '',
             headline: data.headline || '',
-            email: data.email || 'alex.mercer@cloudresume.ai',
+            email: data.email || user?.email || '',
             phone: data.phone || '',
             location: data.location || '',
             website: data.website || '',
@@ -79,8 +79,15 @@ const ProfilePage: React.FC = () => {
           });
         }
       } catch (err) {
-        // Fallback to initial defaults if backend is unavailable in offline mock mode
-        console.warn('Backend profile not loaded, using offline default state:', err);
+        if (isMounted && user) {
+          setFormData((prev) => ({
+            ...prev,
+            firstName: user.name?.split(' ')[0] || '',
+            lastName: user.name?.split(' ').slice(1).join(' ') || '',
+            email: user.email || '',
+          }));
+        }
+        console.warn('Backend profile not loaded, using user auth session state:', err);
       } finally {
         if (isMounted) {
           setLoading(false);
