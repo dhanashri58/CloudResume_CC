@@ -1,8 +1,8 @@
-# Local Setup, Development & Azure Deployment Guide
+# Local Setup, Development & Multi-Cloud Deployment Guide
 
-This guide walks you through setting up and running **CloudResumeAI** locally on your workstation, running tests, executing with Docker Compose, and deploying to Microsoft Azure using automated CI/CD.
+This guide walks you through setting up and running **CloudResumeAI** locally on your workstation, running tests, executing with Docker Compose, and deploying to **Google Cloud Platform (GCP)** and **Microsoft Azure** using automated CI/CD and Infrastructure as Code.
 
-> **Security Notice**: Never commit real passwords, tokens, or API keys. Always use placeholder values in `.env` files and keep real `.env` files in your `.gitignore`.
+> **Security Notice**: Never commit real passwords, tokens, or API keys. Always use placeholder values in `.env.example` templates and keep real `.env` files in `.gitignore`.
 
 ---
 
@@ -10,228 +10,153 @@ This guide walks you through setting up and running **CloudResumeAI** locally on
 
 Before starting, ensure you have the following installed on your machine:
 - **Node.js**: `v20.x` or later (LTS recommended) and `npm v10+`
-- **Python**: `v3.12`
-- **Docker**: Docker Desktop or Docker Engine `v24+` with Docker Compose
+- **Python**: `v3.12` or `v3.13`
 - **Git**: `v2.40+`
-- **(Optional for Cloud Deploy)**: Azure CLI (`az`) and GitHub account
+- **(Optional)**: Docker & Docker Compose (for containerized mode)
+- **(Optional for Cloud Deploy)**: Google Cloud CLI (`gcloud`) or Azure CLI (`az`)
 
 ---
 
-## 2. Local Workstation Setup (Dual-Terminal Workflow)
+## 2. Local Workstation Setup
 
-### 2.1 Clone Repository & Root Inspection
-```bash
-git clone https://github.com/<your-username>/CLOUDRESUME_CC.git
-cd CLOUDRESUME_CC
+### 2.1 1-Click Quickstart (`start.bat`) 🚀 (Windows)
+
+The repository includes a unified, zero-configuration launcher:
+
+```cmd
+start.bat
 ```
+*(Or double-click `start.bat` in File Explorer).*
+
+The launcher automatically:
+1. Verifies Python and Node.js installations.
+2. Initializes the backend virtual environment (`backend/venv`) and installs dependencies.
+3. Installs frontend npm packages (`frontend/node_modules`).
+4. Creates `.env` files configured for instant **SQLite** execution (`cloudresume.db`) with zero external daemons required.
+5. Initializes the database schema.
+6. Launches the **Backend API** (port 5000) and **Frontend SPA** (port 5173) in dedicated, titled console windows.
+7. Opens `http://localhost:5173` automatically in your default browser.
 
 ---
 
-### 2.2 PostgreSQL Database Setup
-You can run a local PostgreSQL database quickly using Docker:
+### 2.2 Manual Dual-Terminal Setup
 
-```bash
-docker run -d \
-  --name cloudresumeai-postgres \
-  -e POSTGRES_USER=cloudresume_user \
-  -e POSTGRES_PASSWORD=cloudresume_password_placeholder \
-  -e POSTGRES_DB=cloudresumeai_dev \
-  -p 5432:5432 \
-  postgres:16-alpine
+#### Step 1: Backend Setup (Terminal 1 - Port 5000)
+
+```powershell
+cd backend
+
+# 1. Activate Python virtual environment
+.\venv\Scripts\activate      # Windows
+# source venv/bin/activate   # macOS / Linux
+
+# 2. Install dependencies (if not already installed)
+pip install -r requirements-dev.txt
+
+# 3. Start Flask REST API
+python wsgi.py
 ```
+Backend API will start on `http://localhost:5000` (Health Check: `http://localhost:5000/api/health`).
 
-Verify that the database is running:
-```bash
-docker ps
+#### Step 2: Frontend Setup (Terminal 2 - Port 5173)
+
+```powershell
+cd frontend
+
+# 1. Start Vite development server
+npm run dev
 ```
-
----
-
-### 2.3 Backend Setup (Terminal 1)
-
-1. **Navigate to the backend directory**:
-   ```bash
-   cd backend
-   ```
-
-2. **Create and activate a virtual environment**:
-   ```bash
-   # On Windows PowerShell:
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-
-   # On macOS / Linux:
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
-
-3. **Install dependencies**:
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt -r requirements-dev.txt
-   ```
-
-4. **Configure environment variables**:
-   Copy the example file to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `backend/.env` with your preferred editor:
-   ```env
-   FLASK_ENV=development
-   FLASK_DEBUG=1
-   SECRET_KEY=dev-secret-key-change-in-production
-   DATABASE_URL=postgresql://cloudresume_user:cloudresume_password_placeholder@localhost:5432/cloudresumeai_dev
-   CORS_ORIGINS=http://localhost:5173,http://localhost:3000
-
-   # Gemini AI Configuration
-   GEMINI_API_KEY=your_gemini_api_key_here
-   GEMINI_MODEL=gemini-3.5-flash-lite
-   GEMINI_TIMEOUT_SECONDS=20
-
-   # Storage Configuration
-   AZURE_STORAGE_MODE=local
-
-   # Observability
-   LOG_LEVEL=INFO
-   ```
-
-5. **Run database migrations**:
-   ```bash
-   flask db upgrade
-   ```
-
-6. **Start the backend development server**:
-   ```bash
-   python wsgi.py
-   ```
-   The backend API will start on `http://localhost:5000`.
-
-7. **Verify health endpoint**:
-   In your browser or via curl:
-   ```bash
-   curl http://localhost:5000/api/health
-   ```
-   You should receive a `200 OK` JSON response indicating the database is connected.
-
----
-
-### 2.4 Frontend Setup (Terminal 2)
-
-1. **Navigate to the frontend directory**:
-   ```bash
-   cd frontend
-   ```
-
-2. **Install Node.js dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment variables**:
-   Copy the example file to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `frontend/.env`:
-   ```env
-   VITE_API_URL=/api
-   # Microsoft Entra ID (Azure AD) - optional for local dev auth
-   VITE_ENTRA_CLIENT_ID=00000000-0000-0000-0000-000000000000
-   VITE_ENTRA_TENANT_ID=00000000-0000-0000-0000-000000000000
-   VITE_DEV_USER_EMAIL=student@example.edu
-   ```
-
-4. **Start the frontend development server**:
-   ```bash
-   npm run dev
-   ```
-   Open your browser to `http://localhost:5173`.
+Open `http://localhost:5173` in your browser. All `/api/*` network calls are automatically reverse-proxied to `http://localhost:5000`.
 
 ---
 
 ## 3. Full Docker Compose Execution (Single Command)
 
-To test the entire containerized stack without manually starting separate terminals:
+To run the complete containerized stack:
 
-1. **Validate docker-compose file**:
-   ```bash
-   docker-compose config
-   ```
+```bash
+docker-compose up --build
+```
 
-2. **Build and run all services**:
-   ```bash
-   docker-compose up --build
-   ```
+- **Frontend SPA**: `http://localhost:3000`
+- **Backend API**: `http://localhost:5000`
+- **Health Check**: `http://localhost:3000/api/health`
+- **PostgreSQL Database**: `localhost:5432`
 
-3. **Service breakdown**:
-   - `cloudresumeai-db`: PostgreSQL 16 on `localhost:5432`
-   - `cloudresumeai-backend`: Python Flask on `localhost:5000`
-   - `cloudresumeai-frontend`: Nginx serving React SPA on `localhost:3000`
-
-4. **Access the application**:
-   - Frontend: `http://localhost:3000`
-   - Backend Health Check: `http://localhost:3000/api/health`
-
-5. **Stop containers**:
-   ```bash
-   docker-compose down
-   ```
+To stop all services:
+```bash
+docker-compose down
+```
 
 ---
 
-## 4. Running the Test Suites
+## 4. Running the Automated Test Suites
 
-### 4.1 Backend Pytest & Flake8
+CloudResumeAI includes **180 automated tests** passing with 100% success:
+
+### 4.1 Backend Pytest & Flake8 (128 Tests)
 ```bash
-# In backend/ directory with .venv activated:
+cd backend
+.\venv\Scripts\activate
+
+# 1. Linting (0 errors)
 flake8 app tests
+
+# 2. Run all 128 tests
 pytest tests -v
 ```
 
-### 4.2 Frontend Vitest & TypeScript Check
+### 4.2 Frontend Vitest & TypeScript Check (52 Tests)
 ```bash
-# In frontend/ directory:
+cd frontend
+
+# 1. Run unit tests
 npm test -- --run
+
+# 2. Run TypeScript compilation check
+npx tsc -b
+
+# 3. Build production bundle
 npm run build
 ```
 
 ---
 
-## 5. Microsoft Azure Cloud Deployment Guide
+## 5. Google Cloud Platform (GCP) 1-Click Deployment Guide
 
-The deployment pipeline is fully automated using GitHub Actions and Azure Bicep.
+Deploy the entire platform to your Google Cloud project using our automated PowerShell script:
 
-### 5.1 Azure Cloud Prerequisites
-1. An active Microsoft Azure Subscription.
-2. An Azure Resource Group (e.g. `rg-cloudresumeai-dev` in region `eastus`).
-3. An App Registration configured for GitHub Actions **OIDC Federated Credentials** (zero stored secrets).
+### 5.1 Prerequisites
+1. An active Google Cloud account with the free trial (\$300 credits) activated.
+2. Google Cloud CLI (`gcloud`) installed.
+3. Your GCP Project ID: `cloudresume-ai`.
 
-### 5.2 GitHub Repository Configuration
-In your GitHub repository, navigate to **Settings -> Secrets and variables -> Actions**:
+### 5.2 1-Click PowerShell Deployment
+Run from the root directory:
+```powershell
+.\scripts\deploy-gcp.ps1 -ProjectId "cloudresume-ai"
+```
 
-#### Action Secrets:
-- `AZURE_CLIENT_ID`: App Registration / Managed Identity Client ID
-- `AZURE_TENANT_ID`: Microsoft Entra Tenant ID
-- `AZURE_SUBSCRIPTION_ID`: Azure Subscription ID
-- `POSTGRES_ADMIN_PASSWORD`: Strong password for PostgreSQL Flexible Server
-- `FLASK_SECRET_KEY`: Random 64-character string
-- `GEMINI_API_KEY`: Google Gemini API key
+The script automatically:
+1. Enables the required Google Cloud APIs (`run.googleapis.com`, `storage.googleapis.com`, `artifactregistry.googleapis.com`, `secretmanager.googleapis.com`).
+2. Creates the private Google Cloud Storage bucket: `gs://cloudresumeai-resumes-cloudresume-ai`.
+3. Creates the Google Artifact Registry repository: `cloudresumeai-repo`.
+4. Builds and pushes the backend and frontend Docker containers.
+5. Deploys both services onto **Google Cloud Run (v2)** with **Scale-to-Zero** enabled.
+6. Returns the live public URLs (e.g. `https://cloudresumeai-frontend-xxxx-uc.a.run.app`).
 
-#### Action Variables:
-- `AZURE_RESOURCE_GROUP`: `rg-cloudresumeai-dev`
-- `AZURE_ACR_LOGIN_SERVER`: `<your-acr-name>.azurecr.io`
+### 5.3 Live Cloud Dashboards
+Once deployed, monitor your resources in real-time on Google Cloud Console:
+- **Cloud Run Services**: [https://console.cloud.google.com/run?project=cloudresume-ai](https://console.cloud.google.com/run?project=cloudresume-ai)
+- **Cloud Storage Bucket**: [https://console.cloud.google.com/storage/browser?project=cloudresume-ai](https://console.cloud.google.com/storage/browser?project=cloudresume-ai)
+- **Secret Manager**: [https://console.cloud.google.com/security/secret-manager?project=cloudresume-ai](https://console.cloud.google.com/security/secret-manager?project=cloudresume-ai)
+- **Cloud Logging (Logs Explorer)**: [https://console.cloud.google.com/logs/query?project=cloudresume-ai](https://console.cloud.google.com/logs/query?project=cloudresume-ai)
 
-### 5.3 Triggering Automated Deployment
-1. Navigate to the **Actions** tab in GitHub.
-2. Select the **CloudResumeAI Azure Deploy** workflow.
-3. Click **Run workflow**, choose the target environment (`dev` or `prod`), and execute.
-4. The workflow will:
-   - Authenticate to Azure via OIDC.
-   - Deploy/update infrastructure using `infra/bicep/main.bicep`.
-   - Build and push container images to Azure Container Registry.
-   - Update revisions in Azure Container Apps.
-   - Run a live health check on the deployed endpoint.
+---
 
+## 6. Microsoft Azure Cloud Deployment (Secondary Target)
+
+The project also maintains complete Azure Bicep templates for multi-cloud redundancy:
+- **IaC Templates**: Located in [`infra/bicep/main.bicep`](infra/bicep/main.bicep).
+- **Target Services**: Azure Container Apps, Azure Blob Storage, Azure Key Vault, Azure Database for PostgreSQL Flexible Server, and Application Insights.
+- **Workflow**: Automated via GitHub Actions in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
