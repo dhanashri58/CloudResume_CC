@@ -3,21 +3,19 @@ import {
   Bell,
   Shield,
   CreditCard,
-  Globe,
   Moon,
-  Monitor,
   LogOut,
   Camera,
   ChevronRight,
   Loader2,
   AlertCircle,
   CheckCircle2,
+  Sparkles,
 } from 'lucide-react';
 import { Button, Input, Card, SectionHeader, Badge, Divider } from '../../components/ui';
 import { getProfile, updateProfile } from '../../services/profileApi';
 import { useAuth } from '../../auth/AuthContext';
-
-type Theme = 'system' | 'light' | 'dark';
+import { useTheme, type AppTheme } from '../../context/ThemeContext';
 
 interface ProfileFormData {
   firstName: string;
@@ -59,7 +57,7 @@ const ProfilePage: React.FC = () => {
     marketing: false,
     weekly: true,
   });
-  const [theme, setTheme] = useState<Theme>('system');
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     let isMounted = true;
@@ -149,8 +147,8 @@ const ProfilePage: React.FC = () => {
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Page title */}
       <div>
-        <h1 className="text-2xl font-serif text-[#1C1917] tracking-tight">Profile & Settings</h1>
-        <p className="text-xs text-stone-500 mt-1 uppercase tracking-wider font-mono">
+        <h1 className="text-2xl font-bold font-sans text-[var(--text-primary)] tracking-tight">Profile & Settings</h1>
+        <p className="text-xs text-[var(--text-muted)] mt-1 tracking-wider uppercase font-mono">
           Account details, cloud synchronization, and personal preferences
         </p>
       </div>
@@ -160,14 +158,14 @@ const ProfilePage: React.FC = () => {
         <div
           className={`p-3.5 rounded-xl border text-sm flex items-center gap-2.5 transition-all ${
             statusMessage.type === 'success'
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-              : 'bg-red-50 border-red-200 text-red-800'
+              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
+              : 'bg-red-500/10 border-red-500/30 text-red-700 dark:text-red-400'
           }`}
         >
           {statusMessage.type === 'success' ? (
-            <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+            <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
           ) : (
-            <AlertCircle size={16} className="text-red-600 shrink-0" />
+            <AlertCircle size={16} className="text-red-600 dark:text-red-400 shrink-0" />
           )}
           <span>{statusMessage.text}</span>
         </div>
@@ -182,23 +180,23 @@ const ProfilePage: React.FC = () => {
         <Divider className="my-4" />
 
         {loading ? (
-          <div className="py-8 flex flex-col items-center justify-center text-slate-400 gap-2">
-            <Loader2 size={24} className="animate-spin text-blue-600" />
+          <div className="py-8 flex flex-col items-center justify-center text-[var(--text-muted)] gap-2">
+            <Loader2 size={24} className="animate-spin text-[var(--accent-primary)]" />
             <p className="text-xs">Loading profile from database...</p>
           </div>
         ) : (
           <>
             <div className="flex items-start gap-5 mb-5">
               <div className="relative shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-[#1C1917] flex items-center justify-center text-[#FAF7F2] font-serif text-xl tracking-wider shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-[var(--accent-primary)] flex items-center justify-center text-white font-bold text-xl tracking-wider shadow-sm">
                   {initials}
                 </div>
                 <button
                   type="button"
                   aria-label="Upload avatar"
-                  className="absolute -bottom-1 -right-1 w-6 h-6 bg-white border border-[#E7DFD5] rounded-full flex items-center justify-center shadow-sm hover:bg-[#FAF7F2] transition-colors"
+                  className="absolute -bottom-1 -right-1 w-6 h-6 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-full flex items-center justify-center shadow-sm hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)] transition-colors"
                 >
-                  <Camera size={11} className="text-stone-600" />
+                  <Camera size={11} />
                 </button>
               </div>
               <div className="flex-1 space-y-3">
@@ -334,23 +332,22 @@ const ProfilePage: React.FC = () => {
 
       {/* Appearance */}
       <Card className="p-5">
-        <SectionHeader title="Appearance" subtitle="Choose your display theme." />
+        <SectionHeader title="Appearance" subtitle="Switch your workspace design system between Golden Hour and Midnight Dark modes." />
         <Divider className="my-4" />
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {(
             [
-              { value: 'system', icon: <Monitor size={16} />, label: 'System' },
-              { value: 'light', icon: <Globe size={16} />, label: 'Golden Light' },
-              { value: 'dark', icon: <Moon size={16} />, label: 'Dark' },
-            ] as { value: Theme; icon: React.ReactNode; label: string }[]
+              { value: 'golden' as AppTheme, icon: <Sparkles size={16} className="text-amber-600" />, label: 'Golden Hour' },
+              { value: 'dark' as AppTheme, icon: <Moon size={16} className="text-blue-400" />, label: 'Midnight Dark' },
+            ]
           ).map((opt) => (
             <button
               key={opt.value}
               onClick={() => setTheme(opt.value)}
-              className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-xl border text-sm font-medium transition-all ${
+              className={`flex flex-col items-center gap-2 py-3.5 px-2 rounded-2xl border text-xs font-semibold transition-all ${
                 theme === opt.value
-                  ? 'border-amber-600 bg-amber-50/70 text-amber-950 font-semibold shadow-xs'
-                  : 'border-[#E7DFD5] text-stone-600 hover:border-stone-400 bg-white'
+                  ? 'border-[var(--accent-primary)] bg-[var(--accent-soft)] text-[var(--accent-primary)] shadow-xs font-bold'
+                  : 'border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-card)] bg-[var(--bg-subtle)]'
               }`}
             >
               {opt.icon}
@@ -380,7 +377,7 @@ const ProfilePage: React.FC = () => {
               icon: <Bell size={16} />,
               label: 'Cloud Infrastructure',
               value: (
-                <span className="text-xs text-stone-500 font-mono">
+                <span className="text-xs text-[var(--text-muted)] font-mono">
                   Google Cloud Run & Cloud SQL
                 </span>
               ),
@@ -388,18 +385,18 @@ const ProfilePage: React.FC = () => {
           ].map((item, i) => (
             <div
               key={i}
-              className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#FAF7F2] cursor-pointer transition-colors group"
+              className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[var(--bg-subtle)] cursor-pointer transition-colors group"
             >
-              <div className="w-8 h-8 bg-[#F5EFE6] rounded-lg flex items-center justify-center text-stone-600">
+              <div className="w-8 h-8 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-lg flex items-center justify-center text-[var(--text-secondary)]">
                 {item.icon}
               </div>
-              <span className="flex-1 text-sm text-stone-800 font-medium">
+              <span className="flex-1 text-sm text-[var(--text-primary)] font-medium">
                 {item.label}
               </span>
               {item.value}
               <ChevronRight
                 size={14}
-                className="text-stone-300 group-hover:text-stone-500 transition-colors"
+                className="text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors"
               />
             </div>
           ))}
@@ -407,8 +404,8 @@ const ProfilePage: React.FC = () => {
         <Divider className="my-4" />
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-red-600">Delete account</p>
-            <p className="text-xs text-stone-500">
+            <p className="text-sm font-semibold text-red-600 dark:text-red-400">Delete account</p>
+            <p className="text-xs text-[var(--text-muted)]">
               Permanently remove your account and all stored resumes.
             </p>
           </div>
@@ -422,7 +419,7 @@ const ProfilePage: React.FC = () => {
       <button
         type="button"
         onClick={() => logout()}
-        className="w-full flex items-center justify-center gap-2 py-3 text-sm text-stone-600 hover:text-red-600 hover:bg-red-50/50 rounded-full transition-colors border border-[#E7DFD5] bg-white shadow-xs font-medium"
+        className="w-full flex items-center justify-center gap-2 py-3 text-sm text-[var(--text-secondary)] hover:text-red-600 hover:bg-rose-500/10 rounded-2xl transition-colors border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-xs font-semibold"
       >
         <LogOut size={15} />
         Sign out

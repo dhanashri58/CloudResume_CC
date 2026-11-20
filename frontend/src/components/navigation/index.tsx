@@ -40,19 +40,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
 
   return (
     <aside
-      className={`h-screen bg-white border-r border-[#E7DFD5] flex flex-col transition-all duration-200 shrink-0 select-none ${
+      className={`h-screen bg-[var(--bg-surface)] border-r border-[var(--border-subtle)] text-[var(--text-primary)] flex flex-col transition-all duration-200 shrink-0 select-none ${
         collapsed ? 'w-16' : 'w-60'
       }`}
     >
       {/* Logo */}
-      <div className={`flex items-center h-16 border-b border-[#E7DFD5] px-4 gap-3 ${collapsed ? 'justify-center' : ''}`}>
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-600 p-[1px] shadow-sm shadow-amber-500/20 shrink-0">
-          <div className="w-full h-full bg-white rounded-[7px] flex items-center justify-center">
-            <Cloud size={16} className="text-amber-600" />
-          </div>
+      <div className={`flex items-center h-16 border-b border-[var(--border-subtle)] px-4 gap-3 ${collapsed ? 'justify-center' : ''}`}>
+        <div className="w-8 h-8 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center shrink-0">
+          <Cloud size={16} className="text-[var(--accent-primary)]" />
         </div>
         {!collapsed && (
-          <span className="font-bold text-[#1C1917] text-sm tracking-tight font-sans">
+          <span className="font-extrabold text-[var(--text-primary)] text-sm tracking-tight font-sans">
             CloudResumeAI
           </span>
         )}
@@ -73,11 +71,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
               title={collapsed ? item.label : undefined}
               className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
                 active
-                  ? 'bg-[#F5EFE6] text-amber-950 font-semibold border border-amber-300/40 shadow-sm'
-                  : 'text-stone-600 hover:text-[#1C1917] hover:bg-[#FAF7F2]'
-              } ${collapsed ? 'justify-center' : ''}`}
+                  ? 'bg-[var(--bg-subtle)] text-[var(--text-primary)] font-bold border border-[var(--border-subtle)] shadow-xs'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+              }`}
             >
-              <span className={active ? 'text-amber-700' : 'text-stone-400'}>{item.icon}</span>
+              <span className={active ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)]'}>{item.icon}</span>
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -85,10 +83,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       </nav>
 
       {/* Bottom section */}
-      <div className="border-t border-[#E7DFD5] py-4 px-2 space-y-1">
+      <div className="border-t border-[var(--border-subtle)] py-4 px-2 space-y-1">
         <Link
           to="/profile"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-stone-600 hover:text-[#1C1917] hover:bg-[#FAF7F2] transition-colors ${
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors ${
             collapsed ? 'justify-center' : ''
           }`}
           title={collapsed ? 'Settings' : undefined}
@@ -99,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         {isAuthenticated && (
           <button
             onClick={() => logout()}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-stone-600 hover:bg-rose-50 hover:text-rose-700 transition-colors ${
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-[var(--text-secondary)] hover:bg-rose-500/10 hover:text-rose-600 transition-colors ${
               collapsed ? 'justify-center' : ''
             }`}
             title={collapsed ? 'Sign out' : undefined}
@@ -111,10 +109,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       </div>
 
       {/* Collapse toggle */}
-      <div className="border-t border-[#E7DFD5] px-2 py-3 flex justify-end">
+      <div className="border-t border-[var(--border-subtle)] px-2 py-3 flex justify-end">
         <button
           onClick={() => onCollapse(!collapsed)}
-          className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-[#FAF7F2] transition-colors"
+          className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -143,9 +141,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
     : 'AM';
 
   return (
-    <header className="h-16 bg-white/90 backdrop-blur-xl border-b border-[#E7DFD5] flex items-center px-6 gap-4 shrink-0 select-none">
+    <header className="h-16 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] flex items-center px-6 gap-4 shrink-0 select-none transition-colors duration-200">
       {title && (
-        <h1 className="text-base font-bold text-[#1C1917] flex-1">{title}</h1>
+        <h1 className="text-base font-bold text-[var(--text-primary)] flex-1">{title}</h1>
       )}
       {!title && <div className="flex-1" />}
       {actions && <div className="flex items-center gap-3">{actions}</div>}
@@ -154,22 +152,22 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <div className="hidden sm:flex flex-col items-end">
-            <span className="text-xs font-semibold text-[#1C1917]">
+            <span className="text-xs font-semibold text-[var(--text-primary)]">
               {user?.name || 'Authenticated User'}
             </span>
-            <span className="text-[10px] text-amber-800 font-medium bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60 mt-0.5">
+            <span className="text-[10px] text-[var(--text-muted)] font-medium bg-[var(--bg-subtle)] px-2 py-0.5 rounded-full border border-[var(--border-subtle)] mt-0.5">
               {user?.role || user?.email || 'Cloud Member'}
             </span>
           </div>
           <div
-            className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-600 via-orange-600 to-amber-700 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm border border-white"
+            className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-xs border border-[var(--border-subtle)]"
             title={user?.email}
           >
             {initials}
           </div>
           <button
             onClick={() => logout()}
-            className="hidden sm:inline-flex text-xs px-2.5 py-1 text-stone-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200"
+            className="hidden sm:inline-flex text-xs px-2.5 py-1 text-[var(--text-muted)] hover:text-rose-600 hover:bg-rose-500/10 rounded-lg transition-colors border border-transparent"
             title="Sign out"
           >
             Sign out
@@ -178,7 +176,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, actions }) => {
       ) : (
         <Link
           to="/login"
-          className="text-xs px-4 py-2 bg-[#1C1917] text-white rounded-full font-medium hover:bg-[#292524] transition-all shadow-sm"
+          className="text-xs px-4 py-2 bg-[var(--text-primary)] text-[var(--bg-page)] rounded-full font-medium hover:opacity-90 transition-all shadow-xs"
         >
           Sign in
         </Link>
@@ -223,41 +221,72 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => (
 export const PublicNav: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+
+  const isTemplates = location.pathname === '/templates';
+  const isFeatures = location.hash === '#features';
+  const isArch = location.hash === '#architecture';
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${id}`);
+      }
+    }
+    setOpen(false);
+  };
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FBF9F5]/90 backdrop-blur-xl border-b border-[#E7DFD5] transition-all select-none">
+    <header className="sticky top-0 z-50 bg-[var(--bg-page)] backdrop-blur-xl border-b border-[var(--border-subtle)] transition-colors duration-250 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 shadow-sm group-hover:scale-105 transition-transform">
-            <Cloud size={20} className="text-amber-700" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 dark:text-amber-400 shadow-sm group-hover:scale-105 transition-transform">
+            <Cloud size={20} className="text-amber-700 dark:text-amber-400" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-[#1C1917] text-base tracking-tight font-sans">
+            <span className="font-extrabold text-[var(--text-primary)] text-base tracking-tight font-sans">
               CloudResumeAI
             </span>
-            <span className="text-[10px] text-amber-800 font-mono tracking-wider uppercase -mt-0.5 hidden sm:block">
+            <span className="text-[10px] text-amber-700 dark:text-amber-400 font-mono tracking-wider uppercase -mt-0.5 hidden sm:block">
               Golden Hour Architecture
             </span>
           </div>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 text-xs bg-[#F5EFE6] px-3 py-1.5 rounded-full border border-[#E7DFD5] shadow-inner">
+        <nav className="hidden md:flex items-center gap-1 text-xs bg-[var(--bg-subtle)] px-2.5 py-1 rounded-full border border-[var(--border-subtle)] shadow-inner">
           <Link
             to="/templates"
-            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
+            className={`px-3.5 py-1.5 rounded-full font-semibold transition-all ${
+              isTemplates
+                ? 'bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-xs border border-[var(--border-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+            }`}
           >
             Templates
           </Link>
           <a
-            href="#features"
-            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
+            href="/#features"
+            onClick={(e) => handleNavClick(e, 'features')}
+            className={`px-3.5 py-1.5 rounded-full font-semibold transition-all ${
+              isFeatures
+                ? 'bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-xs border border-[var(--border-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+            }`}
           >
             Features
           </a>
           <a
-            href="#how-it-works"
-            className="px-3.5 py-1.5 text-stone-700 hover:text-[#1C1917] rounded-full hover:bg-white font-medium transition-all"
+            href="/#architecture"
+            onClick={(e) => handleNavClick(e, 'architecture')}
+            className={`px-3.5 py-1.5 rounded-full font-semibold transition-all ${
+              isArch
+                ? 'bg-[var(--bg-surface)] text-[var(--text-primary)] shadow-xs border border-[var(--border-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+            }`}
           >
             Architecture
           </a>
@@ -269,19 +298,19 @@ export const PublicNav: React.FC = () => {
             <div className="flex items-center gap-2.5">
               <Link
                 to="/dashboard"
-                className="text-xs px-3.5 py-1.5 bg-amber-100/70 border border-amber-300 text-amber-900 rounded-full font-semibold hover:bg-amber-100 transition-all"
+                className="text-xs px-3.5 py-1.5 bg-amber-100/70 dark:bg-amber-900/40 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 rounded-full font-semibold hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all"
               >
                 {user?.name?.split(' ')[0] || 'My Workspace'}
               </Link>
               <Link
                 to="/dashboard"
-                className="text-xs px-4 py-2 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-medium transition-all shadow-sm"
+                className="text-xs px-4 py-2 bg-[var(--text-primary)] hover:opacity-90 text-[var(--bg-page)] rounded-full font-medium transition-all shadow-sm"
               >
                 Go to Dashboard
               </Link>
               <button
                 onClick={() => logout()}
-                className="text-xs text-stone-400 hover:text-stone-700 px-2 py-1"
+                className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] px-2 py-1"
                 title="Sign out"
               >
                 Sign out
@@ -291,13 +320,13 @@ export const PublicNav: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="text-xs px-4 py-2 text-stone-700 hover:text-[#1C1917] font-semibold hover:bg-white rounded-full border border-[#DCD3C7] transition-all shadow-sm"
+                className="text-xs px-4 py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-semibold hover:bg-[var(--bg-surface)] rounded-full border border-[var(--border-subtle)] transition-all shadow-sm"
               >
                 Sign in
               </Link>
               <Link
                 to="/signup"
-                className="text-xs px-5 py-2.5 bg-[#1C1917] hover:bg-[#292524] text-white rounded-full font-semibold transition-all shadow-sm hover:shadow active:scale-[0.98]"
+                className="text-xs px-5 py-2.5 bg-[var(--text-primary)] hover:opacity-90 text-[var(--bg-page)] rounded-full font-semibold transition-all shadow-sm hover:shadow active:scale-[0.98]"
               >
                 Get started free ↗
               </Link>
@@ -307,7 +336,7 @@ export const PublicNav: React.FC = () => {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-stone-700 hover:text-[#1C1917] bg-white rounded-xl border border-[#E7DFD5]"
+          className="md:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -319,39 +348,43 @@ export const PublicNav: React.FC = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-[#E7DFD5] bg-[#FBF9F5] px-6 py-4 space-y-2">
+        <div className="md:hidden border-t border-[var(--border-subtle)] bg-[var(--bg-page)] px-6 py-4 space-y-2">
           <Link
             to="/templates"
-            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
+            className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
             onClick={() => setOpen(false)}
           >
             Templates
           </Link>
           <a
-            href="#features"
-            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
-            onClick={() => setOpen(false)}
+            href="/#features"
+            className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
+            onClick={(e) => handleNavClick(e, 'features')}
           >
             Features
           </a>
           <a
-            href="#how-it-works"
-            className="block px-3 py-2 text-sm text-stone-700 hover:text-[#1C1917] rounded-lg hover:bg-[#F5EFE6]"
-            onClick={() => setOpen(false)}
+            href="/#architecture"
+            className="block px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-subtle)]"
+            onClick={(e) => handleNavClick(e, 'architecture')}
           >
             Architecture
           </a>
-          <div className="pt-3 flex flex-col gap-2 border-t border-[#E7DFD5]">
+          <div className="pt-3 flex flex-col gap-2 border-t border-[var(--border-subtle)]">
+            <div className="flex items-center justify-between pb-2">
+              <span className="text-xs text-[var(--text-muted)]">Theme</span>
+              <ThemeToggle />
+            </div>
             <Link
               to="/login"
-              className="text-center text-sm py-2.5 border border-[#DCD3C7] rounded-full text-stone-800 font-semibold bg-white"
+              className="text-center text-sm py-2.5 border border-[var(--border-subtle)] rounded-full text-[var(--text-primary)] font-semibold bg-[var(--bg-surface)]"
               onClick={() => setOpen(false)}
             >
               Sign in
             </Link>
             <Link
               to="/signup"
-              className="text-center text-sm py-2.5 bg-[#1C1917] text-white rounded-full font-semibold shadow-sm"
+              className="text-center text-sm py-2.5 bg-[var(--text-primary)] text-[var(--bg-page)] rounded-full font-semibold shadow-sm"
               onClick={() => setOpen(false)}
             >
               Get started free

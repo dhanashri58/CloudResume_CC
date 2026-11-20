@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import {
   Mail,
@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { GoogleOAuthModal } from '../../components/auth/GoogleOAuthModal';
 import { PersonaModal, PersonaType } from '../../components/auth/PersonaModal';
-import { ThemeToggle } from '../../components/ui/ThemeToggle';
 
 export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
   initialMode = 'signin',
@@ -192,30 +191,19 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
   };
 
   return (
-    <div className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-8 sm:py-12 bg-slate-50 dark:bg-slate-950 transition-colors">
-      {/* Top Header Controls: Theme Mode Switcher */}
-      <div className="max-w-md w-full flex items-center justify-between mb-4 px-2">
-        <Link
-          to="/"
-          className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors flex items-center gap-1"
-        >
-          <span>← Back to Home</span>
-        </Link>
-        <ThemeToggle />
-      </div>
-
+    <div className="min-h-[calc(100vh-4.5rem)] flex flex-col items-center justify-center px-4 py-8 sm:py-12 bg-[var(--bg-page)] text-[var(--text-primary)] transition-colors duration-250">
       {/* Main Authentication Card */}
-      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-7 sm:p-9 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-6">
+      <div className="max-w-md w-full bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-3xl border border-[var(--border-subtle)] p-7 sm:p-9 shadow-xl space-y-6 transition-colors">
         {/* Brand Header */}
         <div className="text-center space-y-1.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 text-xs font-semibold mb-1">
-            <ShieldCheck size={14} className="text-blue-600 dark:text-blue-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-soft)] border border-[var(--border-subtle)] text-[var(--accent-primary)] text-xs font-semibold mb-1">
+            <ShieldCheck size={14} className="text-[var(--accent-primary)]" />
             <span>Secure Cloud Access</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-sans">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text-primary)] font-sans">
             {tab === 'signin' ? 'Sign In to CloudResume' : 'Create Your Free Account'}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)]">
             {tab === 'signin'
               ? 'Enter your credentials to access your resumes and AI workspace'
               : 'Join to craft ATS-optimized cloud resumes and get Gemini AI advice'}
@@ -223,7 +211,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
         </div>
 
         {/* Interactive Tab Switcher: Sign In vs Create Account */}
-        <div className="p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 flex gap-1 border border-slate-200/80 dark:border-slate-700">
+        <div className="p-1 rounded-2xl bg-[var(--bg-subtle)] flex gap-1 border border-[var(--border-subtle)]">
           <button
             type="button"
             onClick={() => {
@@ -232,8 +220,8 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
             }}
             className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
               tab === 'signin'
-                ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-[var(--bg-surface)] text-[var(--accent-primary)] shadow-xs'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             Sign In
@@ -246,8 +234,8 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
             }}
             className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
               tab === 'signup'
-                ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-[var(--bg-surface)] text-[var(--accent-primary)] shadow-xs'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             Create Account
@@ -256,7 +244,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
 
         {/* Error Notification */}
         {errorMessage && (
-          <div className="p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-2xl text-xs text-red-800 dark:text-red-300 flex items-start gap-2.5 animate-fadeIn">
+          <div className="p-3.5 bg-red-500/10 border border-red-500/30 rounded-2xl text-xs text-red-600 dark:text-red-400 flex items-start gap-2.5 animate-fadeIn">
             <AlertCircle size={16} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
             <span className="leading-relaxed">{errorMessage}</span>
           </div>
@@ -264,7 +252,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
 
         {/* Success Notification */}
         {successMessage && (
-          <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-2xl text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5 animate-fadeIn">
+          <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-2.5 animate-fadeIn">
             <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{successMessage}</span>
           </div>
@@ -275,11 +263,11 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
           /* Sign In Form */
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="block text-xs font-semibold text-[var(--text-secondary)]">
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                   <Mail size={16} />
                 </div>
                 <input
@@ -289,14 +277,14 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <label className="block text-xs font-semibold text-[var(--text-secondary)]">
                   Password
                 </label>
                 <button
@@ -305,13 +293,13 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                     setForgotEmail(email);
                     setShowForgotModal(true);
                   }}
-                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  className="text-xs text-[var(--accent-primary)] hover:underline font-medium"
                 >
                   Forgot password?
                 </button>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                   <Lock size={16} />
                 </div>
                 <input
@@ -321,13 +309,13 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-11 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                  className="w-full pl-10 pr-11 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -340,9 +328,9 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 rounded border-[var(--border-subtle)] text-[var(--accent-primary)] focus:ring-[var(--accent-primary)] cursor-pointer"
                 />
-                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                <span className="text-xs text-[var(--text-secondary)] font-medium">
                   Keep me signed in for 30 days
                 </span>
               </label>
@@ -351,7 +339,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-5 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+              className="w-full py-3 px-5 rounded-full bg-[var(--accent-primary)] hover:opacity-90 active:scale-[0.99] text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/10 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <>
@@ -370,11 +358,11 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
           /* Sign Up Form */
           <form onSubmit={handleSignUpSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="block text-xs font-semibold text-[var(--text-secondary)]">
                 Full Name
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                   <User size={16} />
                 </div>
                 <input
@@ -384,17 +372,17 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Alex Mercer"
-                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="block text-xs font-semibold text-[var(--text-secondary)]">
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                   <Mail size={16} />
                 </div>
                 <input
@@ -404,17 +392,17 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="block text-xs font-semibold text-[var(--text-secondary)]">
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                   <Lock size={16} />
                 </div>
                 <input
@@ -424,13 +412,13 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 8 characters (letters & numbers)"
-                  className="w-full pl-10 pr-11 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                  className="w-full pl-10 pr-11 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -438,11 +426,11 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <label className="block text-xs font-semibold text-[var(--text-secondary)]">
                 Confirm Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                   <Lock size={16} />
                 </div>
                 <input
@@ -452,13 +440,13 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Re-enter your password"
-                  className="w-full pl-10 pr-11 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-2xs"
+                  className="w-full pl-10 pr-11 py-2.5 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/40 focus:border-[var(--accent-primary)] transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -466,22 +454,22 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
             </div>
 
             {password.length > 0 && (
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 rounded-2xl space-y-1 text-[11px] text-slate-600 dark:text-slate-400 animate-fadeIn">
+              <div className="p-3 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-2xl space-y-1 text-[11px] text-[var(--text-secondary)] animate-fadeIn">
                 <div className="grid grid-cols-2 gap-1.5">
-                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasLength ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
-                    <Check size={12} className={passwordCriteria.hasLength ? 'text-emerald-600' : 'text-slate-300'} />
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasLength ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasLength ? 'text-emerald-600' : 'text-[var(--text-muted)]'} />
                     <span>8+ Characters</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasLetter ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
-                    <Check size={12} className={passwordCriteria.hasLetter ? 'text-emerald-600' : 'text-slate-300'} />
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasLetter ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasLetter ? 'text-emerald-600' : 'text-[var(--text-muted)]'} />
                     <span>Has Letters</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasNumber ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
-                    <Check size={12} className={passwordCriteria.hasNumber ? 'text-emerald-600' : 'text-slate-300'} />
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasNumber ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasNumber ? 'text-emerald-600' : 'text-[var(--text-muted)]'} />
                     <span>Has Numbers</span>
                   </div>
-                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasMatch ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}`}>
-                    <Check size={12} className={passwordCriteria.hasMatch ? 'text-emerald-600' : 'text-slate-300'} />
+                  <div className={`flex items-center gap-1.5 ${passwordCriteria.hasMatch ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : ''}`}>
+                    <Check size={12} className={passwordCriteria.hasMatch ? 'text-emerald-600' : 'text-[var(--text-muted)]'} />
                     <span>Passwords Match</span>
                   </div>
                 </div>
@@ -491,7 +479,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-5 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+              className="w-full py-3 px-5 rounded-full bg-[var(--accent-primary)] hover:opacity-90 active:scale-[0.99] text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/10 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <>
@@ -510,17 +498,17 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
 
         {/* Divider */}
         <div className="relative flex items-center justify-center">
-          <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
-          <span className="bg-white dark:bg-slate-900 px-3 text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
+          <div className="border-t border-[var(--border-subtle)] w-full" />
+          <span className="bg-[var(--bg-surface)] px-3 text-[11px] text-[var(--text-muted)] uppercase tracking-wider font-semibold">
             Or continue with
           </span>
         </div>
 
-        {/* Google One-Click Button (Opens Google Account Chooser Modal) */}
+        {/* Google One-Click Button */}
         <button
           type="button"
           onClick={() => setShowGoogleModal(true)}
-          className="w-full py-2.5 px-4 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-2.5 transition-all shadow-xs"
+          className="w-full py-2.5 px-4 rounded-full border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/50 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] text-xs font-semibold flex items-center justify-center gap-2.5 transition-all shadow-2xs"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -544,52 +532,52 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
         </button>
 
         {/* 1-Click Academic Demo Personas for Quick Evaluation */}
-        <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-2">
+        <div className="pt-2 border-t border-[var(--border-subtle)]">
+          <p className="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider text-center mb-2">
             1-Click Academic Demo Personas
           </p>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => setActivePersona('student')}
-              className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-blue-50/50 dark:hover:bg-blue-950/40 text-left transition-all group"
+              className="p-2.5 rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-left transition-all group"
             >
-              <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 font-bold text-[11px]">
+              <div className="flex items-center gap-1.5 text-[var(--accent-primary)] font-bold text-[11px]">
                 <GraduationCap size={14} />
                 <span>Student</span>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Alex Mercer</p>
+              <p className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">Alex Mercer</p>
             </button>
 
             <button
               type="button"
               onClick={() => setActivePersona('evaluator')}
-              className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-emerald-400 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/40 text-left transition-all group"
+              className="p-2.5 rounded-2xl border border-[var(--border-subtle)] hover:border-emerald-500 bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-left transition-all group"
             >
-              <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
+              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">
                 <ShieldCheck size={14} />
                 <span>Evaluator</span>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Prof. Sharma</p>
+              <p className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">Prof. Sharma</p>
             </button>
 
             <button
               type="button"
               onClick={() => setActivePersona('recruiter')}
-              className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-purple-400 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-purple-50/50 dark:hover:bg-purple-950/40 text-left transition-all group"
+              className="p-2.5 rounded-2xl border border-[var(--border-subtle)] hover:border-purple-500 bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-left transition-all group"
             >
-              <div className="flex items-center gap-1.5 text-purple-700 dark:text-purple-400 font-bold text-[11px]">
+              <div className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-bold text-[11px]">
                 <Briefcase size={14} />
                 <span>Recruiter</span>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Sarah Jenkins</p>
+              <p className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">Sarah Jenkins</p>
             </button>
           </div>
         </div>
 
         {/* Footer Toggle text */}
-        <div className="text-center pt-1 border-t border-slate-100 dark:border-slate-800">
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+        <div className="text-center pt-1 border-t border-[var(--border-subtle)]">
+          <p className="text-xs text-[var(--text-secondary)]">
             {tab === 'signin' ? (
               <>
                 Don't have an account yet?{' '}

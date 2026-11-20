@@ -88,27 +88,27 @@ export const PersonaModal: React.FC<PersonaModalProps> = ({
   const info = PERSONA_CONFIGS[persona];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn">
-      <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden text-slate-900 animate-scaleUp">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
+      <div className="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-3xl max-w-md w-full shadow-2xl border border-[var(--border-subtle)] overflow-hidden animate-scaleUp transition-colors">
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 flex items-start justify-between">
+        <div className="p-6 border-b border-[var(--border-subtle)] flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
               {info.icon}
             </div>
             <div>
-              <span className="text-[10px] font-mono tracking-widest uppercase font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+              <span className="text-[10px] font-mono tracking-widest uppercase font-semibold text-[var(--accent-primary)] bg-[var(--accent-soft)] px-2 py-0.5 rounded-full border border-[var(--border-subtle)]">
                 {info.badge}
               </span>
-              <h3 className="text-base font-bold text-slate-900 mt-1">
+              <h3 className="text-base font-bold text-[var(--text-primary)] mt-1 font-sans">
                 {info.name}
               </h3>
-              <p className="text-xs text-slate-500">{info.email}</p>
+              <p className="text-xs text-[var(--text-muted)]">{info.email}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-subtle)] transition-colors"
           >
             <X size={18} />
           </button>
@@ -116,16 +116,16 @@ export const PersonaModal: React.FC<PersonaModalProps> = ({
 
         {/* Body */}
         <div className="p-6 space-y-4">
-          <p className="text-xs text-slate-600 leading-relaxed">
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
             {info.description}
           </p>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-xs font-bold text-slate-800">Available in this persona view:</p>
+          <div className="p-4 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] space-y-2">
+            <p className="text-xs font-bold text-[var(--text-primary)]">Available in this persona view:</p>
             <ul className="space-y-1.5">
               {info.features.map((feat, i) => (
-                <li key={i} className="flex items-center gap-2 text-xs text-slate-600">
-                  <Check size={14} className="text-emerald-600 shrink-0" />
+                <li key={i} className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+                  <Check size={14} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span>{feat}</span>
                 </li>
               ))}
