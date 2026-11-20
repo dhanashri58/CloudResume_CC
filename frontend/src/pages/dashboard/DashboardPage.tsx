@@ -7,7 +7,7 @@ import {
   BarChart3,
   TrendingUp,
   Clock,
-  Sparkles,
+  Zap,
   Layers,
   RefreshCw,
   ShieldCheck,
@@ -308,7 +308,7 @@ const DashboardPage: React.FC = () => {
       <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-500/5 via-orange-500/5 to-transparent p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-            <Sparkles size={20} />
+            <Zap size={20} />
           </div>
           <div>
             <h3 className="text-sm font-bold text-[var(--text-primary)]">
@@ -397,7 +397,7 @@ const DashboardPage: React.FC = () => {
           <Link to="/ai" className="group">
             <div className="h-full p-4 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent-primary)]/50 transition-all duration-200 shadow-xs flex items-start gap-3.5">
               <div className="w-10 h-10 bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-amber-500 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Sparkles size={18} />
+                <Zap size={18} />
               </div>
               <div>
                 <p className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">

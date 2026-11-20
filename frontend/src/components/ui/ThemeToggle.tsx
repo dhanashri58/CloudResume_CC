@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Sparkles } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 export const ThemeToggle: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -21,7 +21,7 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className = '' }
             : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
         }`}
       >
-        <Sparkles size={12} className="text-amber-600" />
+        <Sun size={12} className="text-amber-600" />
         <span>Golden</span>
       </button>
 

@@ -4,7 +4,7 @@ import {
   LayoutDashboard,
   FileText,
   Layers,
-  Sparkles,
+  Bot,
   User,
   ChevronLeft,
   ChevronRight,
@@ -25,7 +25,7 @@ const NAV_ITEMS: SidebarItem[] = [
   { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
   { label: 'My Resumes', path: '/dashboard/resumes', icon: <FileText size={18} /> },
   { label: 'Templates', path: '/templates', icon: <Layers size={18} /> },
-  { label: 'AI Assistant', path: '/ai', icon: <Sparkles size={18} /> },
+  { label: 'AI Assistant', path: '/ai', icon: <Bot size={18} /> },
   { label: 'Profile', path: '/profile', icon: <User size={18} /> },
 ];
 

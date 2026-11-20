@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Send, Sparkles, AlertCircle, ArrowLeft, Trash2, CheckCircle2 } from 'lucide-react';
+import { Send, Bot, AlertCircle, ArrowLeft, Trash2, CheckCircle2 } from 'lucide-react';
 import { SUGGESTED_PROMPTS } from '../../data/mockData';
 import { Button } from '../../components/ui';
 import type { ChatMessage } from '../../types';
@@ -28,7 +28,7 @@ const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
             : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20'
         }`}
       >
-        {isUser ? 'U' : <Sparkles size={13} className="text-[var(--accent-primary)]" />}
+        {isUser ? 'U' : <Bot size={13} className="text-[var(--accent-primary)]" />}
       </div>
 
       {/* Bubble */}
@@ -178,7 +178,7 @@ const AIAssistantPage: React.FC = () => {
             </button>
           </Link>
           <div className="w-9 h-9 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center justify-center text-[var(--accent-primary)]">
-            <Sparkles size={16} />
+            <Bot size={16} />
           </div>
           <div>
             <h1 className="text-base font-bold text-[var(--text-primary)] font-sans">
@@ -228,7 +228,7 @@ const AIAssistantPage: React.FC = () => {
         {isTyping && (
           <div className="flex gap-3">
             <div className="w-7 h-7 rounded-full bg-blue-500/10 flex items-center justify-center">
-              <Sparkles size={13} className="text-[var(--accent-primary)]" />
+              <Bot size={13} className="text-[var(--accent-primary)]" />
             </div>
             <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-xs px-4 py-3 rounded-2xl rounded-tl-xs flex items-center gap-1.5">
               {[0, 1, 2].map((i) => (

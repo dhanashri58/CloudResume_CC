@@ -5,7 +5,7 @@ import {
   SlidersHorizontal,
   Lock,
   ArrowRight,
-  Sparkles,
+  Layers,
   ChevronDown,
   Check,
   MapPin,
@@ -517,7 +517,7 @@ const TemplatesPage: React.FC = () => {
       {/* ─── Page Header (Matches Screenshot) ─────────────────────────────── */}
       <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-2.5 border border-amber-500/20">
-          <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+          <Layers size={12} className="text-amber-600 dark:text-amber-400" />
           <span>Resume Templates</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[var(--text-primary)] mb-2 font-sans tracking-tight">

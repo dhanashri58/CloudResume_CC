@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles,
   Camera,
   Clock,
   Briefcase,
@@ -34,7 +33,7 @@ const HeroResumeDocument: React.FC<{
 }> = ({ activeColor, onSelectColor, onOpenOptimize }) => {
   return (
     <div className="relative w-full max-w-lg mx-auto lg:max-w-none select-none">
-      
+
       {/* Decorative Golden/Green Scribble Behind Top Left */}
       <svg
         className="absolute -top-7 -left-7 w-24 h-24 text-amber-500/70 dark:text-amber-400/50 pointer-events-none -z-10"
@@ -55,7 +54,7 @@ const HeroResumeDocument: React.FC<{
         onClick={onOpenOptimize}
         className="absolute -top-3 right-6 z-30 flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-full text-xs font-bold shadow-lg shadow-amber-600/30 transition-transform hover:scale-105 active:scale-95"
       >
-        <Sparkles size={12} className="fill-white" />
+        <Zap size={12} className="fill-white" />
         <span>Enhance with AI</span>
       </button>
 
@@ -80,7 +79,7 @@ const HeroResumeDocument: React.FC<{
 
       {/* White A4 Resume Card with Warm Shadow */}
       <div className="relative bg-white rounded-3xl shadow-2xl border border-[#EAE3D5] dark:border-slate-800 overflow-hidden text-slate-800 transition-all duration-300">
-        
+
         {/* Top Header Banner with Active Accent Color */}
         <div
           className="p-4 sm:p-5 text-white flex items-center justify-between transition-colors duration-300"
@@ -105,7 +104,7 @@ const HeroResumeDocument: React.FC<{
 
         {/* Resume Content Body */}
         <div className="p-5 sm:p-6 space-y-3.5 text-left">
-          
+
           {/* Summary */}
           <div>
             <p
@@ -199,11 +198,10 @@ const HeroResumeDocument: React.FC<{
               type="button"
               onClick={() => onSelectColor(p.hex)}
               title={p.name}
-              className={`w-4 h-4 rounded-full transition-all flex items-center justify-center ${
-                activeColor === p.hex
-                  ? 'ring-2 ring-offset-1 ring-amber-600 scale-110'
-                  : 'opacity-70 hover:opacity-100 hover:scale-105'
-              }`}
+              className={`w-4 h-4 rounded-full transition-all flex items-center justify-center ${activeColor === p.hex
+                ? 'ring-2 ring-offset-1 ring-amber-600 scale-110'
+                : 'opacity-70 hover:opacity-100 hover:scale-105'
+                }`}
               style={{ backgroundColor: p.hex }}
             >
               {activeColor === p.hex && <Check size={8} className="text-white font-black" />}
@@ -229,11 +227,11 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] transition-colors duration-200 font-sans">
-      
+
       {/* ─── Hero Section ─────────────────────────────────────────────────── */}
       <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
+
           {/* Left Column: Heading, Subtitle, Burnt-Amber CTA Buttons, Rating */}
           <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--text-primary)] leading-[1.08] font-sans">
@@ -261,7 +259,6 @@ const LandingPage: React.FC = () => {
                 onClick={() => setIsOptimizeOpen(true)}
                 className="w-full sm:w-auto px-8 py-3.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] border-2 border-[var(--border-subtle)] hover:border-amber-600 text-sm font-bold rounded-full shadow-xs hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
-                <Sparkles size={14} className="text-amber-600 dark:text-amber-400" />
                 <span>Optimize my resume</span>
               </button>
             </div>
@@ -283,7 +280,7 @@ const LandingPage: React.FC = () => {
       {/* ─── Section 2: "Create a resume that gets results" ─────────────────── */}
       <section className="py-16 sm:py-20 bg-[var(--bg-surface)] border-y border-[var(--border-subtle)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Centered Heading with Curvy Hand-drawn Arrow and Deep Charcoal Pill */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-6 mb-14 text-center md:text-left">
             <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-primary)] tracking-tight font-sans">
@@ -317,7 +314,7 @@ const LandingPage: React.FC = () => {
 
           {/* 3 Refined Feature Pillars with Warm Aesthetic */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            
+
             {/* Column 1: Recruiter-Approved Resume */}
             <div className="p-6 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-page)] hover:border-amber-500/40 hover:shadow-md transition-all space-y-3">
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center shadow-xs">
@@ -364,11 +361,11 @@ const LandingPage: React.FC = () => {
 
       {/* ─── Section 3: "6 features to boost your job search" ───────────────── */}
       <section id="features" className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3 border border-amber-500/20">
-            <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+            <Zap size={12} className="text-amber-600 dark:text-amber-400" />
             <span>Golden Hour Architecture Features</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-primary)] tracking-tight font-sans">
@@ -381,7 +378,7 @@ const LandingPage: React.FC = () => {
 
         {/* 6 Refined Elevated Cards (2 Rows of 3 Cards) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
+
           {/* Card 1: 35+ Template Designs */}
           <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
             <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
@@ -560,7 +557,7 @@ const LandingPage: React.FC = () => {
         heroHeight="clamp(440px, 50vh, 560px)"
         heading={"Engineering\nHigh-Impact Cloud\nCareers with Gemini AI"}
         subheading="Optimize for ATS scanners, craft impact bullets, and export vector PDFs in milliseconds."
-        tagline="Next-generation cloud resume engineering powered by Google Cloud Platform & Gemini AI."
+        tagline="Next-generation cloud resume engineering powered by Gemini AI."
         placeholder="Enter your university / work email"
         cta={{ label: "Start Building Free", href: "/dashboard" }}
         columns={[
@@ -574,11 +571,11 @@ const LandingPage: React.FC = () => {
             ],
           },
           {
-            title: "Cloud",
+            title: "Features",
             links: [
-              { label: "Google Cloud Platform", href: "/#architecture" },
-              { label: "Cloud Run", href: "/#architecture" },
-              { label: "Cloud Storage", href: "/#architecture" },
+              { label: "ATS Keyword Radar", href: "/#features" },
+              { label: "XYZ Bullet Rewriter", href: "/#features" },
+              { label: "Vector PDF Export", href: "/#features" },
             ],
           },
           {

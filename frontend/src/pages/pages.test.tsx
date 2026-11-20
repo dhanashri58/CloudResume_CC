@@ -188,11 +188,12 @@ describe('ProfilePage', () => {
     });
   });
 
-  it('renders notification options and appearance selectors', () => {
+  it('renders appearance selectors and account options', () => {
     renderPage();
-    expect(screen.getByText('Notifications')).toBeInTheDocument();
-    expect(screen.getByText('Resume views')).toBeInTheDocument();
     expect(screen.getByText('Appearance')).toBeInTheDocument();
+    expect(screen.getByText('Golden Hour')).toBeInTheDocument();
+    expect(screen.getByText('Midnight Dark')).toBeInTheDocument();
+    expect(screen.getByText('Sign out')).toBeInTheDocument();
   });
 });
 

@@ -7,6 +7,7 @@ import {
   FileText,
   CheckCircle2,
   X,
+  Wand2,
   Sparkles,
   Sliders,
   Download,
@@ -328,7 +329,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
             {/* Header */}
             <div className="text-center max-w-xl mx-auto mb-8">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3 border border-amber-500/20">
-                <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+                <Wand2 size={12} className="text-amber-600 dark:text-amber-400" />
                 <span>AI Resume Optimizer</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--text-primary)] font-sans">
@@ -643,7 +644,7 @@ export const OptimizeResumeModal: React.FC<OptimizeResumeModalProps> = ({
                 <span>Automated ATS Scoring &amp; Optimization</span>
                 <span className="w-1 h-1 rounded-full bg-[var(--text-muted)]" />
                 <span className="font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1">
-                  <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+                  <Wand2 size={12} className="text-amber-600 dark:text-amber-400" />
                   <span>Google Gemini AI</span>
                 </span>
               </div>

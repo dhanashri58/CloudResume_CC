@@ -210,7 +210,7 @@ const PRESETS: MeadowPaletteMap = {
 
 const DEFAULT_COLUMNS: MeadowColumn[] = [
   { title: "Navigate", links: [{ label: "Home" }, { label: "About" }, { label: "Templates" }, { label: "Dashboard" }] },
-  { title: "Cloud", links: [{ label: "Google Cloud Platform" }, { label: "Cloud Run" }, { label: "Cloud Storage" }] },
+  { title: "Features", links: [{ label: "ATS Optimization" }, { label: "XYZ Bullet Rewriter" }, { label: "Vector PDF Export" }] },
   { title: "AI Assistant", links: [{ label: "Gemini AI" }, { label: "ATS Scorer" }, { label: "Career Coach" }] },
 ];
 
@@ -1213,7 +1213,7 @@ export default function MeadowRiseFooter({
   heading,
   subheading = "Generate ATS-optimized resumes and unlock top cloud engineering roles with Google Gemini.",
   cta = { label: "Build Your Resume", href: "/editor" },
-  tagline = "Enterprise cloud resume engineering powered by Google Cloud Platform & Gemini AI.",
+  tagline = "Enterprise cloud resume engineering powered by Gemini AI.",
   newsletter = true,
   placeholder = "Enter your university / work email",
   onSubscribe,

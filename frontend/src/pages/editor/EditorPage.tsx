@@ -9,6 +9,7 @@ import {
   Save,
   Eye,
   Download,
+  Wand2,
   Sparkles,
   ArrowLeft,
   RefreshCw,
@@ -515,7 +516,7 @@ const EditorPage: React.FC = () => {
             onClick={() => setIsJobMatchModalOpen(true)}
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/30 text-amber-900 dark:text-amber-200 hover:bg-amber-100 transition-colors"
           >
-            <Sparkles size={13} className="text-amber-600 dark:text-amber-400" />
+            <Wand2 size={13} className="text-amber-600 dark:text-amber-400" />
             Match Job
           </button>
 
