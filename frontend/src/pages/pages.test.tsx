@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import TemplatesPage from './templates/TemplatesPage';
 import DashboardPage from './dashboard/DashboardPage';
+import MyResumesPage from './resumes/MyResumesPage';
 import AIAssistantPage from './ai/AIAssistantPage';
 import ProfilePage from './profile/ProfilePage';
 import { RESUME_TEMPLATES } from '../data/mockData';
@@ -96,6 +97,30 @@ describe('DashboardPage', () => {
     renderPage();
     expect(screen.getByText('Browse templates')).toBeInTheDocument();
     expect(screen.getByText('AI Assistant')).toBeInTheDocument();
+  });
+});
+
+// ─── MyResumesPage tests ────────────────────────────────────────────────────────
+
+describe('MyResumesPage', () => {
+  const renderPage = () =>
+    render(
+      <MemoryRouter>
+        <MyResumesPage />
+      </MemoryRouter>
+    );
+
+  it('renders My Resumes heading and search toolbar', () => {
+    renderPage();
+    expect(screen.getByRole('heading', { name: /my resumes/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/search resumes by title, role/i)).toBeInTheDocument();
+  });
+
+  it('renders status filter tabs and sort options', () => {
+    renderPage();
+    expect(screen.getByText(/all \(/i)).toBeInTheDocument();
+    expect(screen.getByText(/active \(/i)).toBeInTheDocument();
+    expect(screen.getByText(/draft \(/i)).toBeInTheDocument();
   });
 });
 

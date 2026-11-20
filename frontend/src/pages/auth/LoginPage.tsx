@@ -12,12 +12,9 @@ import {
   CheckCircle2,
   Loader2,
   ShieldCheck,
-  GraduationCap,
-  Briefcase,
   X,
   Check,
 } from 'lucide-react';
-import { PersonaModal, PersonaType } from '../../components/auth/PersonaModal';
 import { API_BASE_URL, GOOGLE_CLIENT_ID } from '../../config/api';
 
 export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
@@ -27,7 +24,6 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
     loginWithCredentials,
     registerUser,
     loginWithGoogle,
-    loginAsDemo,
     isAuthenticated,
   } = useAuth();
   const navigate = useNavigate();
@@ -69,9 +65,8 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Google OAuth Loading & Personas
+  // Google OAuth Loading
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [activePersona, setActivePersona] = useState<PersonaType | null>(null);
 
   // Check for redirect token and load GIS
   useEffect(() => {
@@ -254,12 +249,6 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
     } else {
       setErrorMessage(result.error || 'Failed to create account. Please try again.');
     }
-  };
-
-
-  const handlePersonaSelect = async (persona: PersonaType) => {
-    await loginAsDemo(persona);
-    navigate(from, { replace: true });
   };
 
   const handleRequestResetCode = async (e: React.FormEvent) => {
@@ -689,52 +678,8 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
           <span>{googleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
         </button>
 
-        {/* 1-Click Academic Demo Personas for Quick Evaluation */}
-        <div className="pt-2 border-t border-[var(--border-subtle)]">
-          <p className="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider text-center mb-2">
-            1-Click Academic Demo Personas
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => setActivePersona('student')}
-              className="p-2.5 rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-left transition-all group"
-            >
-              <div className="flex items-center gap-1.5 text-[var(--accent-primary)] font-bold text-[11px]">
-                <GraduationCap size={14} />
-                <span>Student</span>
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">Alex Mercer</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActivePersona('evaluator')}
-              className="p-2.5 rounded-2xl border border-[var(--border-subtle)] hover:border-emerald-500 bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-left transition-all group"
-            >
-              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">
-                <ShieldCheck size={14} />
-                <span>Evaluator</span>
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">Prof. Sharma</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActivePersona('recruiter')}
-              className="p-2.5 rounded-2xl border border-[var(--border-subtle)] hover:border-purple-500 bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] text-left transition-all group"
-            >
-              <div className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-bold text-[11px]">
-                <Briefcase size={14} />
-                <span>Recruiter</span>
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">Sarah Jenkins</p>
-            </button>
-          </div>
-        </div>
-
         {/* Footer Toggle text */}
-        <div className="text-center pt-1 border-t border-[var(--border-subtle)]">
+        <div className="text-center pt-2 border-t border-[var(--border-subtle)]">
           <p className="text-xs text-[var(--text-secondary)]">
             {tab === 'signin' ? (
               <>
@@ -768,16 +713,6 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
           </p>
         </div>
       </div>
-
-
-
-      {/* Persona Detail Modal */}
-      <PersonaModal
-        isOpen={Boolean(activePersona)}
-        persona={activePersona}
-        onClose={() => setActivePersona(null)}
-        onConfirm={handlePersonaSelect}
-      />
 
       {/* Production-Grade 2-Step Password Reset Modal */}
       {showForgotModal && (

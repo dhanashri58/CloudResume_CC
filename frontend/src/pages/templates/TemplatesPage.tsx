@@ -37,15 +37,107 @@ const SWATCH_COLORS = [
   { id: 'crimson', name: 'Ruby Crimson', hex: '#DC2626' },
 ];
 
+// ─── Candidate Showcase Profiles (Realistic Team Distribution) ───────────────
+
+interface SampleCandidate {
+  name: string;
+  initials: string;
+  role: string;
+  email: string;
+  summary: string;
+  company: string;
+  skills: string[];
+}
+
+const TEMPLATE_CANDIDATES: Record<string, SampleCandidate> = {
+  modern: {
+    name: 'TANMAY KUMBHARE',
+    initials: 'TK',
+    role: 'Senior Cloud Solutions Architect',
+    email: 'tanmay.kumbhare24@vit.edu',
+    summary: 'Cloud solutions architect specializing in serverless microservices, Terraform IaC, and automated CI/CD deployment pipelines.',
+    company: 'CloudScale Technologies · Pune, India',
+    skills: ['AWS Lambda', 'Docker & K8s', 'Terraform', 'System Design'],
+  },
+  minimal: {
+    name: 'KHUSHI GHUMARE',
+    initials: 'KG',
+    role: 'AI & Cloud Systems Engineer',
+    email: 'khushi.ghumare24@vit.edu',
+    summary: 'AI Systems engineer focused on generative AI pipelines, high-throughput microservices, and semantic retrieval systems.',
+    company: 'NeuralCloud Labs · Pune, India',
+    skills: ['Python & FastAPI', 'PostgreSQL', 'Cloud Infrastructure', 'Vector DBs'],
+  },
+  executive: {
+    name: 'DHANASHRI KHODE',
+    initials: 'DK',
+    role: 'Full-Stack & Cloud Infrastructure Engineer',
+    email: 'dhanashri.khode24@vit.edu',
+    summary: 'Full-stack software engineer delivering secure multi-tenant cloud applications, modern React interfaces, and scalable REST APIs.',
+    company: 'Apex Cloud Solutions · Pune, India',
+    skills: ['React & TypeScript', 'AWS Cloud', 'Docker', 'API Security'],
+  },
+  tech: {
+    name: 'HEMANTKUMAR LAKHANE',
+    initials: 'HL',
+    role: 'Cloud Security & Backend Engineer',
+    email: 'hemantkumar.lakhane24@vit.edu',
+    summary: 'Backend and security engineer with hands-on expertise in zero-trust IAM authentication, microservices, and cloud performance monitoring.',
+    company: 'SecureOps Cloud · Pune, India',
+    skills: ['OAuth 2.0 / OIDC', 'Python Flask', 'Cloud Security', 'Redis Caching'],
+  },
+  scholar: {
+    name: 'KHUSHI GHUMARE',
+    initials: 'KG',
+    role: 'AI Research & Data Platform Lead',
+    email: 'khushi.ghumare24@vit.edu',
+    summary: 'Data platform engineer experienced in large-scale machine learning deployment, ATS keyword scoring algorithms, and distributed computing.',
+    company: 'AI Research Institute · Pune, India',
+    skills: ['Machine Learning', 'Data Pipelines', 'Cloud Run', 'Vector Embeddings'],
+  },
+  creative: {
+    name: 'DHANASHRI KHODE',
+    initials: 'DK',
+    role: 'Design Systems & Frontend Architect',
+    email: 'dhanashri.khode24@vit.edu',
+    summary: 'Creative frontend developer building responsive web applications, intuitive design systems, and seamless user experiences.',
+    company: 'Vivid Studio · Pune, India',
+    skills: ['UI/UX Design', 'Tailwind CSS', 'Next.js', 'Interactive Graphics'],
+  },
+  corporate: {
+    name: 'TANMAY KUMBHARE',
+    initials: 'TK',
+    role: 'Enterprise DevOps & Cloud Architect',
+    email: 'tanmay.kumbhare24@vit.edu',
+    summary: 'DevOps lead specialized in infrastructure-as-code, zero-downtime rolling deployments, and serverless architectures.',
+    company: 'Enterprise Systems · Pune, India',
+    skills: ['Terraform & IaC', 'AWS Amplify', 'GitHub Actions', 'Site Reliability'],
+  },
+  compact: {
+    name: 'KHUSHI GHUMARE',
+    initials: 'KG',
+    role: 'Software & Platform Engineer',
+    email: 'khushi.ghumare24@vit.edu',
+    summary: 'Software engineer with expertise in microservice orchestration, database optimization, and high-performance cloud APIs.',
+    company: 'ScalePlatform Corp · Pune, India',
+    skills: ['RESTful APIs', 'SQL & NoSQL', 'System Monitoring', 'Cloud Networking'],
+  },
+};
+
 // ─── Realistic Resume Miniature Preview (Matches Screenshot) ─────────────────
 
 const RealisticResumeMini: React.FC<{
   template: ResumeTemplate;
   accentColor: string;
 }> = ({ template, accentColor }) => {
-  const candidateName = 'TANMAY KUMBHARE';
-  const candidateInitials = 'TK';
-  const candidateRole = 'Senior Full-Stack & Cloud Engineer';
+  const cand = TEMPLATE_CANDIDATES[template.id] || TEMPLATE_CANDIDATES.modern;
+  const candidateName = cand.name;
+  const candidateInitials = cand.initials;
+  const candidateRole = cand.role;
+  const candidateEmail = cand.email;
+  const candidateSummary = cand.summary;
+  const candidateCompany = cand.company;
+  const candidateSkills = cand.skills;
 
   // Determine layout style according to template ID
   const isDarkBanner = template.id === 'executive' || template.id === 'pulse';
@@ -69,7 +161,7 @@ const RealisticResumeMini: React.FC<{
             />
             <div className="min-w-0">
               <p className="font-extrabold tracking-wider text-[9px] uppercase leading-none">{candidateName}</p>
-              <p className="text-[6px] text-white/80 mt-0.5 truncate">Pune, India · tanmay.kumbhare24@vit.edu</p>
+              <p className="text-[6px] text-white/80 mt-0.5 truncate">Pune, India · {candidateEmail}</p>
             </div>
           </div>
 
@@ -79,7 +171,7 @@ const RealisticResumeMini: React.FC<{
               SUMMARY
             </p>
             <p className="text-[6.5px] text-slate-600 line-clamp-2 leading-relaxed">
-              Customer-focused professional with solid understanding of sales dynamics, operations, and modern cloud architectures.
+              {candidateSummary}
             </p>
           </div>
 
@@ -89,10 +181,9 @@ const RealisticResumeMini: React.FC<{
               SKILLS
             </p>
             <div className="grid grid-cols-2 gap-x-2 text-[6px] text-slate-600">
-              <span>• Cloud Architecture</span>
-              <span>• Microservices</span>
-              <span>• Team Leadership</span>
-              <span>• Fast Troubleshooting</span>
+              {candidateSkills.map((sk, idx) => (
+                <span key={idx}>• {sk}</span>
+              ))}
             </div>
           </div>
 
@@ -103,11 +194,11 @@ const RealisticResumeMini: React.FC<{
             </p>
             <div className="flex items-center justify-between text-[6.5px] font-semibold text-slate-900">
               <span className="truncate">{candidateRole}</span>
-              <span className="text-[5.5px] text-slate-400">02/2019 – Present</span>
+              <span className="text-[5.5px] text-slate-400">2023 – Present</span>
             </div>
-            <p className="text-[6px] text-slate-500 italic">ZARA · New Delhi, India</p>
+            <p className="text-[6px] text-slate-500 italic">{candidateCompany}</p>
             <p className="text-[6px] text-slate-600 line-clamp-2 mt-0.5">
-              • Increased monthly sales by 32% by elevating customer experience and technical product recommendations.
+              • Increased operational efficiency and automated cloud deployments with zero downtime.
             </p>
           </div>
         </div>
@@ -127,7 +218,7 @@ const RealisticResumeMini: React.FC<{
             <p className="font-serif font-black tracking-wide text-[10px] text-slate-900 uppercase">
               {candidateName}
             </p>
-            <p className="text-[6px] text-slate-400">tanmay.kumbhare24@vit.edu · Pune, India</p>
+            <p className="text-[6px] text-slate-400">{candidateEmail} · Pune, India</p>
             <div className="w-12 h-0.5 mt-1 transition-colors" style={{ backgroundColor: accentColor }} />
           </div>
 
@@ -137,7 +228,7 @@ const RealisticResumeMini: React.FC<{
               Summary
             </p>
             <p className="text-[6.5px] text-slate-600 line-clamp-2 leading-relaxed">
-              Customer-focused professional offering 5 years of experience delivering quality services and modern cloud solutions.
+              {candidateSummary}
             </p>
           </div>
 
@@ -148,10 +239,10 @@ const RealisticResumeMini: React.FC<{
             </p>
             <div className="flex items-center justify-between text-[6.5px] font-bold text-slate-900">
               <span>{candidateRole}</span>
-              <span className="text-[5.5px] text-slate-400">2019 - Present</span>
+              <span className="text-[5.5px] text-slate-400">2023 - Present</span>
             </div>
             <p className="text-[6px] text-slate-600 line-clamp-2 mt-0.5">
-              • Managed operations and high-impact stakeholder accounts with 99.8% customer satisfaction score.
+              • Architected resilient cloud systems and optimized latency by 35% with 99.9% uptime SLA.
             </p>
           </div>
         </div>
@@ -186,9 +277,9 @@ const RealisticResumeMini: React.FC<{
 
             <div className="mt-2 text-left w-full">
               <p className="text-[6px] font-bold text-slate-800 mb-0.5">SKILLS</p>
-              <p className="text-[5.5px] text-slate-600">• Cloud APIs</p>
-              <p className="text-[5.5px] text-slate-600">• Docker</p>
-              <p className="text-[5.5px] text-slate-600">• Python</p>
+              {candidateSkills.slice(0, 3).map((sk, idx) => (
+                <p key={idx} className="text-[5.5px] text-slate-600">• {sk}</p>
+              ))}
             </div>
           </div>
 
@@ -206,7 +297,7 @@ const RealisticResumeMini: React.FC<{
                 SUMMARY
               </p>
               <p className="text-[6px] text-slate-600 line-clamp-2 leading-relaxed">
-                Customer-focused Software Engineer with solid understanding of modern cloud architectures and scalable microservices.
+                {candidateSummary}
               </p>
             </div>
 
@@ -214,10 +305,10 @@ const RealisticResumeMini: React.FC<{
               <p className="font-bold text-[6.5px] uppercase tracking-wider mb-0.5" style={{ color: accentColor }}>
                 EXPERIENCE
               </p>
-              <p className="text-[6.5px] font-bold text-slate-900 leading-tight">Senior Engineer — ZARA / Cisco</p>
-              <p className="text-[5.5px] text-slate-400">02/2019 – Present | New Delhi, India</p>
+              <p className="text-[6.5px] font-bold text-slate-900 leading-tight">{candidateRole}</p>
+              <p className="text-[5.5px] text-slate-400">{candidateCompany}</p>
               <p className="text-[6px] text-slate-600 line-clamp-2 mt-0.5">
-                • Increased monthly efficiency by 34% through proactive microservice architecture and caching.
+                • Built high-performance microservices cutting response latency by 40% with distributed caching.
               </p>
             </div>
           </div>
@@ -231,7 +322,7 @@ const RealisticResumeMini: React.FC<{
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-extrabold text-[9px] uppercase tracking-wide text-slate-900">{candidateName}</p>
-                <p className="text-[6px] text-slate-500">New Delhi, India · +91 11 5555 5555</p>
+                <p className="text-[6px] text-slate-500">Pune, India · {candidateEmail}</p>
               </div>
               <div
                 className="w-5 h-5 rounded flex items-center justify-center font-bold text-[7px] text-white"
@@ -247,7 +338,7 @@ const RealisticResumeMini: React.FC<{
               Professional Summary
             </p>
             <p className="text-[6.5px] text-slate-600 line-clamp-2">
-              Results-oriented cloud architect with experience in designing, testing, and automating high-throughput infrastructure.
+              {candidateSummary}
             </p>
           </div>
 
@@ -255,9 +346,9 @@ const RealisticResumeMini: React.FC<{
             <p className="font-bold text-[7px] uppercase tracking-wider" style={{ color: accentColor }}>
               Experience & Projects
             </p>
-            <p className="text-[6.5px] font-bold text-slate-900">Lead Cloud Engineer — Tech Systems</p>
+            <p className="text-[6.5px] font-bold text-slate-900">{candidateRole} — {candidateCompany}</p>
             <p className="text-[6px] text-slate-600 line-clamp-2 mt-0.5">
-              • Architected serverless Cloud Run pipelines cutting API latency by 40% and sustaining 10k RPS.
+              • Architected serverless cloud pipelines cutting API latency and sustaining high throughput.
             </p>
           </div>
         </div>

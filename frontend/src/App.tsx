@@ -12,6 +12,7 @@ import PublicLayout from './layouts/PublicLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import LandingPage from './pages/landing/LandingPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import MyResumesPage from './pages/resumes/MyResumesPage';
 import TemplatesPage from './pages/templates/TemplatesPage';
 import EditorPage from './pages/editor/EditorPage';
 import AIAssistantPage from './pages/ai/AIAssistantPage';
@@ -62,7 +63,7 @@ const App: React.FC = () => {
               }
             >
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/dashboard/resumes" element={<DashboardPage />} />
+              <Route path="/dashboard/resumes" element={<MyResumesPage />} />
               <Route path="/ai" element={<AIAssistantPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>

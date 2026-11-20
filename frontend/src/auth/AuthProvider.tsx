@@ -151,27 +151,27 @@ const MsalAuthAdapter: React.FC<{ children: React.ReactNode }> = ({ children }) 
 export const DEMO_PERSONAS: Record<'student' | 'evaluator' | 'recruiter', AuthUser> = {
   student: {
     id: 'usr-student-001',
-    name: 'Alex Mercer',
-    email: 'alex.mercer@cloudresume.ai',
-    username: 'alex.mercer',
-    role: 'Student / Cloud Engineer',
-    avatar: 'AM',
+    name: 'Tanmay Kumbhare',
+    email: 'tanmay.kumbhare24@vit.edu',
+    username: 'tanmay.kumbhare',
+    role: 'Cloud & Software Engineer',
+    avatar: 'TK',
   },
   evaluator: {
     id: 'usr-evaluator-002',
-    name: 'Prof. H. Sharma',
-    email: 'evaluator@university.edu',
-    username: 'prof.sharma',
-    role: 'Project Evaluator / Professor',
-    avatar: 'PS',
+    name: 'Khushi Ghumare',
+    email: 'khushi.ghumare24@vit.edu',
+    username: 'khushi.ghumare',
+    role: 'AI & Cloud Systems Lead',
+    avatar: 'KG',
   },
   recruiter: {
     id: 'usr-recruiter-003',
-    name: 'Sarah Jenkins',
-    email: 'sarah.jenkins@techcloud.io',
-    username: 'sarah.j',
-    role: 'Senior Technical Recruiter',
-    avatar: 'SJ',
+    name: 'Dhanashri Khode',
+    email: 'dhanashri.khode24@vit.edu',
+    username: 'dhanashri.khode',
+    role: 'Full-Stack Cloud Engineer',
+    avatar: 'DK',
   },
 };
 
@@ -233,7 +233,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         name: apiUser.full_name || data.fullName,
         email: apiUser.email || data.email,
         username: (apiUser.email || data.email).split('@')[0],
-        role: 'Cloud Candidate',
+        role: 'Cloud & Software Engineer',
         avatar: (apiUser.full_name || data.fullName).slice(0, 2).toUpperCase(),
       };
 
@@ -283,7 +283,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         name: apiUser.full_name || apiUser.email?.split('@')[0] || credentials.email.split('@')[0],
         email: apiUser.email || credentials.email,
         username: (apiUser.email || credentials.email).split('@')[0],
-        role: 'Cloud Candidate',
+        role: 'Cloud & Software Engineer',
         avatar: (apiUser.full_name || credentials.email).slice(0, 2).toUpperCase(),
       };
 

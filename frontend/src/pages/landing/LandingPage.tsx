@@ -492,7 +492,7 @@ const LandingPage: React.FC = () => {
                 <div className="bg-slate-100 dark:bg-slate-600 px-2 py-1.5 flex items-center justify-between border-b border-slate-200 dark:border-slate-500 font-mono text-[8px] text-slate-600 dark:text-slate-300">
                   <div className="flex items-center gap-1">
                     <Globe size={11} className="text-amber-600 dark:text-amber-400" />
-                    <span>cloudresume.ai/u/aarav</span>
+                    <span>cloudresume.ai/u/khushi</span>
                   </div>
                   <span className="text-[7.5px] bg-amber-500 text-slate-950 font-bold px-1.5 py-0.5 rounded">
                     Your resume URL
@@ -501,11 +501,11 @@ const LandingPage: React.FC = () => {
                 <div className="p-2.5 space-y-1">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-amber-500/30">
-                      <img src="/avatars/candidate-avatar.png" alt="Tanmay Kumbhare" className="w-full h-full object-cover" />
+                      <img src="/avatars/candidate-avatar.png" alt="Khushi Ghumare" className="w-full h-full object-cover" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800 dark:text-white">Tanmay Kumbhare</p>
-                      <p className="text-[8px] text-slate-500 dark:text-slate-400">Cloud Portfolio</p>
+                      <p className="font-bold text-slate-800 dark:text-white">Khushi Ghumare</p>
+                      <p className="text-[8px] text-slate-500 dark:text-slate-400">Cloud & AI Portfolio</p>
                     </div>
                   </div>
                 </div>
