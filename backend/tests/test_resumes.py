@@ -179,3 +179,32 @@ def test_validation_error_handling(client, user_a_headers):
     data = resp.get_json()
     assert data["error"] == "Validation Error"
     assert "details" in data
+
+
+def test_upload_and_optimize_json_and_file(client):
+    """Test /api/resumes/upload-optimize endpoint with json and multipart file."""
+    import io
+
+    # 1. Test JSON payload
+    resp = client.post(
+        "/api/resumes/upload-optimize",
+        json={"raw_text": "Aarav Sharma\naarav@example.com\nPython, Cloud Run"}
+    )
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data["success"] is True
+    assert "resume" in data
+    assert "personal_info" in data["resume"]
+
+    # 2. Test multipart file upload
+    file_bytes = io.BytesIO(b"Candidate Name\nSoftware Engineer\ncontact@example.com")
+    resp_file = client.post(
+        "/api/resume/upload-optimize",
+        data={"file": (file_bytes, "test_resume.txt")},
+        content_type="multipart/form-data"
+    )
+    assert resp_file.status_code == 200
+    file_data = resp_file.get_json()
+    assert file_data["success"] is True
+    assert file_data["filename"] == "test_resume.txt"
+    assert "resume" in file_data
