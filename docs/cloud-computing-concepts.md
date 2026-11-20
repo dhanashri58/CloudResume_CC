@@ -6,20 +6,20 @@ This document provides a comprehensive mapping of core Cloud Computing syllabus 
 
 ## 1. Cloud Computing Concept Mapping Matrix
 
-| Cloud Computing Concept | Project Component | Implementation Details | Cloud Role / Service (GCP & Azure) |
+| Cloud Computing Concept | Project Component | Implementation Details | Cloud Role / Service (AWS, GCP & Azure) |
 | :--- | :--- | :--- | :--- |
 | **SaaS (Software as a Service)** | CloudResumeAI Web Platform | End-user web application for resume building, ATS evaluation, and PDF export | Hosted web application accessible via browser |
-| **Serverless Compute (FaaS / PaaS)** | Frontend & Backend Microservices | Containerized microservices running on serverless runtimes. **Scale-to-zero** when idle, scaling up in milliseconds under traffic. | **Google Cloud Run (v2)** / Azure Container Apps |
-| **Containerization (OS Virtualization)** | Docker (`backend/Dockerfile`, `frontend/Dockerfile`) | Multi-stage Docker builds: Node 20 Alpine + Nginx 1.27 for frontend; Python 3.12 with non-root user for backend | Google Artifact Registry / Azure Container Registry (ACR) |
-| **Cloud Object / Blob Storage** | `StorageService` (`storage_service.py`) | Storing compiled resume PDFs as binary blobs with **User Partition Isolation** (`resumes/{user_id}/{resume_id}.pdf`) | **Google Cloud Storage (GCS)** / Azure Blob Storage |
-| **Cloud Database (DBaaS / PaaS)** | PostgreSQL 16 + SQLAlchemy ORM | ACID-compliant managed relational database with automated backups, connection pooling, and SSL encryption | **Google Cloud SQL (PostgreSQL 16)** / Azure Database for PostgreSQL |
-| **Cloud Identity & IAM** | `token_verifier.py`, `auth_service.py`, MSAL.js | OAuth 2.0 / OpenID Connect (OIDC) JWT verification with **JWKS key caching** (1-hr TTL). Least-privilege service account IAM. | **Google Identity Services** / Microsoft Entra ID |
-| **Cloud Secrets Management** | `keyvault_service.py`, Config | Zero secrets in code: `GEMINI_API_KEY`, DB passwords, and Flask keys loaded dynamically from secret stores | **Google Cloud Secret Manager** / Azure Key Vault |
+| **Serverless Compute (FaaS / PaaS)** | Frontend & Backend Microservices | Containerized microservices running on serverless runtimes. **Scale-to-zero** when idle, scaling up in milliseconds under traffic. | **AWS App Runner / Lambda** / **Google Cloud Run (v2)** / Azure Container Apps |
+| **Containerization (OS Virtualization)** | Docker (`backend/Dockerfile`, `frontend/Dockerfile`) | Multi-stage Docker builds: Node 20 Alpine + Nginx 1.27 for frontend; Python 3.12 with non-root user for backend | Amazon ECR / Google Artifact Registry / Azure Container Registry (ACR) |
+| **Cloud Object / Blob Storage** | `StorageService` (`storage_service.py`) | Storing compiled resume PDFs as binary blobs with **User Partition Isolation** (`resumes/{user_id}/{resume_id}.pdf`) | **Amazon Simple Storage Service (S3)** / **Google Cloud Storage (GCS)** / Azure Blob Storage |
+| **Cloud Database (DBaaS / PaaS)** | PostgreSQL 16 + SQLAlchemy ORM | ACID-compliant managed relational database with automated backups, connection pooling, and SSL encryption | **Amazon RDS (PostgreSQL 16)** / **Google Cloud SQL (PostgreSQL 16)** / Azure Database for PostgreSQL |
+| **Cloud Identity & IAM** | `token_verifier.py`, `auth_service.py`, MSAL.js | OAuth 2.0 / OpenID Connect (OIDC) JWT verification with **JWKS key caching** (1-hr TTL). Least-privilege service account IAM. | **Amazon Cognito User Pools** / **Google Identity Services** / Microsoft Entra ID |
+| **Cloud Secrets Management** | `keyvault_service.py`, Config | Zero secrets in code: `GEMINI_API_KEY`, DB passwords, and Flask keys loaded dynamically from secret stores | **AWS Secrets Manager** / **Google Cloud Secret Manager** / Azure Key Vault |
 | **Infrastructure as Code (IaC)** | `infra/terraform/` & `infra/bicep/` | Declarative, version-controlled provisioning of all cloud resources (network, storage, compute, database, IAM) | **HashiCorp Terraform** (`main.tf`) / Azure Bicep |
-| **Elasticity & Autoscaling** | Cloud Run / Container Apps config | Concurrency-based autoscaling (`0` to `5` instances); scale-to-zero on idle saves 100% compute costs | Cloud Run Concurrency (80 req/instance) / Container Apps HTTP rules |
-| **Cloud Observability & Tracing** | `logging.py`, `telemetry.py` | Distributed request correlation via `X-Request-ID`, execution metrics via `Server-Timing`, sensitive data log filter | **Google Cloud Logging** / Azure Application Insights |
-| **CI / CD Pipeline** | GitHub Actions (`ci.yml`, `deploy-gcp.yml`) | Automated linting (Flake8), testing (Pytest 128 tests, Vitest), Docker build verification, and deployment | GitHub Actions CI/CD to Google Cloud Run |
-| **Cost Optimization** | Serverless scale-to-zero, Free Tier | Elimination of idle compute costs, burstable database tier, and uniform bucket policies | GCP Free Tier / Azure Consumption Budgets |
+| **Elasticity & Autoscaling** | Cloud Run / App Runner config | Concurrency-based autoscaling (`0` to `5` instances); scale-to-zero on idle saves 100% compute costs | AWS App Runner Autoscaling / Cloud Run Concurrency (80 req/instance) |
+| **Cloud Observability & Tracing** | `logging.py`, `telemetry.py` | Distributed request correlation via `X-Request-ID`, execution metrics via `Server-Timing`, sensitive data log filter | **Amazon CloudWatch** / **Google Cloud Logging** / Azure Application Insights |
+| **CI / CD Pipeline** | GitHub Actions (`ci.yml`, `deploy-gcp.yml`) | Automated linting (Flake8), testing (Pytest 129 tests, Vitest), Docker build verification, and deployment | GitHub Actions CI/CD to AWS / Google Cloud Run |
+| **Cost Optimization** | Serverless scale-to-zero, Free Tier | Elimination of idle compute costs, burstable database tier, and uniform bucket policies | AWS Free Plan ($100 credits) / GCP Free Tier / Azure Consumption |
 
 ---
 

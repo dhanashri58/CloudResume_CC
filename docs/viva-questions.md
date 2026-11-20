@@ -123,7 +123,7 @@ Resume optimization and chat coaching require rapid response times to feel inter
 **Answer**:
 Implemented using **GitHub Actions**:
 - On every `git push` or pull request, the CI workflow (`ci.yml`):
-  1. Installs Python dependencies and runs **Flake8** linting and **Pytest** (128 backend tests).
+  1. Installs Python dependencies and runs **Flake8** linting and **Pytest** (129 backend tests).
   2. Installs Node.js dependencies and runs **Vitest** (52 frontend tests), TypeScript typecheck, and Vite production build.
   3. Validates both frontend and backend Dockerfiles by building the images.
 - A deployment workflow (`deploy-gcp.yml`) runs Terraform apply, pushes container images to Google Artifact Registry, and deploys new revisions to Google Cloud Run.
@@ -131,5 +131,5 @@ Implemented using **GitHub Actions**:
 ### Q15: How many automated tests does CloudResumeAI have, and what do they verify?
 **Answer**:
 CloudResumeAI has **180 automated tests** with a 100% pass rate:
-- **128 Backend Tests (Pytest)**: Testing AI endpoints, token verification, ReportLab PDF generation, GCS and Azure dual-mode storage, Alembic migrations, database models, health probes, and structured log redaction.
+- **129 Backend Tests (Pytest)**: Testing AI endpoints, token verification, ReportLab PDF generation, Amazon S3, GCS, and Azure multi-cloud storage, Alembic migrations, database models, health probes, and structured log redaction.
 - **52 Frontend Tests (Vitest)**: Testing React components, API clients, authentication helpers, routing, and page rendering.

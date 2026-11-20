@@ -6,6 +6,18 @@ An enterprise-ready, AI-orchestrated cloud resume engineering platform designed 
 
 ---
 
+## Live Production Cloud Deployment (AWS)
+
+| Component | Cloud Service | Live URL / Endpoint | Status |
+| :--- | :--- | :--- | :--- |
+| **Frontend Web App** | **AWS Amplify Hosting (Global CloudFront CDN)** | [https://main.dfikzx2dg0tka.amplifyapp.com](https://main.dfikzx2dg0tka.amplifyapp.com) | **LIVE (HTTPS)** |
+| **Backend REST API** | **AWS Lambda (Function URL)** | [https://dcjovytpk37z6noqf7et5nt3uq0lnrvj.lambda-url.ap-southeast-2.on.aws/api/health](https://dcjovytpk37z6noqf7et5nt3uq0lnrvj.lambda-url.ap-southeast-2.on.aws/api/health) | **LIVE (Healthy)** |
+| **Relational Database** | **Amazon RDS (PostgreSQL 16.14 on Graviton2)** | `cloudresume-postgres.cd8ewc4qw5qp.ap-southeast-2.rds.amazonaws.com:5432` | **LIVE (8 Tables)** |
+| **Object / Blob Storage** | **Amazon Simple Storage Service (S3)** | `s3://cloudresume-resumes-tanmay-617711904818` (AES-256 Encrypted) | **LIVE** |
+| **Container Registry** | **Amazon Elastic Container Registry (ECR)** | `617711904818.dkr.ecr.ap-southeast-2.amazonaws.com/cloudresume-backend:latest` | **LIVE** |
+
+---
+
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
@@ -361,7 +373,7 @@ All test suites have been verified with a **100% pass rate**:
 # 1. Backend Linting (Flake8) - 0 errors
 backend/.venv/Scripts/flake8 backend/app backend/tests
 
-# 2. Backend Automated Tests (Pytest) - 128 Passed across 15 test suites
+# 2. Backend Automated Tests (Pytest) - 129 Passed across 15 test suites
 backend/.venv/Scripts/pytest backend/tests -v
 
 # 3. Frontend Tests (Vitest) - 52 Passed across 7 files

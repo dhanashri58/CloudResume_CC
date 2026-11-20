@@ -335,6 +335,108 @@ class GoogleCloudStorageProvider(BaseStorageProvider):
             return False
 
 
+class S3StorageProvider(BaseStorageProvider):
+    """Production storage provider backed by Amazon Simple Storage Service (S3)."""
+
+    def __init__(
+        self,
+        bucket_name: str = "cloudresume-resumes-tanmay-617711904818",
+        region_name: Optional[str] = "ap-southeast-2",
+        profile_name: Optional[str] = None,
+    ):
+        self.bucket_name = bucket_name
+        self.region_name = region_name or os.getenv("AWS_REGION", "ap-southeast-2")
+        self.profile_name = profile_name or os.getenv("AWS_PROFILE", None)
+        self._s3_client = None
+
+    def _get_client(self):
+        """Initialize Boto3 S3 client using environment or configured profile."""
+        if self._s3_client is not None:
+            return self._s3_client
+
+        try:
+            import boto3
+
+            if self.profile_name:
+                session = boto3.Session(
+                    profile_name=self.profile_name, region_name=self.region_name
+                )
+                self._s3_client = session.client("s3")
+            else:
+                self._s3_client = boto3.client("s3", region_name=self.region_name)
+            return self._s3_client
+        except Exception as e:
+            raise StorageConfigurationError(
+                f"AWS S3 client initialization failed: {e}"
+            )
+
+    def upload(
+        self,
+        blob_name: str,
+        data: bytes,
+        content_type: str = "application/pdf"
+    ) -> str:
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        client = self._get_client()
+        try:
+            client.put_object(
+                Bucket=self.bucket_name,
+                Key=clean_name,
+                Body=data,
+                ContentType=content_type,
+                ServerSideEncryption="AES256",
+            )
+            logger.info(
+                "Uploaded blob '%s' to Amazon S3 bucket '%s'",
+                clean_name,
+                self.bucket_name,
+            )
+            return clean_name
+        except Exception as e:
+            logger.error("Error uploading S3 blob '%s': %s", clean_name, e)
+            raise StorageError(f"Failed to upload S3 blob '{clean_name}': {e}")
+
+    def download(self, blob_name: str) -> Optional[bytes]:
+        from botocore.exceptions import ClientError
+
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        client = self._get_client()
+        try:
+            response = client.get_object(Bucket=self.bucket_name, Key=clean_name)
+            return response["Body"].read()
+        except ClientError as e:
+            if e.response["Error"]["Code"] in ("NoSuchKey", "404"):
+                return None
+            logger.error("Error downloading S3 blob '%s': %s", clean_name, e)
+            raise StorageError(f"Failed to download S3 blob '{clean_name}': {e}")
+        except Exception as e:
+            logger.error("Error downloading S3 blob '%s': %s", clean_name, e)
+            raise StorageError(f"Failed to download S3 blob '{clean_name}': {e}")
+
+    def exists(self, blob_name: str) -> bool:
+        from botocore.exceptions import ClientError
+
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        client = self._get_client()
+        try:
+            client.head_object(Bucket=self.bucket_name, Key=clean_name)
+            return True
+        except ClientError:
+            return False
+
+    def delete(self, blob_name: str) -> bool:
+        from botocore.exceptions import ClientError
+
+        clean_name = blob_name.replace("\\", "/").lstrip("/")
+        client = self._get_client()
+        try:
+            client.delete_object(Bucket=self.bucket_name, Key=clean_name)
+            return True
+        except ClientError as e:
+            logger.error("Error deleting S3 blob '%s': %s", clean_name, e)
+            return False
+
+
 class StorageService:
     """Service facade for resume storage with user ownership isolation."""
 
@@ -403,6 +505,30 @@ class StorageService:
                 container_name=container,
                 account_name=account or None,
                 connection_string=conn_str or None,
+            )
+        elif mode in ("s3", "aws"):
+            bucket = config.get(
+                "S3_BUCKET_NAME",
+                config.get(
+                    "AWS_S3_BUCKET",
+                    os.getenv(
+                        "S3_BUCKET_NAME",
+                        os.getenv("AWS_S3_BUCKET", "cloudresume-resumes-tanmay-617711904818")
+                    )
+                )
+            )
+            region = config.get(
+                "AWS_REGION",
+                os.getenv("AWS_REGION", "ap-southeast-2")
+            )
+            profile = config.get(
+                "AWS_PROFILE",
+                os.getenv("AWS_PROFILE", None)
+            )
+            cls._provider = S3StorageProvider(
+                bucket_name=bucket,
+                region_name=region,
+                profile_name=profile or None,
             )
         else:
             default_dir = os.path.join(

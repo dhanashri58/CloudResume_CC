@@ -1,6 +1,18 @@
 # Local Setup, Development & Multi-Cloud Deployment Guide
 
-This guide walks you through setting up and running **CloudResumeAI** locally on your workstation, running tests, executing with Docker Compose, and deploying to **Google Cloud Platform (GCP)** and **Microsoft Azure** using automated CI/CD and Infrastructure as Code.
+This guide walks you through setting up and running **CloudResumeAI** locally on your workstation, running tests, executing with Docker Compose, and deploying to **Amazon Web Services (AWS)**, **Google Cloud Platform (GCP)**, and **Microsoft Azure**.
+
+---
+
+## Live Production Deployment on AWS
+
+| Cloud Component | Service | Endpoint / Resource | Region |
+| :--- | :--- | :--- | :--- |
+| **Frontend Web App** | **AWS Amplify Hosting (CloudFront CDN)** | [https://main.dfikzx2dg0tka.amplifyapp.com](https://main.dfikzx2dg0tka.amplifyapp.com) | `ap-southeast-2` |
+| **Backend API** | **AWS Lambda (Function URL)** | [https://dcjovytpk37z6noqf7et5nt3uq0lnrvj.lambda-url.ap-southeast-2.on.aws/api/health](https://dcjovytpk37z6noqf7et5nt3uq0lnrvj.lambda-url.ap-southeast-2.on.aws/api/health) | `ap-southeast-2` |
+| **Relational Database** | **Amazon RDS (PostgreSQL 16.14)** | `cloudresume-postgres.cd8ewc4qw5qp.ap-southeast-2.rds.amazonaws.com:5432` | `ap-southeast-2` |
+| **Object Storage** | **Amazon S3** | `s3://cloudresume-resumes-tanmay-617711904818` | `ap-southeast-2` |
+| **Container Registry** | **Amazon ECR** | `617711904818.dkr.ecr.ap-southeast-2.amazonaws.com/cloudresume-backend` | `ap-southeast-2` |
 
 > **Security Notice**: Never commit real passwords, tokens, or API keys. Always use placeholder values in `.env.example` templates and keep real `.env` files in `.gitignore`.
 

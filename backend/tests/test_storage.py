@@ -296,3 +296,52 @@ def test_delete_resume_removes_stored_pdf(
 
         # Verify stored PDF was purged
         assert local_provider.exists(blob_name) is False
+
+
+def test_s3_storage_provider_lifecycle():
+    """Verify S3StorageProvider upload, download, exists, and delete with mocked boto3."""
+    from app.services.storage_service import S3StorageProvider
+
+    mock_client = MagicMock()
+    mock_body = MagicMock()
+    mock_body.read.return_value = b"%PDF-1.4 s3 test payload"
+    mock_client.get_object.return_value = {"Body": mock_body}
+    mock_client.head_object.return_value = {"ContentLength": 24}
+
+    provider = S3StorageProvider(
+        bucket_name="cloudresume-resumes-tanmay-617711904818",
+        region_name="ap-southeast-2",
+    )
+    provider._s3_client = mock_client
+
+    blob_name = "resumes/user-test-1/resume-99.pdf"
+    test_data = b"%PDF-1.4 s3 test payload"
+
+    # Upload
+    res = provider.upload(blob_name, test_data)
+    assert res == blob_name
+    mock_client.put_object.assert_called_once_with(
+        Bucket="cloudresume-resumes-tanmay-617711904818",
+        Key=blob_name,
+        Body=test_data,
+        ContentType="application/pdf",
+        ServerSideEncryption="AES256",
+    )
+
+    # Exists
+    assert provider.exists(blob_name) is True
+    mock_client.head_object.assert_called_once_with(
+        Bucket="cloudresume-resumes-tanmay-617711904818",
+        Key=blob_name,
+    )
+
+    # Download
+    data = provider.download(blob_name)
+    assert data == test_data
+
+    # Delete
+    assert provider.delete(blob_name) is True
+    mock_client.delete_object.assert_called_once_with(
+        Bucket="cloudresume-resumes-tanmay-617711904818",
+        Key=blob_name,
+    )
