@@ -28,7 +28,7 @@ const PERSONA_CONFIGS: Record<PersonaType, PersonaInfo> = {
     accentColor: 'border-blue-200 bg-blue-50/50 text-blue-900',
     description: 'Explore as a candidate crafting cloud-native engineering resumes with live ATS feedback.',
     features: [
-      'Resume builder with 8 vector templates',
+      'Resume builder with 25+ vector templates',
       'Google Gemini XYZ bullet point rewriting',
       'Target job description match radar (98% ATS score)',
       'Server-side vector PDF downloads',

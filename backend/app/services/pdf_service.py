@@ -42,6 +42,79 @@ class PDFGenerationError(Exception):
 
 # Template color palettes matching frontend RESUME_TEMPLATES
 TEMPLATE_PALETTES: Dict[str, Dict[str, Any]] = {
+    # Flagship Academic & SDE
+    "latex-classic": {
+        "primary": colors.HexColor("#0f172a"),      # Slate 900
+        "accent": colors.HexColor("#0f6292"),       # Cerulean / Steel Blue
+        "secondary": colors.HexColor("#475569"),    # Slate 600
+        "border": colors.HexColor("#6b7280"),       # Gray 500 horizontal rule
+        "body": colors.HexColor("#1e293b"),         # Slate 800
+    },
+    "research-fellow": {
+        "primary": colors.HexColor("#1e293b"),
+        "accent": colors.HexColor("#1d4ed8"),
+        "secondary": colors.HexColor("#475569"),
+        "border": colors.HexColor("#cbd5e1"),
+        "body": colors.HexColor("#334155"),
+    },
+    "cambridge-minimal": {
+        "primary": colors.HexColor("#1c1917"),
+        "accent": colors.HexColor("#b45309"),
+        "secondary": colors.HexColor("#78716c"),
+        "border": colors.HexColor("#d6d3d1"),
+        "body": colors.HexColor("#292524"),
+    },
+    # Modern & Double Column
+    "ivy-league": {
+        "primary": colors.HexColor("#0f172a"),
+        "accent": colors.HexColor("#1e3a8a"),
+        "secondary": colors.HexColor("#475569"),
+        "border": colors.HexColor("#e2e8f0"),
+        "body": colors.HexColor("#334155"),
+    },
+    "double-column-pro": {
+        "primary": colors.HexColor("#0f172a"),
+        "accent": colors.HexColor("#2563eb"),
+        "secondary": colors.HexColor("#64748b"),
+        "border": colors.HexColor("#e2e8f0"),
+        "body": colors.HexColor("#334155"),
+    },
+    "timeline": {
+        "primary": colors.HexColor("#18181b"),
+        "accent": colors.HexColor("#059669"),
+        "secondary": colors.HexColor("#71717a"),
+        "border": colors.HexColor("#e4e4e7"),
+        "body": colors.HexColor("#27272a"),
+    },
+    "compact-grid": {
+        "primary": colors.HexColor("#0f172a"),
+        "accent": colors.HexColor("#0284c7"),
+        "secondary": colors.HexColor("#475569"),
+        "border": colors.HexColor("#cbd5e1"),
+        "body": colors.HexColor("#1e293b"),
+    },
+    "bold-split": {
+        "primary": colors.HexColor("#1e293b"),
+        "accent": colors.HexColor("#3b82f6"),
+        "secondary": colors.HexColor("#64748b"),
+        "border": colors.HexColor("#cbd5e1"),
+        "body": colors.HexColor("#334155"),
+    },
+    "sleek-hybrid": {
+        "primary": colors.HexColor("#111827"),
+        "accent": colors.HexColor("#8b5cf6"),
+        "secondary": colors.HexColor("#6b7280"),
+        "border": colors.HexColor("#e5e7eb"),
+        "body": colors.HexColor("#374151"),
+    },
+    "impact-metrics": {
+        "primary": colors.HexColor("#0f172a"),
+        "accent": colors.HexColor("#d97706"),
+        "secondary": colors.HexColor("#475569"),
+        "border": colors.HexColor("#fde68a"),
+        "body": colors.HexColor("#1f2937"),
+    },
+    # Professional & ATS
     "executive": {
         "primary": colors.HexColor("#0f172a"),      # Slate 900
         "accent": colors.HexColor("#2563eb"),       # Blue 600
@@ -49,12 +122,83 @@ TEMPLATE_PALETTES: Dict[str, Dict[str, Any]] = {
         "border": colors.HexColor("#e2e8f0"),       # Slate 200
         "body": colors.HexColor("#334155"),         # Slate 700
     },
-    "clarity": {
-        "primary": colors.HexColor("#111827"),      # Gray 900
-        "accent": colors.HexColor("#6366f1"),       # Indigo 500
-        "secondary": colors.HexColor("#6b7280"),    # Gray 500
-        "border": colors.HexColor("#e5e7eb"),       # Gray 200
-        "body": colors.HexColor("#374151"),         # Gray 700
+    "corporate-classic": {
+        "primary": colors.HexColor("#1e293b"),
+        "accent": colors.HexColor("#334155"),
+        "secondary": colors.HexColor("#64748b"),
+        "border": colors.HexColor("#cbd5e1"),
+        "body": colors.HexColor("#1e293b"),
+    },
+    "ats-standard": {
+        "primary": colors.HexColor("#000000"),
+        "accent": colors.HexColor("#1f2937"),
+        "secondary": colors.HexColor("#4b5563"),
+        "border": colors.HexColor("#e5e7eb"),
+        "body": colors.HexColor("#111827"),
+    },
+    "directorate": {
+        "primary": colors.HexColor("#0f172a"),
+        "accent": colors.HexColor("#0284c7"),
+        "secondary": colors.HexColor("#475569"),
+        "border": colors.HexColor("#bae6fd"),
+        "body": colors.HexColor("#1e293b"),
+    },
+    "consulting-edge": {
+        "primary": colors.HexColor("#0f172a"),
+        "accent": colors.HexColor("#0f766e"),
+        "secondary": colors.HexColor("#475569"),
+        "border": colors.HexColor("#99f6e4"),
+        "body": colors.HexColor("#1e293b"),
+    },
+    "wall-street": {
+        "primary": colors.HexColor("#09090b"),
+        "accent": colors.HexColor("#18181b"),
+        "secondary": colors.HexColor("#52525b"),
+        "border": colors.HexColor("#d4d4d8"),
+        "body": colors.HexColor("#18181b"),
+    },
+    "modern-clean": {
+        "primary": colors.HexColor("#1e293b"),
+        "accent": colors.HexColor("#475569"),
+        "secondary": colors.HexColor("#64748b"),
+        "border": colors.HexColor("#e2e8f0"),
+        "body": colors.HexColor("#334155"),
+    },
+    "metro": {
+        "primary": colors.HexColor("#111827"),
+        "accent": colors.HexColor("#dc2626"),
+        "secondary": colors.HexColor("#6b7280"),
+        "border": colors.HexColor("#fecaca"),
+        "body": colors.HexColor("#1f2937"),
+    },
+    # Creative & Minimalist
+    "editorial": {
+        "primary": colors.HexColor("#1c1917"),
+        "accent": colors.HexColor("#78716c"),
+        "secondary": colors.HexColor("#78716c"),
+        "border": colors.HexColor("#e7e5e4"),
+        "body": colors.HexColor("#292524"),
+    },
+    "swiss-grid": {
+        "primary": colors.HexColor("#09090b"),
+        "accent": colors.HexColor("#e11d48"),
+        "secondary": colors.HexColor("#71717a"),
+        "border": colors.HexColor("#fecdd3"),
+        "body": colors.HexColor("#18181b"),
+    },
+    "monochrome-minimal": {
+        "primary": colors.HexColor("#000000"),
+        "accent": colors.HexColor("#52525b"),
+        "secondary": colors.HexColor("#71717a"),
+        "border": colors.HexColor("#e4e4e7"),
+        "body": colors.HexColor("#18181b"),
+    },
+    "studio": {
+        "primary": colors.HexColor("#18181b"),
+        "accent": colors.HexColor("#7c3aed"),
+        "secondary": colors.HexColor("#71717a"),
+        "border": colors.HexColor("#ddd6fe"),
+        "body": colors.HexColor("#27272a"),
     },
     "horizon": {
         "primary": colors.HexColor("#1e293b"),      # Slate 800
@@ -62,6 +206,27 @@ TEMPLATE_PALETTES: Dict[str, Dict[str, Any]] = {
         "secondary": colors.HexColor("#64748b"),    # Slate 500
         "border": colors.HexColor("#cbd5e1"),       # Slate 300
         "body": colors.HexColor("#334155"),         # Slate 700
+    },
+    "nordic": {
+        "primary": colors.HexColor("#1e293b"),
+        "accent": colors.HexColor("#64748b"),
+        "secondary": colors.HexColor("#64748b"),
+        "border": colors.HexColor("#e2e8f0"),
+        "body": colors.HexColor("#334155"),
+    },
+    "aura": {
+        "primary": colors.HexColor("#1c1917"),
+        "accent": colors.HexColor("#d97706"),
+        "secondary": colors.HexColor("#78716c"),
+        "border": colors.HexColor("#fed7aa"),
+        "body": colors.HexColor("#292524"),
+    },
+    "clarity": {
+        "primary": colors.HexColor("#111827"),      # Gray 900
+        "accent": colors.HexColor("#6366f1"),       # Indigo 500
+        "secondary": colors.HexColor("#6b7280"),    # Gray 500
+        "border": colors.HexColor("#e5e7eb"),       # Gray 200
+        "body": colors.HexColor("#374151"),         # Gray 700
     },
     "prism": {
         "primary": colors.HexColor("#18181b"),      # Zinc 900
@@ -97,6 +262,20 @@ TEMPLATE_PALETTES: Dict[str, Dict[str, Any]] = {
         "secondary": colors.HexColor("#475569"),    # Slate 600
         "border": colors.HexColor("#99f6e4"),       # Teal 200
         "body": colors.HexColor("#1f2937"),         # Gray 800
+    },
+    "terracotta-split": {
+        "primary": colors.HexColor("#1c1917"),      # Stone 900
+        "accent": colors.HexColor("#c2410c"),       # Terracotta / Orange 700
+        "secondary": colors.HexColor("#78716c"),    # Stone 500
+        "border": colors.HexColor("#fdba74"),       # Orange 300
+        "body": colors.HexColor("#292524"),         # Stone 800
+    },
+    "emerald-matrix": {
+        "primary": colors.HexColor("#064e3b"),      # Emerald 900
+        "accent": colors.HexColor("#059669"),       # Emerald 600
+        "secondary": colors.HexColor("#475569"),    # Slate 600
+        "border": colors.HexColor("#a7f3d0"),       # Emerald 200
+        "body": colors.HexColor("#1e293b"),         # Slate 800
     },
 }
 
@@ -180,16 +359,21 @@ class PDFService:
 
     @classmethod
     def _build_styles(
-        cls, palette: Dict[str, Any]
+        cls, palette: Dict[str, Any], template_id: str = "executive"
     ) -> Dict[str, ParagraphStyle]:
         """Create custom styles with proper leading to avoid overlap."""
         sheet = getSampleStyleSheet()
+        tid = (template_id or "").strip().lower()
+        is_serif = tid in ("latex-classic", "cambridge-minimal", "editorial", "scholar")
+        font_bold = "Times-Bold" if is_serif else "Helvetica-Bold"
+        font_regular = "Times-Roman" if is_serif else "Helvetica"
+        font_italic = "Times-Italic" if is_serif else "Helvetica-Oblique"
 
         return {
             "Name": ParagraphStyle(
                 "ResumeName",
                 parent=sheet["Normal"],
-                fontName="Helvetica-Bold",
+                fontName=font_bold,
                 fontSize=20,
                 leading=24,
                 textColor=palette["primary"],
@@ -198,7 +382,7 @@ class PDFService:
             "Headline": ParagraphStyle(
                 "ResumeHeadline",
                 parent=sheet["Normal"],
-                fontName="Helvetica-Bold",
+                fontName=font_bold,
                 fontSize=10,
                 leading=14,
                 textColor=palette["accent"],
@@ -207,7 +391,7 @@ class PDFService:
             "Contact": ParagraphStyle(
                 "ResumeContact",
                 parent=sheet["Normal"],
-                fontName="Helvetica",
+                fontName=font_regular,
                 fontSize=8.5,
                 leading=12,
                 textColor=palette["secondary"],
@@ -216,7 +400,7 @@ class PDFService:
             "SectionTitle": ParagraphStyle(
                 "ResumeSectionTitle",
                 parent=sheet["Normal"],
-                fontName="Helvetica-Bold",
+                fontName=font_bold,
                 fontSize=10,
                 leading=14,
                 textColor=palette["primary"],
@@ -227,7 +411,7 @@ class PDFService:
             "ItemTitle": ParagraphStyle(
                 "ResumeItemTitle",
                 parent=sheet["Normal"],
-                fontName="Helvetica-Bold",
+                fontName=font_bold,
                 fontSize=9.5,
                 leading=13,
                 textColor=palette["primary"],
@@ -235,7 +419,7 @@ class PDFService:
             "ItemSubtitle": ParagraphStyle(
                 "ResumeItemSubtitle",
                 parent=sheet["Normal"],
-                fontName="Helvetica",
+                fontName=font_italic,
                 fontSize=8.5,
                 leading=12,
                 textColor=palette["secondary"],
@@ -243,7 +427,7 @@ class PDFService:
             "ItemDate": ParagraphStyle(
                 "ResumeItemDate",
                 parent=sheet["Normal"],
-                fontName="Helvetica",
+                fontName=font_regular,
                 fontSize=8.5,
                 leading=12,
                 textColor=palette["secondary"],
@@ -252,7 +436,7 @@ class PDFService:
             "Body": ParagraphStyle(
                 "ResumeBody",
                 parent=sheet["Normal"],
-                fontName="Helvetica",
+                fontName=font_regular,
                 fontSize=8.5,
                 leading=12.5,
                 textColor=palette["body"],
@@ -261,7 +445,7 @@ class PDFService:
             "Bullet": ParagraphStyle(
                 "ResumeBullet",
                 parent=sheet["Normal"],
-                fontName="Helvetica",
+                fontName=font_regular,
                 fontSize=8.5,
                 leading=12,
                 textColor=palette["body"],
@@ -276,7 +460,7 @@ class PDFService:
         """Generate a complete, professional A4 PDF resume document."""
         try:
             palette = cls._resolve_palette(resume.template_id)
-            styles = cls._build_styles(palette)
+            styles = cls._build_styles(palette, resume.template_id)
 
             buffer = io.BytesIO()
             doc = SimpleDocTemplate(

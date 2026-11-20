@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import {
   ChevronDown,
   ChevronUp,
@@ -19,6 +19,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { SAMPLE_RESUME_DATA } from '../../data/mockData';
+import { ALL_RESUME_TEMPLATES } from '../../data/templatesData';
+import { ResumeTemplatePreview } from '../../components/templates/ResumeTemplatePreview';
 import { Button, Input, Textarea, Badge } from '../../components/ui';
 import { ThemeToggle } from '../../components/ui/ThemeToggle';
 import {
@@ -40,6 +42,9 @@ import {
 import type {
   ResumeData,
   ExperienceEntry,
+  EducationEntry,
+  ProjectEntry,
+  SkillGroup,
 } from '../../types';
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
@@ -74,145 +79,16 @@ const EditorSection: React.FC<{
   );
 };
 
-// ─── Live preview ─────────────────────────────────────────────────────────────
-
-const ResumePreview: React.FC<{ data: ResumeData }> = ({ data }) => {
-  const { personalInfo: p, summary, experience, education, skills, projects } = data;
-
-  return (
-    <div className="bg-white border border-stone-200/90 rounded-sm shadow-2xl shadow-stone-400/30 overflow-hidden text-stone-900 max-w-[800px] mx-auto min-h-[1050px]">
-      {/* Header */}
-      <div className="px-8 pt-8 pb-5 border-b border-slate-200">
-        <h1 className="text-xl font-bold text-slate-900 leading-tight">
-          {p.fullName || 'Your Name'}
-        </h1>
-        {p.headline && (
-          <p className="text-sm text-blue-600 font-medium mt-0.5">{p.headline}</p>
-        )}
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-          {p.email && <span className="text-xs text-slate-500">{p.email}</span>}
-          {p.phone && <span className="text-xs text-slate-500">{p.phone}</span>}
-          {p.location && <span className="text-xs text-slate-500">{p.location}</span>}
-          {p.website && <span className="text-xs text-blue-500">{p.website}</span>}
-        </div>
-      </div>
-
-      <div className="px-8 py-5 space-y-5 text-[11px] leading-relaxed">
-        {/* Summary */}
-        {summary && (
-          <div>
-            <h2 className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">
-              Summary
-            </h2>
-            <p className="text-slate-700">{summary}</p>
-          </div>
-        )}
-
-        {/* Experience */}
-        {experience.length > 0 && (
-          <div>
-            <h2 className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">
-              Experience
-            </h2>
-            <div className="space-y-3">
-              {experience.map((exp) => (
-                <div key={exp.id}>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-semibold text-slate-900">{exp.role}</p>
-                      <p className="text-slate-500">
-                        {exp.company} · {exp.location}
-                      </p>
-                    </div>
-                    <span className="text-slate-400 shrink-0 ml-2">
-                      {exp.startDate} – {exp.current ? 'Present' : exp.endDate}
-                    </span>
-                  </div>
-                  <ul className="mt-1 space-y-0.5 pl-3">
-                    {exp.bullets.map((b, i) => (
-                      <li key={i} className="text-slate-600 before:content-['·'] before:mr-1.5 before:text-slate-400">
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Education */}
-        {education.length > 0 && (
-          <div>
-            <h2 className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">
-              Education
-            </h2>
-            <div className="space-y-2">
-              {education.map((ed) => (
-                <div key={ed.id} className="flex justify-between">
-                  <div>
-                    <p className="font-semibold text-slate-900">
-                      {ed.degree} in {ed.field}
-                    </p>
-                    <p className="text-slate-500">{ed.institution}</p>
-                  </div>
-                  <span className="text-slate-400 shrink-0 ml-2">
-                    {ed.startDate}–{ed.endDate}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Skills */}
-        {skills.length > 0 && (
-          <div>
-            <h2 className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">
-              Skills
-            </h2>
-            <div className="space-y-1">
-              {skills.map((sg) => (
-                <div key={sg.id} className="flex gap-2">
-                  <span className="font-medium text-slate-700 w-20 shrink-0">
-                    {sg.category}:
-                  </span>
-                  <span className="text-slate-600">{sg.skills.join(', ')}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Projects */}
-        {projects.length > 0 && (
-          <div>
-            <h2 className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">
-              Projects
-            </h2>
-            <div className="space-y-2">
-              {projects.map((proj) => (
-                <div key={proj.id}>
-                  <p className="font-semibold text-slate-900">{proj.name}</p>
-                  <p className="text-slate-600">{proj.description}</p>
-                  <p className="text-slate-400">
-                    {proj.technologies.join(' · ')}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
 // ─── Editor page ──────────────────────────────────────────────────────────────
 
 const EditorPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTemplate = searchParams.get('template') || 'latex-classic';
+  const initialColor = searchParams.get('color') || '#0F6292';
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(initialTemplate);
+  const [selectedColor, setSelectedColor] = useState<string>(initialColor);
   const [resumeId, setResumeId] = useState<string>(id || 'new');
   const [title, setTitle] = useState<string>('My Resume');
   const [data, setData] = useState<ResumeData>(SAMPLE_RESUME_DATA);
@@ -233,6 +109,9 @@ const EditorPage: React.FC = () => {
       getResume(id)
         .then((res) => {
           setTitle(res.title || 'My Resume');
+          if (res.templateId) {
+            setSelectedTemplateId(res.templateId);
+          }
           setData({
             personalInfo: res.personalInfo || SAMPLE_RESUME_DATA.personalInfo,
             summary: res.summary || '',
@@ -398,6 +277,170 @@ const EditorPage: React.FC = () => {
     }));
   };
 
+  // ─── Complete CRUD Handlers (Experience, Education, Skills, Projects) ─────
+  const addExperience = () => {
+    const newExp: ExperienceEntry = {
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `exp-${Date.now()}`,
+      company: 'New Company',
+      role: 'Software Engineer',
+      location: 'Remote',
+      startDate: '2023',
+      endDate: 'Present',
+      current: true,
+      bullets: ['Spearheaded high-impact technical initiatives improving system reliability and performance.'],
+    };
+    setData((prev) => ({
+      ...prev,
+      experience: [...prev.experience, newExp],
+    }));
+  };
+
+  const removeExperience = (expId: string) => {
+    setData((prev) => ({
+      ...prev,
+      experience: prev.experience.filter((e) => e.id !== expId),
+    }));
+  };
+
+  const moveExperience = (index: number, direction: 'up' | 'down') => {
+    setData((prev) => {
+      const newExp = [...prev.experience];
+      const targetIdx = direction === 'up' ? index - 1 : index + 1;
+      if (targetIdx < 0 || targetIdx >= newExp.length) return prev;
+      const temp = newExp[index];
+      newExp[index] = newExp[targetIdx];
+      newExp[targetIdx] = temp;
+      return { ...prev, experience: newExp };
+    });
+  };
+
+  const addEducation = () => {
+    const newEdu: EducationEntry = {
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `edu-${Date.now()}`,
+      institution: 'University / Institute',
+      degree: 'B.S. in Computer Science',
+      field: 'Computer Science',
+      startDate: '2019',
+      endDate: '2023',
+      gpa: '3.8 / 4.0',
+      honors: '',
+    };
+    setData((prev) => ({
+      ...prev,
+      education: [...prev.education, newEdu],
+    }));
+  };
+
+  const updateEducationField = (
+    eduId: string,
+    field: keyof EducationEntry | 'location',
+    value: string
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      education: prev.education.map((ed) =>
+        ed.id === eduId ? { ...ed, [field]: value } : ed
+      ),
+    }));
+  };
+
+  const removeEducation = (eduId: string) => {
+    setData((prev) => ({
+      ...prev,
+      education: prev.education.filter((ed) => ed.id !== eduId),
+    }));
+  };
+
+  const moveEducation = (index: number, direction: 'up' | 'down') => {
+    setData((prev) => {
+      const newEdu = [...prev.education];
+      const targetIdx = direction === 'up' ? index - 1 : index + 1;
+      if (targetIdx < 0 || targetIdx >= newEdu.length) return prev;
+      const temp = newEdu[index];
+      newEdu[index] = newEdu[targetIdx];
+      newEdu[targetIdx] = temp;
+      return { ...prev, education: newEdu };
+    });
+  };
+
+  const addSkillGroup = () => {
+    const newSg: SkillGroup = {
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `skill-${Date.now()}`,
+      category: 'Core Competencies',
+      skills: ['TypeScript', 'React', 'Python', 'Cloud Systems'],
+    };
+    setData((prev) => ({
+      ...prev,
+      skills: [...prev.skills, newSg],
+    }));
+  };
+
+  const removeSkillGroup = (sgId: string) => {
+    setData((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((sg) => sg.id !== sgId),
+    }));
+  };
+
+  const moveSkillGroup = (index: number, direction: 'up' | 'down') => {
+    setData((prev) => {
+      const newSkills = [...prev.skills];
+      const targetIdx = direction === 'up' ? index - 1 : index + 1;
+      if (targetIdx < 0 || targetIdx >= newSkills.length) return prev;
+      const temp = newSkills[index];
+      newSkills[index] = newSkills[targetIdx];
+      newSkills[targetIdx] = temp;
+      return { ...prev, skills: newSkills };
+    });
+  };
+
+  const addProject = () => {
+    const newProj: ProjectEntry = {
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `proj-${Date.now()}`,
+      name: 'Project Title',
+      description: 'Engineered high-performance cloud application delivering robust real-time functionality.',
+      technologies: ['React', 'TypeScript', 'GCP'],
+      url: '',
+      github: '',
+    };
+    setData((prev) => ({
+      ...prev,
+      projects: [...(prev.projects || []), newProj],
+    }));
+  };
+
+  const updateProjectField = (
+    projId: string,
+    field: keyof ProjectEntry,
+    value: string | string[]
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      projects: (prev.projects || []).map((p) =>
+        p.id === projId ? { ...p, [field]: value } : p
+      ),
+    }));
+  };
+
+  const removeProject = (projId: string) => {
+    setData((prev) => ({
+      ...prev,
+      projects: (prev.projects || []).filter((p) => p.id !== projId),
+    }));
+  };
+
+  const moveProject = (index: number, direction: 'up' | 'down') => {
+    setData((prev) => {
+      const newProj = [...(prev.projects || [])];
+      const targetIdx = direction === 'up' ? index - 1 : index + 1;
+      if (targetIdx < 0 || targetIdx >= newProj.length) return prev;
+      const temp = newProj[index];
+      newProj[index] = newProj[targetIdx];
+      newProj[targetIdx] = temp;
+      return { ...prev, projects: newProj };
+    });
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setErrorMessage(null);
@@ -405,7 +448,7 @@ const EditorPage: React.FC = () => {
       if (resumeId === 'new') {
         const created = await createResume({
           title,
-          templateId: 'executive',
+          templateId: selectedTemplateId,
           ...data,
         });
         setResumeId(created.id);
@@ -413,6 +456,7 @@ const EditorPage: React.FC = () => {
       } else {
         await updateResume(resumeId, {
           title,
+          templateId: selectedTemplateId,
           ...data,
         });
       }
@@ -438,7 +482,7 @@ const EditorPage: React.FC = () => {
       if (targetId === 'new') {
         const created = await createResume({
           title,
-          templateId: 'executive',
+          templateId: selectedTemplateId,
           ...data,
         });
         targetId = created.id;
@@ -447,6 +491,7 @@ const EditorPage: React.FC = () => {
       } else {
         await updateResume(targetId, {
           title,
+          templateId: selectedTemplateId,
           ...data,
         });
       }
@@ -637,19 +682,44 @@ const EditorPage: React.FC = () => {
           {/* Experience */}
           <EditorSection title="Work Experience">
             <div className="mt-4 space-y-6">
-              {data.experience.map((exp) => (
+              {data.experience.map((exp, idx) => (
                 <div
                   key={exp.id}
                   className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs"
                 >
                   <div className="flex items-center gap-2">
-                    <GripVertical size={14} className="text-stone-400 cursor-grab" />
+                    <GripVertical size={14} className="text-stone-400" />
                     <span className="text-xs font-bold text-[#1C1917] flex-1">
-                      {exp.company}
+                      {exp.company || 'New Position'} {exp.role ? `— ${exp.role}` : ''}
                     </span>
-                    <button className="p-1 text-stone-400 hover:text-rose-600 transition-colors">
-                      <Trash2 size={13} />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        title="Move Up"
+                        disabled={idx === 0}
+                        onClick={() => moveExperience(idx, 'up')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronUp size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Move Down"
+                        disabled={idx === data.experience.length - 1}
+                        onClick={() => moveExperience(idx, 'down')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronDown size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Delete Experience"
+                        onClick={() => removeExperience(exp.id)}
+                        className="p-1 text-stone-400 hover:text-rose-600 transition-colors"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-3">
                     <Input
@@ -664,6 +734,13 @@ const EditorPage: React.FC = () => {
                       value={exp.role}
                       onChange={(e) =>
                         updateExperienceField(exp.id, 'role', e.target.value)
+                      }
+                    />
+                    <Input
+                      label="Location"
+                      value={exp.location || ''}
+                      onChange={(e) =>
+                        updateExperienceField(exp.id, 'location', e.target.value)
                       }
                     />
                     <Input
@@ -707,18 +784,20 @@ const EditorPage: React.FC = () => {
                         Enhance with AI
                       </button>
                     </div>
-                    {exp.bullets.map((bullet, idx) => (
-                      <div key={idx} className="flex gap-2 mb-2">
+                    {exp.bullets.map((bullet, bIdx) => (
+                      <div key={bIdx} className="flex gap-2 mb-2">
                         <textarea
                           rows={2}
                           className="flex-1 px-3 py-2 text-xs border border-[#E7DFD5] bg-white text-stone-900 placeholder-stone-400 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
                           value={bullet}
                           onChange={(e) =>
-                            updateExperienceBullet(exp.id, idx, e.target.value)
+                            updateExperienceBullet(exp.id, bIdx, e.target.value)
                           }
                         />
                         <button
-                          onClick={() => removeExperienceBullet(exp.id, idx)}
+                          type="button"
+                          title="Remove Bullet"
+                          onClick={() => removeExperienceBullet(exp.id, bIdx)}
                           className="p-1 text-stone-400 hover:text-rose-600 transition-colors self-start mt-1"
                         >
                           <Trash2 size={13} />
@@ -726,6 +805,7 @@ const EditorPage: React.FC = () => {
                       </div>
                     ))}
                     <button
+                      type="button"
                       onClick={() => addExperienceBullet(exp.id)}
                       className="flex items-center gap-1 text-xs text-amber-700 hover:text-amber-800 font-bold mt-1"
                     >
@@ -735,7 +815,11 @@ const EditorPage: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all">
+              <button
+                type="button"
+                onClick={addExperience}
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all"
+              >
                 <Plus size={15} />
                 Add experience
               </button>
@@ -745,29 +829,93 @@ const EditorPage: React.FC = () => {
           {/* Education */}
           <EditorSection title="Education">
             <div className="mt-4 space-y-4">
-              {data.education.map((ed) => (
+              {data.education.map((ed, idx) => (
                 <div
                   key={ed.id}
-                  className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 grid sm:grid-cols-2 gap-3 shadow-2xs"
+                  className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs"
                 >
-                  <Input
-                    label="Institution"
-                    value={ed.institution}
-                    onChange={() => {}}
-                  />
-                  <Input
-                    label="Degree"
-                    value={`${ed.degree} in ${ed.field}`}
-                    onChange={() => {}}
-                  />
-                  <Input label="Start year" value={ed.startDate} onChange={() => {}} />
-                  <Input label="End year" value={ed.endDate} onChange={() => {}} />
-                  {ed.gpa && (
-                    <Input label="GPA" value={ed.gpa} onChange={() => {}} />
-                  )}
+                  <div className="flex items-center justify-between pb-1 border-b border-stone-200">
+                    <span className="text-xs font-bold text-[#1C1917]">
+                      {ed.institution || 'New Education'} {ed.degree ? `— ${ed.degree}` : ''}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        title="Move Up"
+                        disabled={idx === 0}
+                        onClick={() => moveEducation(idx, 'up')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronUp size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Move Down"
+                        disabled={idx === data.education.length - 1}
+                        onClick={() => moveEducation(idx, 'down')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronDown size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Delete Education"
+                        onClick={() => removeEducation(ed.id)}
+                        className="p-1 text-stone-400 hover:text-rose-600 transition-colors"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <Input
+                      label="Institution"
+                      value={ed.institution}
+                      onChange={(e) => updateEducationField(ed.id, 'institution', e.target.value)}
+                    />
+                    <Input
+                      label="Degree"
+                      value={ed.degree}
+                      onChange={(e) => updateEducationField(ed.id, 'degree', e.target.value)}
+                    />
+                    <Input
+                      label="Field of study"
+                      value={ed.field}
+                      onChange={(e) => updateEducationField(ed.id, 'field', e.target.value)}
+                    />
+                    <Input
+                      label="Location"
+                      value={(ed as any).location || ''}
+                      onChange={(e) => updateEducationField(ed.id, 'location', e.target.value)}
+                    />
+                    <Input
+                      label="Start year"
+                      value={ed.startDate}
+                      onChange={(e) => updateEducationField(ed.id, 'startDate', e.target.value)}
+                    />
+                    <Input
+                      label="End year"
+                      value={ed.endDate}
+                      onChange={(e) => updateEducationField(ed.id, 'endDate', e.target.value)}
+                    />
+                    <Input
+                      label="GPA"
+                      value={ed.gpa || ''}
+                      onChange={(e) => updateEducationField(ed.id, 'gpa', e.target.value)}
+                    />
+                    <Input
+                      label="Honors / Awards"
+                      value={ed.honors || ''}
+                      onChange={(e) => updateEducationField(ed.id, 'honors', e.target.value)}
+                    />
+                  </div>
                 </div>
               ))}
-              <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all">
+              <button
+                type="button"
+                onClick={addEducation}
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all"
+              >
                 <Plus size={15} />
                 Add education
               </button>
@@ -777,24 +925,63 @@ const EditorPage: React.FC = () => {
           {/* Skills */}
           <EditorSection title="Skills">
             <div className="mt-4 space-y-4">
-              {data.skills.map((sg) => (
-                <div key={sg.id} className="grid sm:grid-cols-3 gap-3 items-start">
-                  <Input
-                    label="Category"
-                    value={sg.category}
-                    onChange={(e) => updateSkillCategory(sg.id, e.target.value)}
-                  />
-                  <div className="sm:col-span-2">
+              {data.skills.map((sg, idx) => (
+                <div key={sg.id} className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs">
+                  <div className="flex items-center justify-between pb-1 border-b border-stone-200">
+                    <span className="text-xs font-bold text-[#1C1917]">
+                      {sg.category || 'Skill Group'}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        title="Move Up"
+                        disabled={idx === 0}
+                        onClick={() => moveSkillGroup(idx, 'up')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronUp size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Move Down"
+                        disabled={idx === data.skills.length - 1}
+                        onClick={() => moveSkillGroup(idx, 'down')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronDown size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Delete Skill Group"
+                        onClick={() => removeSkillGroup(sg.id)}
+                        className="p-1 text-stone-400 hover:text-rose-600 transition-colors"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-3 items-start">
                     <Input
-                      label="Skills (comma-separated)"
-                      value={sg.skills.join(', ')}
-                      onChange={(e) => updateSkillList(sg.id, e.target.value)}
+                      label="Category"
+                      value={sg.category}
+                      onChange={(e) => updateSkillCategory(sg.id, e.target.value)}
                     />
+                    <div className="sm:col-span-2">
+                      <Input
+                        label="Skills (comma-separated)"
+                        value={sg.skills.join(', ')}
+                        onChange={(e) => updateSkillList(sg.id, e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
-              <button className="flex items-center gap-1 text-xs text-amber-700 hover:text-amber-800 font-bold">
-                <Plus size={12} />
+              <button
+                type="button"
+                onClick={addSkillGroup}
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all"
+              >
+                <Plus size={15} />
                 Add skill group
               </button>
             </div>
@@ -803,26 +990,80 @@ const EditorPage: React.FC = () => {
           {/* Projects */}
           <EditorSection title="Projects">
             <div className="mt-4 space-y-4">
-              {data.projects.map((proj) => (
+              {(data.projects || []).map((proj, idx) => (
                 <div
                   key={proj.id}
                   className="border border-[#E7DFD5] bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xs"
                 >
-                  <Input label="Project name" value={proj.name} onChange={() => {}} />
+                  <div className="flex items-center justify-between pb-1 border-b border-stone-200">
+                    <span className="text-xs font-bold text-[#1C1917]">
+                      {proj.name || 'New Project'}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        title="Move Up"
+                        disabled={idx === 0}
+                        onClick={() => moveProject(idx, 'up')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronUp size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Move Down"
+                        disabled={idx === data.projects.length - 1}
+                        onClick={() => moveProject(idx, 'down')}
+                        className="p-1 text-stone-400 hover:text-stone-700 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                      >
+                        <ChevronDown size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        title="Delete Project"
+                        onClick={() => removeProject(proj.id)}
+                        className="p-1 text-stone-400 hover:text-rose-600 transition-colors"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <Input
+                      label="Project name"
+                      value={proj.name}
+                      onChange={(e) => updateProjectField(proj.id, 'name', e.target.value)}
+                    />
+                    <Input
+                      label="Project URL / GitHub"
+                      value={proj.url || proj.github || ''}
+                      onChange={(e) => updateProjectField(proj.id, 'url', e.target.value)}
+                    />
+                  </div>
                   <Textarea
                     label="Description"
                     rows={2}
                     value={proj.description}
-                    onChange={() => {}}
+                    onChange={(e) => updateProjectField(proj.id, 'description', e.target.value)}
                   />
                   <Input
                     label="Technologies (comma-separated)"
                     value={proj.technologies.join(', ')}
-                    onChange={() => {}}
+                    onChange={(e) =>
+                      updateProjectField(
+                        proj.id,
+                        'technologies',
+                        e.target.value.split(',').map((t) => t.trim()).filter(Boolean)
+                      )
+                    }
                   />
                 </div>
               ))}
-              <button className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all">
+              <button
+                type="button"
+                onClick={addProject}
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#DCD3C7] text-xs font-semibold text-stone-600 hover:text-amber-800 hover:border-amber-400 hover:bg-white rounded-2xl transition-all"
+              >
                 <Plus size={15} />
                 Add project
               </button>
@@ -832,17 +1073,94 @@ const EditorPage: React.FC = () => {
 
         {/* Preview panel */}
         <div
-          className={`bg-[var(--bg-subtle)] border-l border-[var(--border-subtle)] overflow-y-auto p-6 ${
+          className={`bg-[var(--bg-subtle)] border-l border-[var(--border-subtle)] overflow-y-auto p-4 sm:p-6 ${
             previewMode ? 'w-full lg:w-1/2' : 'hidden lg:block lg:w-1/2'
           }`}
         >
-          <div className="sticky top-0 flex items-center justify-between mb-4 z-10 pb-2">
-            <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Live preview</p>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-semibold shadow-2xs">A4 Studio</span>
+          {/* Live Preview Controls: Template & Color Customizer */}
+          <div className="sticky top-0 mb-4 z-20 pb-2 bg-[var(--bg-page)]/95 backdrop-blur-md p-3 rounded-2xl border border-[var(--border-subtle)] shadow-xs space-y-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <label className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+                  Template:
+                </label>
+                <select
+                  value={selectedTemplateId}
+                  onChange={(e) => {
+                    const nextId = e.target.value;
+                    setSelectedTemplateId(nextId);
+                    const tmpl = ALL_RESUME_TEMPLATES.find((t) => t.id === nextId);
+                    if (tmpl?.colorScheme?.accent) {
+                      setSelectedColor(tmpl.colorScheme.accent);
+                    }
+                    setSearchParams((prev) => {
+                      prev.set('template', nextId);
+                      return prev;
+                    });
+                  }}
+                  className="text-xs font-semibold bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
+                >
+                  {ALL_RESUME_TEMPLATES.map((tmpl) => (
+                    <option key={tmpl.id} value={tmpl.id}>
+                      {tmpl.name} ({tmpl.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Real-time Color Palette Swatches */}
+              <div className="flex items-center gap-1.5">
+                {[
+                  { hex: '#0F6292', name: 'Steel Cerulean' },
+                  { hex: '#1D4ED8', name: 'Royal Sapphire' },
+                  { hex: '#18181B', name: 'Charcoal Slate' },
+                  { hex: '#D97706', name: 'Warm Amber' },
+                  { hex: '#059669', name: 'Forest Emerald' },
+                  { hex: '#7C3AED', name: 'Purple Iris' },
+                  { hex: '#DC2626', name: 'Ruby Crimson' },
+                  { hex: '#0284C7', name: 'Sky Azure' },
+                ].map((c) => (
+                  <button
+                    key={c.hex}
+                    type="button"
+                    onClick={() => {
+                      setSelectedColor(c.hex);
+                      setSearchParams((prev) => {
+                        prev.set('color', c.hex);
+                        return prev;
+                      });
+                    }}
+                    title={c.name}
+                    className={`w-4 h-4 rounded-full transition-transform ${
+                      selectedColor === c.hex
+                        ? 'ring-2 ring-offset-1 ring-amber-600 scale-110'
+                        : 'opacity-70 hover:opacity-100 hover:scale-105'
+                    }`}
+                    style={{ backgroundColor: c.hex }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[10px] text-[var(--text-secondary)] pt-1 border-t border-[var(--border-subtle)]">
+              <span className="font-medium">
+                {ALL_RESUME_TEMPLATES.find((t) => t.id === selectedTemplateId)?.name || 'Custom'} · {ALL_RESUME_TEMPLATES.find((t) => t.id === selectedTemplateId)?.category}
+              </span>
+              <span className="font-mono text-[9px] bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full">
+                ATS Score: {ALL_RESUME_TEMPLATES.find((t) => t.id === selectedTemplateId)?.atsScore || 96}%
+              </span>
             </div>
           </div>
-          <ResumePreview data={data} />
+
+          {/* Scaled A4 Resume Canvas */}
+          <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-slate-200">
+            <ResumeTemplatePreview
+              data={data}
+              template={ALL_RESUME_TEMPLATES.find((t) => t.id === selectedTemplateId) || ALL_RESUME_TEMPLATES[0]}
+              accentColor={selectedColor}
+              scale="full"
+            />
+          </div>
         </div>
       </div>
 

@@ -545,6 +545,54 @@ const LandingPage: React.FC = () => {
 
         </div>
 
+        {/* Centered Secondary "Choose a template" CTA Button */}
+        <div className="flex justify-center pt-12 pb-4">
+          <Link to="/templates">
+            <button className="px-9 py-3.5 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 hover:from-amber-700 hover:to-orange-700 text-white rounded-full font-bold text-sm shadow-lg shadow-amber-600/25 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              <span>Choose a template</span>
+              <ArrowUpRight size={16} />
+            </button>
+          </Link>
+        </div>
+
+      </section>
+
+      {/* ─── Section 4: "OUR CUSTOMERS HAVE BEEN HIRED BY *" ─────────────────── */}
+      <section className="py-12 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs sm:text-sm font-black tracking-widest text-[var(--text-secondary)] uppercase mb-8">
+            OUR CUSTOMERS HAVE BEEN HIRED BY *
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-85 hover:opacity-100 transition-opacity">
+            {/* HDFC Bank */}
+            <div className="flex items-center gap-2 font-black text-slate-800 dark:text-slate-100 tracking-wider">
+              <span className="px-2 py-0.5 bg-[#004B8D] text-white text-xs font-bold rounded">HDFC</span>
+              <span className="text-sm sm:text-base font-extrabold tracking-tight">HDFC BANK</span>
+            </div>
+
+            {/* Tech Mahindra */}
+            <div className="flex items-baseline gap-1 font-serif text-slate-800 dark:text-slate-100">
+              <span className="text-base sm:text-lg font-black tracking-wide">TECH</span>
+              <span className="font-sans font-light text-sm sm:text-base text-slate-600 dark:text-slate-300">mahindra</span>
+            </div>
+
+            {/* Genpact */}
+            <div className="font-sans font-black tracking-widest text-base sm:text-lg text-slate-800 dark:text-slate-100 uppercase">
+              GENPACT
+            </div>
+
+            {/* Accenture */}
+            <div className="flex items-center gap-1 font-sans font-bold text-base sm:text-lg text-slate-800 dark:text-slate-100">
+              <span className="text-amber-600 dark:text-amber-400 font-extrabold text-xl leading-none">&gt;</span>
+              <span className="font-semibold lowercase tracking-tight">accenture</span>
+            </div>
+
+            {/* Deloitte */}
+            <div className="font-serif font-black text-base sm:text-lg tracking-tight text-slate-800 dark:text-slate-100">
+              Deloitte<span className="text-emerald-500 font-black">.</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ─── NEW FULL-BLEED CTA + EDITORIAL MEADOW RISE FOOTER SECTION ──────── */}

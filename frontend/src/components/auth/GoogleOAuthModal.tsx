@@ -17,10 +17,10 @@ const DEFAULT_ACCOUNTS: GoogleAccount[] = [
     avatarText: 'TK',
   },
   {
-    name: 'Hemant Lakhane',
-    email: 'lakhanehemant@gmail.com',
-    avatarBg: 'bg-gradient-to-tr from-emerald-500 to-teal-600',
-    avatarText: 'HL',
+    name: 'Aarav Sharma',
+    email: 'aarav.sharma@gmail.com',
+    avatarBg: 'bg-gradient-to-tr from-amber-500 to-orange-600',
+    avatarText: 'AS',
   },
 ];
 

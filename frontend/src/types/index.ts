@@ -80,7 +80,37 @@ export interface ResumeTemplate {
   tags: string[];
   popular: boolean;
   premium: boolean;
+  headshot?: boolean;
+  graphics?: 'minimal' | 'modern';
+  columns?: 1 | 2;
+  atsScore?: number;
+  roleCategory?: string;
   previewImage?: string;
+  layoutType?:
+    | 'latex-academic'
+    | 'executive-banner'
+    | 'sidebar-left-full'
+    | 'split-banner-sidebar'
+    | 'ats-single-column'
+    | 'timeline-spine'
+    | 'swiss-grid'
+    | 'editorial-serif'
+    | 'metrics-highlight'
+    | 'monogram-cards'
+    | 'gradient-header'
+    | 'monochrome-editorial'
+    | 'ivy-league-academic'
+    | 'ats-standard-blue'
+    | string;
+  persona?: {
+    name: string;
+    role: string;
+    location: string;
+    email: string;
+    initials: string;
+    avatarBg?: string;
+    avatarUrl?: string;
+  };
 }
 
 // ─── Dashboard / Resumes ────────────────────────────────────────────────────

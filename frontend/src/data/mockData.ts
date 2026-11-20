@@ -4,91 +4,12 @@ import type {
   ResumeData,
   ChatMessage,
 } from '../types';
+import { ALL_RESUME_TEMPLATES } from './templatesData';
 
-// ─── Templates mock data ─────────────────────────────────────────────────────
+// ─── Templates data (25+ Distinct Production-Grade Layouts) ──────────────────
 
-export const RESUME_TEMPLATES: ResumeTemplate[] = [
-  {
-    id: 'executive',
-    name: 'Executive',
-    category: 'professional',
-    description: 'Clean, authoritative layout for senior professionals.',
-    colorScheme: { primary: '#0f172a', accent: '#2563eb', bg: '#ffffff' },
-    tags: ['Finance', 'Consulting', 'Management'],
-    popular: true,
-    premium: false,
-  },
-  {
-    id: 'clarity',
-    name: 'Clarity',
-    category: 'minimal',
-    description: 'Whitespace-first design that lets your content speak.',
-    colorScheme: { primary: '#111827', accent: '#6366f1', bg: '#fafafa' },
-    tags: ['Tech', 'Design', 'Product'],
-    popular: true,
-    premium: false,
-  },
-  {
-    id: 'horizon',
-    name: 'Horizon',
-    category: 'modern',
-    description: 'Bold sidebar accent with contemporary two-column layout.',
-    colorScheme: { primary: '#1e293b', accent: '#0ea5e9', bg: '#ffffff' },
-    tags: ['Engineering', 'Data Science', 'DevOps'],
-    popular: true,
-    premium: false,
-  },
-  {
-    id: 'prism',
-    name: 'Prism',
-    category: 'creative',
-    description: 'Distinctive visual hierarchy for creative professionals.',
-    colorScheme: { primary: '#18181b', accent: '#8b5cf6', bg: '#ffffff' },
-    tags: ['Design', 'Marketing', 'Media'],
-    popular: false,
-    premium: true,
-  },
-  {
-    id: 'scholar',
-    name: 'Scholar',
-    category: 'academic',
-    description: 'Traditional CV format for academia and research.',
-    colorScheme: { primary: '#1c1917', accent: '#b45309', bg: '#fffbeb' },
-    tags: ['Research', 'PhD', 'Academia'],
-    popular: false,
-    premium: false,
-  },
-  {
-    id: 'atlas',
-    name: 'Atlas',
-    category: 'modern',
-    description: 'Structured, information-dense layout for detailed CVs.',
-    colorScheme: { primary: '#0f2942', accent: '#0284c7', bg: '#f8fafc' },
-    tags: ['Engineering', 'Finance', 'Strategy'],
-    popular: false,
-    premium: true,
-  },
-  {
-    id: 'pulse',
-    name: 'Pulse',
-    category: 'creative',
-    description: 'Energy and personality for roles that value culture fit.',
-    colorScheme: { primary: '#0c0a09', accent: '#e11d48', bg: '#fff1f2' },
-    tags: ['Startup', 'Sales', 'Marketing'],
-    popular: false,
-    premium: false,
-  },
-  {
-    id: 'meridian',
-    name: 'Meridian',
-    category: 'professional',
-    description: 'Balanced, trustworthy layout built for ATS compatibility.',
-    colorScheme: { primary: '#134e4a', accent: '#0d9488', bg: '#f0fdfa' },
-    tags: ['Legal', 'HR', 'Operations'],
-    popular: false,
-    premium: false,
-  },
-];
+export const RESUME_TEMPLATES: ResumeTemplate[] = ALL_RESUME_TEMPLATES;
+export { ALL_RESUME_TEMPLATES };
 
 // ─── Dashboard mock resumes ──────────────────────────────────────────────────
 
