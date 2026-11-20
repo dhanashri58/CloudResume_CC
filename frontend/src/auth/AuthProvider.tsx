@@ -330,7 +330,7 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     }
   }, []);
 
-  const loginWithGoogle = useCallback(async (customAccount?: { name: string; email: string; avatar?: string }) => {
+  const loginWithGoogle = useCallback(async (customAccount?: { name: string; email: string; avatar?: string; credential?: string }) => {
     const email = customAccount?.email || 'cloud.developer@gmail.com';
     const name = customAccount?.name || 'Google Cloud Developer';
     const avatar = customAccount?.avatar || (name ? name.slice(0, 2).toUpperCase() : 'GD');
@@ -345,17 +345,29 @@ const DevAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setUser(googleUser);
     try {
       localStorage.setItem('cloudresume_auth_user', JSON.stringify(googleUser));
-      // Auto-acquire real backend session token so backend remains connected
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      // Auto-acquire real backend session token from /api/auth/google
+      const res = await fetch(`${API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'student@cloudresume.ai', password: 'Password123' })
+        body: JSON.stringify({
+          credential: customAccount?.credential,
+          email,
+          name,
+        }),
       });
       if (res.ok) {
         const body = await res.json();
         if (body.token) {
           setToken(body.token);
           localStorage.setItem('cloudresume_auth_token', body.token);
+          if (body.user) {
+            setUser({
+              ...googleUser,
+              id: body.user.id || googleUser.id,
+              name: body.user.full_name || googleUser.name,
+              email: body.user.email || googleUser.email,
+            });
+          }
         }
       }
     } catch {

@@ -162,7 +162,7 @@ export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
     }
   };
 
-  const handleGoogleSelect = async (account: { name: string; email: string; avatar?: string }) => {
+  const handleGoogleSelect = async (account: { name: string; email: string; avatar?: string; credential?: string }) => {
     await loginWithGoogle(account);
     navigate(from, { replace: true });
   };

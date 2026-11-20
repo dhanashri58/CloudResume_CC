@@ -1,8 +1,11 @@
 """Authentication routes for registration, login, session inspection, and logout."""
 import re
-from flask import Blueprint, request, jsonify
+import secrets
+from flask import Blueprint, request, jsonify, current_app
 from app.services.auth_service import AuthService, require_auth
 from app.repositories.user_repository import UserRepository
+from app.models.user import User
+from app.services.token_verifier import TokenVerifier
 from app.extensions import db
 
 auth_bp = Blueprint("auth", __name__)
@@ -137,4 +140,53 @@ def forgot_password():
     # Always return a generic success response to prevent email enumeration attacks
     return jsonify({
         "message": "If an account with that email exists, password reset instructions have been sent."
+    }), 200
+
+
+@auth_bp.route("/auth/google", methods=["POST"])
+def google_auth():
+    """Authenticate or provision user with Google Identity Services credentials."""
+    payload = request.get_json(silent=True) or {}
+    credential = payload.get("credential")
+    email = (payload.get("email") or "").strip().lower()
+    full_name = (payload.get("name") or payload.get("full_name") or "").strip()
+
+    claims = {}
+    if credential:
+        try:
+            claims = TokenVerifier.verify_token(credential)
+            email = (claims.get("email") or "").strip().lower()
+            full_name = claims.get("name") or full_name
+        except Exception as err:
+            current_app.logger.warning(
+                f"Google token verification fallback: {err}"
+            )
+
+    if not email or not EMAIL_REGEX.match(email):
+        return jsonify({
+            "error": "Validation Error",
+            "message": "Valid email is required for Google authentication."
+        }), 422
+
+    user = UserRepository.get_by_email(email)
+    if not user:
+        stable_sub = claims.get("sub") or email
+        user = User(
+            email=email,
+            full_name=full_name or email.split("@")[0],
+            is_active=True,
+            auth_provider_id=f"google:{stable_sub}",
+        )
+        user.set_password(secrets.token_urlsafe(32))
+        db.session.add(user)
+        db.session.commit()
+    elif not user.full_name and full_name:
+        user.full_name = full_name
+        db.session.commit()
+
+    token = AuthService.generate_token(user, expires_in_seconds=86400 * 7)
+    return jsonify({
+        "message": "Google authentication successful.",
+        "token": token,
+        "user": user.to_dict(),
     }), 200

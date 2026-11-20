@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { X, Check, Plus, Shield } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Check, Plus, Shield, Globe } from 'lucide-react';
+import { GOOGLE_CLIENT_ID } from '../../config/api';
 
 interface GoogleAccount {
   name: string;
@@ -26,7 +27,7 @@ const DEFAULT_ACCOUNTS: GoogleAccount[] = [
 interface GoogleOAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectAccount: (account: { name: string; email: string; avatar?: string }) => Promise<void>;
+  onSelectAccount: (account: { name: string; email: string; avatar?: string; credential?: string }) => Promise<void>;
 }
 
 export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
@@ -41,7 +42,54 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
   const [customName, setCustomName] = useState('');
   const [customEmail, setCustomEmail] = useState('');
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const existing = document.getElementById('google-gsi-client');
+    if (!existing) {
+      const script = document.createElement('script');
+      script.id = 'google-gsi-client';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  }, []);
+
   if (!isOpen) return null;
+
+  const handleLaunchGooglePopup = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const google = (window as any).google;
+    if (google?.accounts?.id) {
+      setLoading(true);
+      setStatusText('Connecting to Google Identity Services...');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: async (response: { credential?: string }) => {
+          if (response.credential) {
+            setStatusText('Verifying Google credentials with AWS backend...');
+            await onSelectAccount({
+              name: 'Google User',
+              email: '',
+              credential: response.credential,
+            });
+            setLoading(false);
+            onClose();
+          }
+        },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      google.accounts.id.prompt((notification: any) => {
+        if (notification.isNotDisplayed?.() || notification.isSkippedMoment?.()) {
+          setLoading(false);
+          setStatusText('');
+        }
+      });
+    } else {
+      setShowCustom(true);
+    }
+  };
 
   const handleChoose = async (acc: { name: string; email: string; avatarText?: string }) => {
     setSelectedEmail(acc.email);
@@ -133,8 +181,18 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
           </div>
         ) : (
           <div className="p-4 space-y-2">
+            {/* Real Google Account Sign-In Button */}
+            <button
+              type="button"
+              onClick={handleLaunchGooglePopup}
+              className="w-full flex items-center justify-center gap-2.5 p-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all shadow-sm mb-2"
+            >
+              <Globe size={16} />
+              <span>Sign in with your Google Account</span>
+            </button>
+
             <p className="text-[11px] font-semibold text-[var(--text-muted)] px-3 uppercase tracking-wider">
-              Choose an account
+              Or pick an account
             </p>
 
             {/* Account List */}

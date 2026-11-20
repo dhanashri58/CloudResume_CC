@@ -8,6 +8,7 @@ frontend:
     build:
       commands:
         - echo "VITE_API_BASE_URL=https://dcjovytpk37z6noqf7et5nt3uq0lnrvj.lambda-url.ap-southeast-2.on.aws" > .env.production
+        - echo "VITE_GOOGLE_CLIENT_ID=1009767865628-5t95t4gimdri6omss4toejicgtq8v5vm.apps.googleusercontent.com" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: frontend/dist

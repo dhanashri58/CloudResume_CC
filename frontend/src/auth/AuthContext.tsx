@@ -37,7 +37,7 @@ export interface AuthContextType {
   registerUser: (data: RegisterData) => Promise<AuthResponseResult>;
   loginWithCredentials: (credentials: LoginCredentials) => Promise<AuthResponseResult>;
   login: (userOrType?: string | { email: string; name?: string; role?: string }) => Promise<void>;
-  loginWithGoogle: (customAccount?: { name: string; email: string; avatar?: string }) => Promise<void>;
+  loginWithGoogle: (customAccount?: { name: string; email: string; avatar?: string; credential?: string }) => Promise<void>;
   loginAsDemo: (persona?: 'student' | 'evaluator' | 'recruiter') => Promise<void>;
   logout: () => Promise<void>;
   getAccessToken: () => Promise<string | null>;

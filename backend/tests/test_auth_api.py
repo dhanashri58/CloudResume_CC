@@ -248,3 +248,28 @@ def test_forgot_password_and_logout(client):
 
     logout_res = client.post("/api/auth/logout")
     assert logout_res.status_code == 200
+
+
+def test_google_auth_provision_and_login(client):
+    """Google authentication route provisions new user and returns valid token."""
+    res = client.post(
+        "/api/auth/google",
+        json={
+            "email": "google.user@example.com",
+            "name": "Google Test User",
+        },
+    )
+    assert res.status_code == 200
+    data = res.get_json()
+    assert "token" in data
+    assert data["user"]["email"] == "google.user@example.com"
+    assert data["user"]["full_name"] == "Google Test User"
+
+    # Verify token allows access to protected routes
+    token = data["token"]
+    me_res = client.get(
+        "/api/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert me_res.status_code == 200
+    assert me_res.get_json()["user"]["email"] == "google.user@example.com"

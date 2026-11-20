@@ -11,3 +11,7 @@ export const PRODUCTION_API_URL =
 export const API_BASE_URL: string =
   (import.meta.env.VITE_API_BASE_URL as string) ||
   (import.meta.env.PROD ? PRODUCTION_API_URL : '');
+
+export const GOOGLE_CLIENT_ID: string =
+  (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) ||
+  '1009767865628-5t95t4gimdri6omss4toejicgtq8v5vm.apps.googleusercontent.com';
