@@ -74,10 +74,10 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn">
-      <div className="bg-white rounded-3xl max-w-sm w-full shadow-2xl border border-slate-200 overflow-hidden text-slate-900 animate-scaleUp">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
+      <div className="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-3xl max-w-sm w-full shadow-2xl border border-[var(--border-subtle)] overflow-hidden animate-scaleUp transition-colors">
         {/* Google Header */}
-        <div className="p-6 border-b border-slate-100 flex items-start justify-between">
+        <div className="p-6 border-b border-[var(--border-subtle)] flex items-start justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
@@ -98,18 +98,18 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <h2 className="text-base font-semibold text-slate-900 font-sans">
+              <h2 className="text-base font-semibold text-[var(--text-primary)] font-sans">
                 Sign in with Google
               </h2>
             </div>
-            <p className="text-xs text-slate-500">
-              to continue to <strong className="text-slate-800">CloudResumeAI</strong>
+            <p className="text-xs text-[var(--text-muted)]">
+              to continue to <strong className="text-[var(--text-primary)]">CloudResumeAI</strong>
             </p>
           </div>
           <button
             onClick={onClose}
             disabled={loading}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-full hover:bg-[var(--bg-subtle)] transition-colors"
           >
             <X size={18} />
           </button>
@@ -123,17 +123,17 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
               <Shield size={18} className="text-blue-600 absolute inset-0 m-auto" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-[var(--text-primary)]">
                 {statusText}
               </p>
-              <p className="text-xs text-slate-400 mt-1 font-mono">
+              <p className="text-xs text-[var(--text-muted)] mt-1 font-mono">
                 {selectedEmail}
               </p>
             </div>
           </div>
         ) : (
           <div className="p-4 space-y-2">
-            <p className="text-[11px] font-semibold text-slate-500 px-3 uppercase tracking-wider">
+            <p className="text-[11px] font-semibold text-[var(--text-muted)] px-3 uppercase tracking-wider">
               Choose an account
             </p>
 
@@ -142,7 +142,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
               <button
                 key={acc.email}
                 onClick={() => handleChoose(acc)}
-                className="w-full flex items-center gap-3.5 p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all text-left group"
+                className="w-full flex items-center gap-3.5 p-3 rounded-2xl hover:bg-[var(--bg-subtle)] border border-transparent hover:border-[var(--border-subtle)] transition-all text-left group"
               >
                 <div
                   className={`w-10 h-10 rounded-full ${acc.avatarBg} text-white font-bold text-sm flex items-center justify-center shadow-xs shrink-0`}
@@ -150,26 +150,26 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
                   {acc.avatarText}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                  <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-blue-600 transition-colors">
                     {acc.name}
                   </p>
-                  <p className="text-xs text-slate-500 truncate">{acc.email}</p>
+                  <p className="text-xs text-[var(--text-muted)] truncate">{acc.email}</p>
                 </div>
-                <Check size={16} className="text-slate-300 group-hover:text-blue-600" />
+                <Check size={16} className="text-[var(--text-muted)] group-hover:text-blue-600" />
               </button>
             ))}
 
             {/* Custom Account Form or Trigger */}
             {showCustom ? (
-              <form onSubmit={handleCustomSubmit} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 mt-2 animate-fadeIn">
-                <p className="text-xs font-semibold text-slate-700">Enter custom Google account:</p>
+              <form onSubmit={handleCustomSubmit} className="p-3 bg-[var(--bg-subtle)] rounded-2xl border border-[var(--border-subtle)] space-y-3 mt-2 animate-fadeIn">
+                <p className="text-xs font-semibold text-[var(--text-secondary)]">Enter custom Google account:</p>
                 <input
                   type="text"
                   required
                   placeholder="Your Name"
                   value={customName}
                   onChange={(e) => setCustomName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3 py-2 text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                 />
                 <input
                   type="email"
@@ -177,7 +177,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({
                   placeholder="your.email@gmail.com"
                   value={customEmail}
                   onChange={(e) => setCustomEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3 py-2 text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                 />
                 <div className="flex gap-2">
                   <button

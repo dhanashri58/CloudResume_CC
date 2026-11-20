@@ -2,910 +2,628 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Sparkles,
-  Target,
-  BarChart3,
-  Download,
-  ArrowRight,
-  Star,
-  Sun,
-  Shield,
-  Cpu,
-  ChevronRight,
+  Camera,
+  Clock,
+  Briefcase,
   Check,
-  Zap,
-  Award,
-  Layers,
-  Lock,
-  Cloud,
-  Database,
-  KeyRound,
-  FileCode2,
-  Workflow,
-  Server,
+  CheckCircle2,
+  Wand2,
+  Globe,
+  TrendingUp,
+  ArrowUpRight,
 } from 'lucide-react';
-import { RESUME_TEMPLATES } from '../../data/mockData';
-import MeadowRiseFooter, { MeadowTheme } from '../../components/ui/meadow-rise-footer';
+import OptimizeResumeModal from '../../components/modals/OptimizeResumeModal';
+import MeadowRiseFooter, { MeadowPreset } from '../../components/ui/meadow-rise-footer';
 import { useTheme } from '../../context/ThemeContext';
 
-// ─── Interactive Hero Preview Card ───────────────────────────────────────────
+// ─── Color Swatches for Hero Resume Preview ───────────────────────────────────
+const HERO_PALETTES = [
+  { id: 'cream', name: 'Warm Cream', hex: '#A38F78' },
+  { id: 'maroon', name: 'Executive Crimson', hex: '#991B1B' },
+  { id: 'charcoal', name: 'Charcoal Slate', hex: '#1E293B' },
+  { id: 'amber', name: 'Burnt Amber', hex: '#D97706' },
+  { id: 'emerald', name: 'Forest Emerald', hex: '#059669' },
+];
 
-const HeroGlassPreview: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'improved' | 'original'>('improved');
-
+// ─── Hero Resume Document Preview ─────────────────────────────────────────────
+const HeroResumeDocument: React.FC<{
+  activeColor: string;
+  onSelectColor: (hex: string) => void;
+  onOpenOptimize: () => void;
+}> = ({ activeColor, onSelectColor, onOpenOptimize }) => {
   return (
-    <div className="relative mx-auto w-full max-w-4xl mt-8 sm:mt-10 group">
-      {/* Ambient aura beneath card */}
-      <div className="absolute -inset-1.5 bg-gradient-to-r from-amber-500/20 via-orange-400/15 to-amber-600/20 dark:from-blue-600/20 dark:via-indigo-500/15 dark:to-cyan-500/20 rounded-3xl blur-2xl opacity-75 group-hover:opacity-100 transition duration-1000 -z-10" />
+    <div className="relative w-full max-w-lg mx-auto lg:max-w-none select-none">
+      
+      {/* Decorative Golden/Green Scribble Behind Top Left */}
+      <svg
+        className="absolute -top-7 -left-7 w-24 h-24 text-amber-500/70 dark:text-amber-400/50 pointer-events-none -z-10"
+        viewBox="0 0 100 100"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+      >
+        <path d="M15,10 Q35,45 20,80" />
+        <path d="M30,10 Q50,45 35,80" />
+        <path d="M45,10 Q65,45 50,80" />
+        <path d="M60,10 Q80,45 65,80" />
+      </svg>
 
-      {/* Surface Card Container */}
-      <div className="relative rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-xl overflow-hidden p-5 sm:p-7 text-left transition-all duration-300">
-        
-        {/* Card Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[var(--border-subtle)]">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-rose-400 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
-            </div>
-            <span className="text-xs text-[var(--text-muted)] font-mono pl-2 border-l border-[var(--border-subtle)]">
-              alex_morgan_cloud_architect.pdf
-            </span>
-          </div>
+      {/* Floating Burnt-Amber Pill (Top Right): Enhance with AI */}
+      <button
+        onClick={onOpenOptimize}
+        className="absolute -top-3 right-6 z-30 flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-full text-xs font-bold shadow-lg shadow-amber-600/30 transition-transform hover:scale-105 active:scale-95"
+      >
+        <Sparkles size={12} className="fill-white" />
+        <span>Enhance with AI</span>
+      </button>
 
-          <div className="flex items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              ATS Score: 98%
-            </div>
-            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-semibold">
-              <Sparkles size={11} className="text-amber-600 dark:text-amber-400" />
-              Gemini Optimized
-            </span>
+      {/* Floating Left Callout: Step-by-step content recommendations */}
+      <div className="hidden sm:block absolute -left-8 top-44 z-30 w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-amber-300 dark:border-amber-700/60 shadow-xl rounded-2xl p-3 text-[10px] text-slate-700 dark:text-slate-300 leading-tight">
+        <div className="flex items-start gap-1.5 mb-1.5">
+          <div className="w-4 h-4 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 flex items-center justify-center font-bold text-[9px] shrink-0">
+            ✓
           </div>
+          <p className="font-bold text-slate-900 dark:text-white">
+            Google XYZ recommendations:
+          </p>
         </div>
+        <p className="text-slate-500 dark:text-slate-400 pl-5">
+          Hand-crafted bullet points for maximum recruiter impact.
+        </p>
+        <div className="mt-2 pt-1.5 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 pl-1 text-[9px] text-amber-700 dark:text-amber-400 font-semibold">
+          <span>⚡ Hand-crafted for maximum ATS scoring</span>
+        </div>
+      </div>
 
-        {/* Card Body - Grid Mockup */}
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Left Column: Candidate Info & AI Optimization */}
-          <div className="lg:col-span-7 space-y-4">
+      {/* White A4 Resume Card with Warm Shadow */}
+      <div className="relative bg-white rounded-3xl shadow-2xl border border-[#EAE3D5] dark:border-slate-800 overflow-hidden text-slate-800 transition-all duration-300">
+        
+        {/* Top Header Banner with Active Accent Color */}
+        <div
+          className="p-4 sm:p-5 text-white flex items-center justify-between transition-colors duration-300"
+          style={{ backgroundColor: activeColor }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl border border-white/30 bg-white/10 flex items-center justify-center font-extrabold text-xs shrink-0">
+              AS
+            </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold text-[var(--text-primary)] tracking-tight">Alex Morgan</h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/30 font-semibold">
-                  Senior Cloud Architect
-                </span>
-              </div>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                Seattle, WA · linkedin.com/in/alex-cloud · alex.morgan@example.com
+              <h3 className="text-base sm:text-lg font-black tracking-wider uppercase leading-none font-sans">
+                AARAV SHARMA
+              </h3>
+              <p className="text-[10px] text-white/80 mt-1">
+                New Delhi, India · +91 98765 43210 · aarav.sharma@example.com
               </p>
             </div>
-
-            {/* AI Bullet Improvement Diff Box */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] relative overflow-hidden">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--text-primary)]">
-                  <Sparkles size={13} className="text-amber-600 dark:text-amber-400" />
-                  <span>Experience Bullet Optimization</span>
-                </div>
-                <div className="flex rounded-lg bg-[var(--bg-surface)] p-0.5 text-[11px] border border-[var(--border-subtle)]">
-                  <button
-                    onClick={() => setActiveTab('improved')}
-                    className={`px-2.5 py-0.5 rounded-md font-semibold transition-all ${
-                      activeTab === 'improved'
-                        ? 'bg-[var(--accent-primary)] text-white shadow-xs'
-                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                    }`}
-                  >
-                    AI Enhanced
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('original')}
-                    className={`px-2.5 py-0.5 rounded-md font-medium transition-all ${
-                      activeTab === 'original'
-                        ? 'bg-[var(--text-primary)] text-[var(--bg-surface)] shadow-xs'
-                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                    }`}
-                  >
-                    Original
-                  </button>
-                </div>
-              </div>
-
-              {activeTab === 'improved' ? (
-                <div className="space-y-1.5 animate-fadeIn">
-                  <p className="text-xs text-[var(--text-primary)] leading-relaxed bg-[var(--bg-surface)] p-2.5 rounded-xl border border-emerald-500/30">
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">Architected and deployed </span>
-                    stateless Python Flask REST services across Google Cloud Run, cutting API tail latencies by 42% and sustaining 10,000+ RPS.
-                  </p>
-                  <div className="flex items-center gap-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-medium pl-1">
-                    <Check size={11} /> +32% stronger XYZ action verb impact
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-1.5 animate-fadeIn">
-                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed bg-[var(--bg-surface)] p-2.5 rounded-xl border border-[var(--border-subtle)] line-through opacity-75">
-                    Responsible for creating backend REST APIs with Python and maintaining cloud containers for team usage.
-                  </p>
-                  <div className="text-[10px] text-rose-500 font-mono pl-1">
-                    Passive phrasing · Lacks quantified business outcome
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Column: ATS Score Radar & Technical Skills */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)]">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-[var(--text-primary)]">Real-Time ATS Keywords</span>
-                <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">12 / 12 Matched</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {['Google Cloud Run', 'Cloud SQL', 'Docker', 'PostgreSQL', 'OAuth 2.0 / OIDC', 'Terraform', 'CI/CD Pipelines', 'REST APIs'].map(
-                  (tag, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-medium"
-                    >
-                      <Check size={10} className="text-emerald-500 font-bold" />
-                      {tag}
-                    </span>
-                  )
-                )}
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span className="text-[11px] text-[var(--text-muted)] font-mono">ReportLab Engine Active</span>
-              </div>
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-1 text-xs font-bold text-[var(--accent-primary)] hover:opacity-80"
-              >
-                Try Editor <ChevronRight size={13} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ─── Bento Grid Feature Cards (Features Section) ──────────────────────────────
-
-const BentoFeaturesSection: React.FC = () => {
-  return (
-    <section id="features" className="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto relative scroll-mt-20">
-      {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3">
-          <Cpu size={13} className="text-amber-600 dark:text-amber-400" />
-          Engineered for Modern Hiring
-        </div>
-        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight mb-3 font-serif">
-          Everything required to{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 dark:from-blue-400 dark:to-cyan-400">
-            dominate the applicant pool
-          </span>
-        </h2>
-        <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
-          Traditional resume builders export broken HTML or clunky tables. CloudResumeAI utilizes serverless Gemini AI, in-memory vector PDF rendering, and Google Cloud infrastructure.
-        </p>
-      </div>
-
-      {/* Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
-        
-        {/* Bento 1: Large Featured Card - AI Bullet Enhancer (Span 7) */}
-        <div className="md:col-span-7 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 sm:p-7 relative overflow-hidden group hover:border-[var(--accent-primary)] hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
-              <Sparkles size={20} />
-            </div>
-            <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-muted)] font-semibold">
-              gemini-3.5-flash-lite
-            </span>
-          </div>
-
-          <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-1.5 tracking-tight">
-            AI-Powered Bullet Point Optimization
-          </h3>
-          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-4 leading-relaxed">
-            Automatically transform weak, passive responsibilities into quantified business results using Google's proven XYZ methodology.
-          </p>
-
-          {/* Interactive Visual Widget */}
-          <div className="space-y-2 p-3 sm:p-4 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)]">
-            <div className="flex items-start gap-2.5 text-xs text-rose-700 dark:text-rose-300 bg-rose-500/10 p-2.5 rounded-xl border border-rose-500/20">
-              <span className="font-mono font-bold text-rose-600">RAW:</span>
-              <span>"Created REST API endpoints in Python for user authentication."</span>
-            </div>
-            <div className="flex items-start gap-2.5 text-xs text-emerald-800 dark:text-emerald-300 font-medium bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/20">
-              <span className="font-mono font-bold text-emerald-600">AI:</span>
-              <span>"Engineered stateless Python Flask REST API with Google OIDC token verification, accelerating authentication throughput by 3.4x."</span>
-            </div>
           </div>
         </div>
 
-        {/* Bento 2: ATS Scanner & Score Radar (Span 5) */}
-        <div className="md:col-span-5 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 sm:p-7 relative overflow-hidden group hover:border-[var(--accent-primary)] hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+        {/* Resume Content Body */}
+        <div className="p-5 sm:p-6 space-y-3.5 text-left">
+          
+          {/* Summary */}
           <div>
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3">
-              <Target size={20} />
-            </div>
-            <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-1.5 tracking-tight">
-              Real-Time ATS Score Radar
-            </h3>
-            <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-4 leading-relaxed">
-              Scan candidate text against recruiter job postings to detect missing keywords before submitting applications.
+            <p
+              className="text-[9.5px] font-black uppercase tracking-wider mb-0.5"
+              style={{ color: activeColor }}
+            >
+              PROFESSIONAL SUMMARY
+            </p>
+            <p className="text-[10px] text-slate-600 leading-relaxed">
+              Customer-focused Cloud Engineer with 5+ years of experience architecting high-throughput microservices, serverless APIs, and automated CI/CD pipelines. Proven track record of boosting system reliability to 99.99%.
             </p>
           </div>
 
-          {/* Radial score gauge visual */}
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-between">
-            <div>
-              <p className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-emerald-600 dark:from-cyan-400 dark:to-emerald-400">
-                98 / 100
+          {/* Two Columns: Skills & Experience */}
+          <div className="grid grid-cols-12 gap-3 pt-0.5">
+            {/* Skills */}
+            <div className="col-span-5 space-y-1">
+              <p
+                className="text-[9.5px] font-black uppercase tracking-wider"
+                style={{ color: activeColor }}
+              >
+                SKILLS
               </p>
-              <p className="text-[11px] text-[var(--text-muted)] font-medium mt-0.5">Optimal Interview Probability</p>
+              <div className="text-[9px] text-slate-600 space-y-0.5">
+                <p>• Google Cloud Run &amp; GCS</p>
+                <p>• Python, Flask &amp; FastAPI</p>
+                <p>• React, TypeScript &amp; Tailwind</p>
+                <p>• Docker &amp; CI/CD Pipelines</p>
+                <p>• Vector PDF Engine</p>
+              </div>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-mono font-bold bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                15 matched
-              </span>
-              <span className="text-[11px] text-[var(--text-muted)] font-mono">0 gaps detected</span>
+
+            {/* Experience */}
+            <div className="col-span-7 space-y-1">
+              <p
+                className="text-[9.5px] font-black uppercase tracking-wider"
+                style={{ color: activeColor }}
+              >
+                EXPERIENCE
+              </p>
+              <div>
+                <div className="flex items-center justify-between text-[10px] font-bold text-slate-900 leading-tight">
+                  <span>Senior Cloud Engineer</span>
+                  <span className="text-[8.5px] text-slate-400">2021 – Present</span>
+                </div>
+                <p className="text-[9px] text-slate-500 italic">Cloud Tech Systems · New Delhi, India</p>
+                <ul className="text-[9px] text-slate-600 space-y-0.5 mt-1">
+                  <li>• Architected serverless REST API on Cloud Run, cutting latency by 42%.</li>
+                  <li>• Implemented Google OIDC authentication with 99.99% system uptime.</li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Bento 3: Server-Side Vector PDF Engine (Span 4) */}
-        <div className="md:col-span-4 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 group hover:border-[var(--accent-primary)] hover:shadow-lg transition-all duration-300">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3">
-            <Download size={20} />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] mb-1.5 tracking-tight">
-            Vector PDF Engine
-          </h3>
-          <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-3">
-            Compiled server-side using Python ReportLab. Clean vector typography, zero blurry raster images, and two-pass page numbering.
-          </p>
-          <div className="text-[11px] font-mono text-[var(--text-primary)] bg-[var(--bg-subtle)] p-2.5 rounded-xl border border-[var(--border-subtle)] flex items-center justify-between">
-            <span>A4 Document Buffer</span>
-            <span className="text-amber-600 dark:text-amber-400 font-bold">100% Vector</span>
-          </div>
-        </div>
-
-        {/* Bento 4: Google Cloud Identity & Security (Span 4) */}
-        <div className="md:col-span-4 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 group hover:border-[var(--accent-primary)] hover:shadow-lg transition-all duration-300">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3">
-            <Shield size={20} />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] mb-1.5 tracking-tight">
-            Cloud Identity & Privacy
-          </h3>
-          <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-3">
-            Google Cloud Identity & OIDC authentication with public JWKS validation and strict multi-tenant data isolation.
-          </p>
-          <div className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 bg-[var(--bg-subtle)] p-2.5 rounded-xl border border-[var(--border-subtle)] flex items-center justify-between">
-            <span>RS256 JWT Signed</span>
-            <span className="font-bold">Zero Leaks</span>
-          </div>
-        </div>
-
-        {/* Bento 5: Observability & Telemetry (Span 4) */}
-        <div className="md:col-span-4 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 group hover:border-[var(--accent-primary)] hover:shadow-lg transition-all duration-300">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3">
-            <BarChart3 size={20} />
-          </div>
-          <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] mb-1.5 tracking-tight">
-            Observability & Analytics
-          </h3>
-          <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-3">
-            Structured JSON logging, end-to-end `X-Request-ID` correlation, Server-Timing latency metrics, and Cloud Logging.
-          </p>
-          <div className="text-[11px] font-mono text-[var(--text-primary)] bg-[var(--bg-subtle)] p-2.5 rounded-xl border border-[var(--border-subtle)] flex items-center justify-between">
-            <span>Serverless Latency</span>
-            <span className="text-amber-600 dark:text-amber-400 font-bold">&lt; 1.2s API</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  );
-};
-
-// ─── Dedicated Google Cloud Architecture Section ─────────────────────────────
-
-const CloudArchitectureSection: React.FC = () => {
-  const [activeTier, setActiveTier] = useState<string>('compute');
-
-  const ARCH_SERVICES = [
-    {
-      id: 'compute',
-      name: 'Google Cloud Run',
-      badge: 'Compute & Microservices',
-      icon: <Server className="text-blue-500" size={20} />,
-      role: 'Stateless Python Flask backend containerized with Docker and Gunicorn WSGI. Automatically scales from 0 to N instances on demand.',
-      specs: [
-        { label: 'Container Image', val: 'Distroless Python 3.11' },
-        { label: 'Scaling Profile', val: '0 to 100 Auto-Instances' },
-        { label: 'Latency', val: '<120ms P95 Response' },
-      ],
-      tag: 'Serverless Autoscaling',
-    },
-    {
-      id: 'ai',
-      name: 'Google Gemini 2.5 / 3.5 Flash',
-      badge: 'AI Intelligence Engine',
-      icon: <Sparkles className="text-amber-500" size={20} />,
-      role: 'Vertex AI & Google Generative Language SDK. Rewrites passive experience bullets into XYZ metrics and extracts resume ATS keywords.',
-      specs: [
-        { label: 'Model', val: 'gemini-2.5-flash / lite' },
-        { label: 'Methodology', val: 'Google XYZ Impact Formula' },
-        { label: 'Context Window', val: '1M+ Tokens Support' },
-      ],
-      tag: 'GenAI Vertex Pipeline',
-    },
-    {
-      id: 'pdf',
-      name: 'Python ReportLab Vector Engine',
-      badge: 'Document Rendering',
-      icon: <FileCode2 className="text-emerald-500" size={20} />,
-      role: 'Server-side vector compiler that writes directly into in-memory `io.BytesIO` streams. Two-pass NumberedCanvas computes total pages without disk writes.',
-      specs: [
-        { label: 'Compilation', val: 'Pure In-Memory Streams' },
-        { label: 'Output Fidelity', val: '100% Vector PDF' },
-        { label: 'Disk Footprint', val: '0 KB Temporary Files' },
-      ],
-      tag: 'In-Memory Stream',
-    },
-    {
-      id: 'data',
-      name: 'Google Cloud SQL & Storage',
-      badge: 'Persistence & Buckets',
-      icon: <Database className="text-purple-500" size={20} />,
-      role: 'Managed PostgreSQL instances with private IP VPC peering. Cloud Storage buckets archive compiled vector PDFs with secure signed URLs.',
-      specs: [
-        { label: 'Database', val: 'PostgreSQL 15 via SQLAlchemy' },
-        { label: 'Encryption', val: 'AES-256 at Rest & TLS Transit' },
-        { label: 'Multi-Tenant', val: 'Strict User ID Scoping' },
-      ],
-      tag: 'Managed ACID Storage',
-    },
-    {
-      id: 'security',
-      name: 'Secret Manager & OIDC Auth',
-      badge: 'Zero-Trust Security',
-      icon: <KeyRound className="text-rose-500" size={20} />,
-      role: 'Centralized runtime secret fetching with IAM role permissions. OIDC JWT verification validates RS256 token signatures against public Google JWKS.',
-      specs: [
-        { label: 'Credentials', val: 'Secret Manager Zero Hardcoding' },
-        { label: 'Token Spec', val: 'RS256 JWT Signed' },
-        { label: 'Password Hash', val: 'Scrypt via Werkzeug' },
-      ],
-      tag: 'Zero-Trust Perimeter',
-    },
-    {
-      id: 'frontend',
-      name: 'Modern Cloud SPA Client',
-      badge: 'Frontend Client Tier',
-      icon: <Cloud className="text-cyan-500" size={20} />,
-      role: 'React 18 single-page application built with Vite and Tailwind CSS. Features optimistic state updates, live AST scoring, and responsive theme engine.',
-      specs: [
-        { label: 'Framework', val: 'React 18 + Vite SPA' },
-        { label: 'Styling', val: 'Dynamic Themed Tailwind CSS' },
-        { label: 'Build Size', val: '<180 KB Gzip Bundle' },
-      ],
-      tag: 'Edge Client Tier',
-    },
-  ];
-
-  return (
-    <section id="architecture" className="py-12 sm:py-16 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[var(--border-subtle)] scroll-mt-20">
-      {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-3 border border-blue-500/20">
-          <Workflow size={13} />
-          System Design & Cloud Architecture
-        </div>
-        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight mb-3 font-serif">
-          Production Google Cloud Platform Stack
-        </h2>
-        <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed">
-          CloudResumeAI is architected from the ground up for serverless scale, sub-second latency, zero disk-write vulnerabilities, and strict multi-tenant isolation.
-        </p>
-
-        {/* Service selector tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-6">
-          {ARCH_SERVICES.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => setActiveTier(s.id)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                activeTier === s.id
-                  ? 'bg-[var(--text-primary)] text-[var(--bg-page)] shadow-xs'
-                  : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)]'
-              }`}
+          {/* Education */}
+          <div className="pt-1 border-t border-slate-100">
+            <p
+              className="text-[9.5px] font-black uppercase tracking-wider mb-0.5"
+              style={{ color: activeColor }}
             >
-              <span>{s.name}</span>
+              EDUCATION
+            </p>
+            <div className="flex items-center justify-between text-[9px]">
+              <div>
+                <span className="font-bold text-slate-800">B.Tech in Computer Science &amp; Engineering</span>
+                <span className="text-slate-500 block">Indian Institute of Technology (IIT)</span>
+              </div>
+              <span className="text-slate-400">2017 – 2021</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Floating Candidate Circular Photo Avatar (Right edge) */}
+        <div className="absolute right-5 top-12 z-20">
+          <div
+            className="w-14 h-14 rounded-full border-2 p-0.5 shadow-lg bg-white overflow-hidden"
+            style={{ borderColor: activeColor }}
+          >
+            <div className="w-full h-full rounded-full bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-700 flex items-center justify-center text-white font-extrabold text-sm">
+              AS
+            </div>
+          </div>
+        </div>
+
+        {/* Color Palette Switcher Pill (Bottom Right) */}
+        <div className="absolute bottom-4 right-4 z-20 bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md rounded-full px-2.5 py-1.5 flex items-center gap-1.5">
+          {HERO_PALETTES.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => onSelectColor(p.hex)}
+              title={p.name}
+              className={`w-4 h-4 rounded-full transition-all flex items-center justify-center ${
+                activeColor === p.hex
+                  ? 'ring-2 ring-offset-1 ring-amber-600 scale-110'
+                  : 'opacity-70 hover:opacity-100 hover:scale-105'
+              }`}
+              style={{ backgroundColor: p.hex }}
+            >
+              {activeColor === p.hex && <Check size={8} className="text-white font-black" />}
             </button>
           ))}
         </div>
+
       </div>
 
-      {/* Architecture Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-        {ARCH_SERVICES.map((svc) => {
-          const isSelected = activeTier === svc.id;
-          return (
-            <div
-              key={svc.id}
-              onClick={() => setActiveTier(svc.id)}
-              className={`p-5 rounded-3xl border bg-[var(--bg-surface)] cursor-pointer transition-all duration-200 flex flex-col justify-between shadow-xs ${
-                isSelected
-                  ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-primary)]/20 shadow-md -translate-y-0.5'
-                  : 'border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/60'
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center">
-                    {svc.icon}
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-muted)] font-bold">
-                    {svc.tag}
-                  </span>
-                </div>
-
-                <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 mb-0.5">
-                  {svc.badge}
-                </div>
-                <h3 className="text-base font-bold text-[var(--text-primary)] mb-2 tracking-tight">
-                  {svc.name}
-                </h3>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
-                  {svc.role}
-                </p>
-              </div>
-
-              {/* Technical specs block */}
-              <div className="pt-3 border-t border-[var(--border-subtle)] space-y-1.5 bg-[var(--bg-subtle)]/50 p-2.5 rounded-xl">
-                {svc.specs.map((sp, i) => (
-                  <div key={i} className="flex items-center justify-between text-[11px]">
-                    <span className="text-[var(--text-muted)] font-medium">{sp.label}:</span>
-                    <span className="text-[var(--text-primary)] font-mono font-semibold">{sp.val}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Cloud Data Pipeline Flow Strip */}
-      <div className="mt-8 p-4 sm:p-5 rounded-3xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)]">
-        <div className="text-xs font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2">
-          <Zap size={14} className="text-amber-600 dark:text-amber-400" />
-          End-to-End Request Execution Pipeline
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-center text-xs">
-          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-            <span className="block font-bold text-[var(--text-primary)]">1. React SPA</span>
-            <span className="text-[10px] text-[var(--text-muted)]">OIDC Auth Token</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-            <span className="block font-bold text-[var(--text-primary)]">2. Cloud Run API</span>
-            <span className="text-[10px] text-[var(--text-muted)]">Flask + Gunicorn</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-            <span className="block font-bold text-[var(--text-primary)]">3. Gemini AI</span>
-            <span className="text-[10px] text-[var(--text-muted)]">XYZ Prompt Tuning</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-            <span className="block font-bold text-[var(--text-primary)]">4. ReportLab PDF</span>
-            <span className="text-[10px] text-[var(--text-muted)]">In-Memory Buffer</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-            <span className="block font-bold text-[var(--text-primary)]">5. Vector Export</span>
-            <span className="text-[10px] text-[var(--text-muted)]">&lt;1.2s Delivery</span>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 };
-
-// ─── Template Preview Card ───────────────────────────────────────────────────
-
-const DarkTemplatePreviewCard: React.FC<{
-  name: string;
-  primary: string;
-  accent: string;
-  category?: string;
-}> = ({ name, primary, accent, category }) => (
-  <div className="group rounded-3xl border border-[var(--border-subtle)] overflow-hidden bg-[var(--bg-surface)] hover:border-[var(--accent-primary)] hover:-translate-y-1 transition-all duration-300 shadow-xs hover:shadow-lg">
-    {/* Colored header line */}
-    <div className="h-2 w-full" style={{ background: accent }} />
-    <div className="p-4 space-y-3">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight font-serif">{name}</p>
-        {category && (
-          <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-muted)] font-semibold">
-            {category}
-          </span>
-        )}
-      </div>
-
-      {/* Miniature preview canvas */}
-      <div className="rounded-2xl p-3.5 space-y-2 border border-[var(--border-subtle)] bg-[var(--bg-subtle)]">
-        <div className="h-2 w-20 rounded-full" style={{ background: accent, opacity: 0.9 }} />
-        <div className="h-1.5 w-14 rounded-full" style={{ background: primary, opacity: 0.6 }} />
-        <div className="mt-2 space-y-1 pt-1.5 border-t border-[var(--border-subtle)]">
-          {[88, 72, 60, 78].map((w, i) => (
-            <div
-              key={i}
-              className="h-1 rounded-full bg-[var(--text-muted)]"
-              style={{
-                width: `${w}%`,
-                opacity: 0.2 + i * 0.1,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// ─── Process / How It Works ───────────────────────────────────────────────────
-
-const HOW_IT_WORKS = [
-  {
-    step: '01',
-    title: 'Select a Template',
-    desc: 'Pick from designer color palettes engineered for ATS compliance and clean visual hierarchy.',
-  },
-  {
-    step: '02',
-    title: 'Input Career History',
-    desc: 'Add professional experience, academic degrees, portfolio projects, and categorized skill tags.',
-  },
-  {
-    step: '03',
-    title: 'Apply Gemini AI',
-    desc: 'Let Google Gemini rewrite passive duties into high-impact accomplishment bullets with metrics.',
-  },
-  {
-    step: '04',
-    title: 'Export Vector PDF',
-    desc: 'Download a clean vector PDF compiled directly in server memory, ready for recruiter submission.',
-  },
-];
-
-// ─── Testimonials ─────────────────────────────────────────────────────────────
-
-const TESTIMONIALS = [
-  {
-    name: 'Priya Kapoor',
-    role: 'Software Engineer at Spotify',
-    badge: 'Landed 3 Interviews in Week 1',
-    quote:
-      'CloudResumeAI helped me land 3 interviews in a week. The AI bullet improvements were incredible and immediately stood out.',
-    avatar: 'PK',
-    stars: 5,
-  },
-  {
-    name: 'James Liu',
-    role: 'Product Manager at Figma',
-    badge: 'ATS Score Jumped 64% to 98%',
-    quote:
-      'Best resume tool I have ever used. The ATS score feature alone saved me countless rejections by revealing keyword gaps.',
-    avatar: 'JL',
-    stars: 5,
-  },
-  {
-    name: 'Sara Okafor',
-    role: 'Cloud Architect at Stripe',
-    badge: 'Offer Accepted $185k',
-    quote:
-      'The templates are beautiful, modern, and actually pass automated screening. Truly enterprise-grade engineering.',
-    avatar: 'SO',
-    stars: 5,
-  },
-];
 
 // ─── Main Landing Page Component ──────────────────────────────────────────────
 
 const LandingPage: React.FC = () => {
+  const [activeColor, setActiveColor] = useState(HERO_PALETTES[3].hex);
+  const [isOptimizeOpen, setIsOptimizeOpen] = useState(false);
   const { theme } = useTheme();
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = ['All', 'Engineering', 'Architecture', 'Leadership', 'Creative'];
-
-  const filteredTemplates = RESUME_TEMPLATES.filter((t) => {
-    if (selectedCategory === 'All') return true;
-    return t.category?.toLowerCase() === selectedCategory.toLowerCase();
-  });
-
-  // Choose footer preset according to theme
-  const footerPreset: MeadowTheme = theme === 'dark' ? 'moonlit' : theme === 'light' ? 'meadow' : 'golden';
+  // Map application theme into Meadow preset
+  const footerPreset: MeadowPreset = theme === 'dark' ? 'moonlit' : 'golden';
 
   return (
-    <div className="text-[var(--text-primary)] overflow-hidden relative">
-      {/* Warm / Cool Ambient Radiant Glow Aura */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[480px] bg-gradient-to-b from-amber-400/15 via-orange-300/10 to-transparent dark:from-blue-600/15 dark:via-indigo-500/10 dark:to-transparent rounded-full blur-[100px] pointer-events-none -z-10" />
-
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] transition-colors duration-200 font-sans">
+      
       {/* ─── Hero Section ─────────────────────────────────────────────────── */}
-      <section className="pt-10 sm:pt-16 pb-8 sm:pb-12 px-4 sm:px-6 max-w-6xl mx-auto text-center relative">
-        {/* Release Pill with Sun Icon */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs font-semibold mb-6 hover:border-[var(--accent-primary)] transition-colors shadow-2xs">
-          <Sun size={13} className="text-amber-600 dark:text-amber-400" />
-          <span className="tracking-wide">ENGINEERED FOR GOOGLE CLOUD & GEMINI AI</span>
-          <ArrowRight size={12} className="text-[var(--text-muted)]" />
-        </div>
+      <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          {/* Left Column: Heading, Subtitle, Burnt-Amber CTA Buttons, Rating */}
+          <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[var(--text-primary)] leading-[1.08] font-sans">
+              India's Top
+              <br />
+              <span className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 dark:from-amber-400 dark:via-orange-300 dark:to-amber-500 bg-clip-text text-transparent">
+                Resume Templates
+              </span>
+            </h1>
 
-        {/* Editorial Headline */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--text-primary)] mb-4 leading-[1.1] font-serif">
-          Good resumes. <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-            All career long.
-          </span>
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl mx-auto mb-6 leading-relaxed font-normal">
-          Get interviews at top companies with AI-crafted, ATS-optimized cloud resumes. Powered by
-          Google Gemini and designed for modern cloud careers.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto mb-6">
-          <Link
-            to="/dashboard"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 bg-[var(--text-primary)] hover:opacity-90 text-[var(--bg-page)] text-sm font-semibold rounded-full transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Start building for free ↗
-          </Link>
-          <Link
-            to="/templates"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] text-sm font-semibold rounded-full border border-[var(--border-subtle)] shadow-xs transition-all"
-          >
-            Explore templates
-          </Link>
-        </div>
-
-        {/* Live Metrics Ticker Banner */}
-        <div className="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 p-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-xs">
-          <div className="text-center p-2 rounded-xl bg-[var(--bg-subtle)]">
-            <div className="flex items-center justify-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
-              <Zap size={14} /> 98.4%
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">ATS Pass Rate</div>
-          </div>
-          <div className="text-center p-2 rounded-xl bg-[var(--bg-subtle)]">
-            <div className="flex items-center justify-center gap-1 text-amber-600 dark:text-amber-400 font-bold text-sm">
-              <Award size={14} /> 14,200+
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">Resumes Generated</div>
-          </div>
-          <div className="text-center p-2 rounded-xl bg-[var(--bg-subtle)]">
-            <div className="flex items-center justify-center gap-1 text-blue-600 dark:text-blue-400 font-bold text-sm">
-              <Cpu size={14} /> &lt; 1.2s
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">Vector PDF Compile</div>
-          </div>
-          <div className="text-center p-2 rounded-xl bg-[var(--bg-subtle)]">
-            <div className="flex items-center justify-center gap-1 text-purple-600 dark:text-purple-400 font-bold text-sm">
-              <Lock size={14} /> 100%
-            </div>
-            <div className="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">Isolated Security</div>
-          </div>
-        </div>
-
-        {/* Company Logos Proof Strip */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--text-muted)] font-medium">
-          <span>Engineers hired at:</span>
-          <span className="font-semibold text-[var(--text-secondary)]">Google</span>
-          <span>•</span>
-          <span className="font-semibold text-[var(--text-secondary)]">Amazon</span>
-          <span>•</span>
-          <span className="font-semibold text-[var(--text-secondary)]">Microsoft</span>
-          <span>•</span>
-          <span className="font-semibold text-[var(--text-secondary)]">Stripe</span>
-          <span>•</span>
-          <span className="font-semibold text-[var(--text-secondary)]">Spotify</span>
-        </div>
-
-        {/* Hero Preview Card */}
-        <HeroGlassPreview />
-      </section>
-
-      {/* ─── Bento Grid Feature Section ───────────────────────────────────── */}
-      <BentoFeaturesSection />
-
-      {/* ─── Dedicated Cloud Architecture Section ─────────────────────────── */}
-      <CloudArchitectureSection />
-
-      {/* ─── Template Gallery Previews ────────────────────────────────────── */}
-      <section className="py-10 sm:py-14 px-4 sm:px-6 max-w-7xl mx-auto border-t border-[var(--border-subtle)]">
-        <div className="text-center max-w-2xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-2">
-            <Layers size={12} />
-            Curated Styles
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-2 tracking-tight font-serif">
-            Templates designed to impress recruiters
-          </h2>
-          <p className="text-[var(--text-secondary)] text-xs sm:text-sm leading-relaxed mb-4">
-            Every template is crafted for ATS compatibility, elegant typography, and instant PDF compilation.
-          </p>
-
-          {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-[var(--text-primary)] text-[var(--bg-page)] shadow-xs'
-                    : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)]'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {(filteredTemplates.length > 0 ? filteredTemplates.slice(0, 4) : RESUME_TEMPLATES.slice(0, 4)).map((t) => (
-            <DarkTemplatePreviewCard
-              key={t.id}
-              name={t.name}
-              primary={t.colorScheme.primary}
-              accent={t.colorScheme.accent}
-              category={t.category}
-            />
-          ))}
-        </div>
-
-        <div className="text-center mt-6">
-          <Link
-            to="/templates"
-            className="inline-flex items-center gap-2 text-xs font-bold text-[var(--accent-primary)] hover:opacity-80 transition-colors bg-[var(--bg-surface)] px-4 py-2 rounded-full border border-[var(--border-subtle)] shadow-2xs"
-          >
-            Explore all {RESUME_TEMPLATES.length} templates
-            <ArrowRight size={13} />
-          </Link>
-        </div>
-      </section>
-
-      {/* ─── How It Works (Step Workflow Pipeline) ────────────────────────── */}
-      <section id="how-it-works" className="py-10 sm:py-14 px-4 sm:px-6 bg-[var(--bg-subtle)] border-y border-[var(--border-subtle)] scroll-mt-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <span className="text-xs font-mono uppercase tracking-widest text-amber-700 dark:text-amber-400 mb-1.5 block font-semibold">
-              Execution Pipeline
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] tracking-tight mb-2 font-serif">
-              From blank draft to job interviews in 4 steps
-            </h2>
-            <p className="text-xs sm:text-sm text-[var(--text-secondary)]">
-              A streamlined, high-speed automated pipeline built with cloud-native reliability.
+            <p className="text-base sm:text-lg text-[var(--text-secondary)] max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
+              Get the job 2x as fast.¹ Use recruiter-approved templates and step-by-step content recommendations to create a new resume or optimize your current one.
             </p>
+
+            {/* Warm Burnt-Amber / Charcoal CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+              <Link to="/editor/new" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 hover:from-amber-700 hover:to-orange-700 text-white text-sm font-bold rounded-full shadow-lg shadow-amber-600/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                  <span>Create new resume</span>
+                  <ArrowUpRight size={16} />
+                </button>
+              </Link>
+
+              <button
+                onClick={() => setIsOptimizeOpen(true)}
+                className="w-full sm:w-auto px-8 py-3.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)] border-2 border-[var(--border-subtle)] hover:border-amber-600 text-sm font-bold rounded-full shadow-xs hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles size={14} className="text-amber-600 dark:text-amber-400" />
+                <span>Optimize my resume</span>
+              </button>
+            </div>
+
+            {/* Trustpilot Rating Pill */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] shadow-xs">
+              <span className="font-bold text-[var(--text-primary)] uppercase text-[11px]">
+                EXCELLENT
+              </span>
+              <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <span
+                    key={s}
+                    className="w-3.5 h-3.5 bg-emerald-600 text-white rounded-[2px] flex items-center justify-center text-[9px] font-bold"
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="text-[11px] font-medium text-[var(--text-secondary)]">
+                4.5 out of 5 based on 19,826 reviews
+              </span>
+              <span className="font-bold text-emerald-700 dark:text-emerald-400 text-[11px] flex items-center gap-0.5">
+                ★ Trustpilot
+              </span>
+            </div>
+
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
-            {HOW_IT_WORKS.map((step, idx) => (
-              <div
-                key={idx}
-                className="p-5 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] relative group hover:border-[var(--accent-primary)] transition-all shadow-xs flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600 dark:from-cyan-400 dark:to-blue-400">
-                      {step.step}
-                    </span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  </div>
-                  <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] mb-1.5 tracking-tight">
-                    {step.title}
-                  </h3>
-                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                    {step.desc}
-                  </p>
+          {/* Right Column: Hero Resume Preview Canvas */}
+          <div className="lg:col-span-6">
+            <HeroResumeDocument
+              activeColor={activeColor}
+              onSelectColor={setActiveColor}
+              onOpenOptimize={() => setIsOptimizeOpen(true)}
+            />
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── Section 2: "Create a resume that gets results" ─────────────────── */}
+      <section className="py-16 sm:py-20 bg-[var(--bg-surface)] border-y border-[var(--border-subtle)]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Centered Heading with Curvy Hand-drawn Arrow and Deep Charcoal Pill */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-6 mb-14 text-center md:text-left">
+            <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-primary)] tracking-tight font-sans">
+              Create a resume
+              <br />
+              <span className="relative inline-block">
+                that gets results
+                <svg
+                  className="absolute -bottom-1.5 left-0 w-full h-2 text-amber-500"
+                  viewBox="0 0 100 10"
+                  preserveAspectRatio="none"
+                >
+                  <path d="M0 5 Q 50 10, 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
+                </svg>
+              </span>
+            </h2>
+
+            {/* Hand-drawn Curvy Arrow & Charcoal Pill Button with Directional Arrow */}
+            <div className="flex items-center gap-3">
+              <span className="text-2xl text-[var(--text-muted)] hidden md:inline transform rotate-12">
+                ⤹
+              </span>
+              <Link to="/templates">
+                <button className="px-8 py-3.5 bg-[#18181B] dark:bg-amber-600 hover:bg-black dark:hover:bg-amber-700 text-white rounded-full font-bold text-sm shadow-md flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                  <span>Choose a template</span>
+                  <ArrowUpRight size={16} />
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          {/* 3 Refined Feature Pillars with Warm Aesthetic */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            
+            {/* Column 1: Recruiter-Approved Resume */}
+            <div className="p-6 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-page)] hover:border-amber-500/40 hover:shadow-md transition-all space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 flex items-center justify-center shadow-xs">
+                <Camera size={22} />
+              </div>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">
+                Recruiter-Approved Resume
+              </h3>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                We work with recruiters to design resume templates that format automatically and pass modern ATS parsers.
+              </p>
+            </div>
+
+            {/* Column 2: Finish Your Resume in 15 Minutes */}
+            <div className="p-6 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-page)] hover:border-amber-500/40 hover:shadow-md transition-all space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 flex items-center justify-center shadow-xs">
+                <Clock size={22} />
+              </div>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">
+                Finish Your Resume in 15 Minutes
+              </h3>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                CloudResumeAI helps you tackle your work experience by reminding you what you did at your job with intelligent suggestions.
+              </p>
+            </div>
+
+            {/* Column 3: Land an Interview */}
+            <div className="p-6 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-page)] hover:border-amber-500/40 hover:shadow-md transition-all space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-700 dark:text-orange-300 border border-orange-500/20 flex items-center justify-center shadow-xs">
+                <Briefcase size={22} />
+              </div>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">
+                Land an Interview
+              </h3>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                We suggest the skills you should add. It helped over a million people get interviews.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── Section 3: "6 features to boost your job search" ───────────────── */}
+      <section id="features" className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Heading */}
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3 border border-amber-500/20">
+            <Sparkles size={12} className="text-amber-600 dark:text-amber-400" />
+            <span>Golden Hour Architecture Features</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-primary)] tracking-tight font-sans">
+            6 features to boost your job search
+          </h2>
+          <p className="text-sm text-[var(--text-secondary)] mt-2">
+            Everything required to dominate the applicant pool and accelerate your cloud engineering career.
+          </p>
+        </div>
+
+        {/* 6 Refined Elevated Cards (2 Rows of 3 Cards) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          {/* Card 1: 35+ Template Designs */}
+          <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
+            <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
+              <div className="relative w-full max-w-[200px] h-28 flex items-center justify-center">
+                <div className="absolute w-24 h-28 bg-white dark:bg-slate-700 rounded-md shadow-md border border-slate-200 dark:border-slate-600 -rotate-12 translate-x-[-20px] p-2">
+                  <div className="w-8 h-1.5 bg-amber-600 rounded-full mb-1.5" />
+                  <div className="w-14 h-1 bg-slate-300 dark:bg-slate-500 rounded mb-1" />
+                  <div className="w-10 h-1 bg-slate-200 dark:bg-slate-600 rounded" />
+                </div>
+                <div className="absolute w-24 h-28 bg-white dark:bg-slate-700 rounded-md shadow-md border border-slate-200 dark:border-slate-600 rotate-6 translate-x-[20px] p-2">
+                  <div className="w-8 h-1.5 bg-orange-500 rounded-full mb-1.5" />
+                  <div className="w-14 h-1 bg-slate-300 dark:bg-slate-500 rounded mb-1" />
+                  <div className="w-10 h-1 bg-slate-200 dark:bg-slate-600 rounded" />
+                </div>
+                <div className="relative w-28 h-32 bg-white dark:bg-slate-700 rounded-md shadow-xl border border-slate-300 dark:border-slate-500 z-10 p-2.5">
+                  <div className="w-12 h-2 bg-emerald-600 rounded-full mb-2" />
+                  <div className="w-20 h-1 bg-slate-300 dark:bg-slate-500 rounded mb-1" />
+                  <div className="w-16 h-1 bg-slate-200 dark:bg-slate-600 rounded mb-2" />
+                  <div className="w-full h-0.5 bg-slate-100 dark:bg-slate-600 my-1.5" />
+                  <div className="w-22 h-1 bg-slate-200 dark:bg-slate-600 rounded" />
                 </div>
               </div>
-            ))}
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-[var(--text-primary)]">35+ Template Designs</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Recruiter-vetted layouts that highlight your strengths and pass automated ATS screening tests.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ─── Testimonials ─────────────────────────────────────────────────── */}
-      <section className="py-10 sm:py-14 px-4 sm:px-6 max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-semibold mb-2">
-            <Star size={12} className="fill-amber-500 text-amber-500" />
-            Candidate Success
+          {/* Card 2: Enhance with AI */}
+          <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
+            <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
+              <div className="w-full max-w-[220px] bg-white dark:bg-slate-700 rounded-xl shadow-md border border-slate-200 dark:border-slate-600 p-3.5 space-y-2 text-[10px]">
+                <p className="font-bold text-slate-800 dark:text-slate-100 pb-1.5 border-b border-slate-100 dark:border-slate-600">
+                  Here are a few options for AI enhanced grammar, clarity and readability
+                </p>
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                  <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="font-medium">Grammar &amp; impact rewrite</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                  <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="font-medium">Google XYZ formula applied</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-[var(--text-primary)]">Enhance with AI</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Instantly turn passive job duties into high-impact accomplishments using Google Gemini AI.
+              </p>
+            </div>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-2 tracking-tight font-serif">
-            Loved by software engineers and professionals
-          </h2>
-          <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
-            Join candidates who boosted their ATS pass rates and landed offers with CloudResumeAI.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-          {TESTIMONIALS.map((t, idx) => (
-            <div
-              key={idx}
-              className="p-5 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent-primary)] transition-all flex flex-col justify-between shadow-xs"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex gap-1">
-                    {Array.from({ length: t.stars }).map((_, s) => (
-                      <Star key={s} size={13} className="text-amber-500 fill-amber-500" />
-                    ))}
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
-                    {t.badge}
+          {/* Card 3: Resume Review */}
+          <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
+            <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
+              <div className="w-full max-w-[220px] bg-white dark:bg-slate-700 rounded-xl shadow-md border border-slate-200 dark:border-slate-600 p-3.5 text-[10px]">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-bold text-slate-800 dark:text-slate-100">Review Diagnostic</span>
+                  <span className="px-2 py-0.5 bg-emerald-600 text-white rounded-full font-bold text-[10px]">
+                    98 / 100
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed italic mb-4">
-                  &ldquo;{t.quote}&rdquo;
+                <div className="w-full bg-slate-100 dark:bg-slate-600 h-1.5 rounded-full overflow-hidden mb-2">
+                  <div className="bg-emerald-600 h-full w-[98%]" />
+                </div>
+                <p className="text-[9.5px] text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                  ATS formatting is clean. All keywords properly matched to target cloud role.
                 </p>
               </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-[var(--text-primary)]">Resume Review</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Diagnostic scoring on readability, keyword density, and hiring manager appeal.
+              </p>
+            </div>
+          </div>
 
-              <div className="flex items-center gap-3 pt-3 border-t border-[var(--border-subtle)]">
-                <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200 flex items-center justify-center text-xs font-bold shrink-0 border border-amber-500/30">
-                  {t.avatar}
+          {/* Card 4: AI Cover Letter Builder */}
+          <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
+            <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
+              <div className="w-full max-w-[210px] bg-white dark:bg-slate-700 rounded-xl shadow-md border border-slate-200 dark:border-slate-600 p-3.5 space-y-1.5 text-[9.5px]">
+                <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-bold">
+                  <Wand2 size={13} />
+                  <span>Matching Cover Letter</span>
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-[var(--text-primary)]">{t.name}</p>
-                  <p className="text-[10px] text-[var(--text-muted)]">{t.role}</p>
+                <p className="text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                  "Dear Hiring Team, I am thrilled to apply for the Senior Cloud Engineer position. My background in serverless systems..."
+                </p>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-[var(--text-primary)]">AI Cover Letter Builder</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Generate tailored cover letters matched to specific job roles and job descriptions in seconds.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 5: Resume Website */}
+          <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
+            <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
+              <div className="w-full max-w-[220px] bg-white dark:bg-slate-700 rounded-xl shadow-md border border-slate-200 dark:border-slate-600 overflow-hidden text-[9px]">
+                <div className="bg-slate-100 dark:bg-slate-600 px-2 py-1.5 flex items-center justify-between border-b border-slate-200 dark:border-slate-500 font-mono text-[8px] text-slate-600 dark:text-slate-300">
+                  <div className="flex items-center gap-1">
+                    <Globe size={11} className="text-amber-600 dark:text-amber-400" />
+                    <span>cloudresume.ai/u/aarav</span>
+                  </div>
+                  <span className="text-[7.5px] bg-amber-500 text-slate-950 font-bold px-1.5 py-0.5 rounded">
+                    Your resume URL
+                  </span>
+                </div>
+                <div className="p-2.5 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-600 to-orange-600 text-white flex items-center justify-center font-bold text-[8.5px]">
+                      AS
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-800 dark:text-white">Aarav Sharma</p>
+                      <p className="text-[8px] text-slate-500 dark:text-slate-400">Cloud Portfolio</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
+            <div>
+              <h3 className="font-bold text-base text-[var(--text-primary)]">Resume Website</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Publish a personalized, live web resume URL you can add directly to LinkedIn and outreach emails.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 6: Resume Tracking */}
+          <div className="rounded-3xl border border-[#EAE3D5] dark:border-slate-800 bg-[var(--bg-surface)] p-6 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-amber-500/50 hover:-translate-y-0.5 transition-all duration-300">
+            <div className="h-40 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-subtle)] flex items-center justify-center relative overflow-hidden mb-4 p-4">
+              <div className="w-full max-w-[210px] bg-white dark:bg-slate-700 rounded-xl shadow-md border border-slate-200 dark:border-slate-600 p-3 text-[9.5px]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1">
+                    <TrendingUp size={12} className="text-emerald-600 dark:text-emerald-400" />
+                    Employers clicking your resume
+                  </span>
+                </div>
+                <p className="text-[8px] text-slate-500 dark:text-slate-400 mb-1">for jobs you applied to</p>
+                <div className="h-10 flex items-end gap-1.5 pt-2">
+                  <div className="flex-1 bg-amber-200 dark:bg-amber-900/60 rounded-t h-[35%]" />
+                  <div className="flex-1 bg-amber-300 dark:bg-amber-800/60 rounded-t h-[50%]" />
+                  <div className="flex-1 bg-amber-400 dark:bg-amber-700/60 rounded-t h-[70%]" />
+                  <div className="flex-1 bg-amber-600 dark:bg-amber-600 rounded-t h-[95%]" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-[var(--text-primary)]">Resume Tracking</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Receive real-time notifications when hiring managers view or download your resume.
+              </p>
+            </div>
+          </div>
+
         </div>
+
       </section>
 
-      {/* ─── Bottom CTA Banner ─────────────────────────────────────────────── */}
-      <section className="py-8 sm:py-12 px-4 sm:px-6 relative">
-        <div className="max-w-4xl mx-auto rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-subtle)] p-6 sm:p-10 text-center relative overflow-hidden shadow-lg">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] mb-3 tracking-tight font-serif">
-            Start building your interview-winning resume today
-          </h2>
-          <p className="text-[var(--text-secondary)] text-xs sm:text-sm max-w-xl mx-auto mb-6 leading-relaxed">
-            Free forever in development mode. Zero credit card required. Experience cutting-edge AI career engineering.
-          </p>
-
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 px-7 py-3 bg-[var(--text-primary)] hover:opacity-90 text-[var(--bg-page)] text-sm font-semibold rounded-full shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-          >
-            Get started for free ↗
-          </Link>
-        </div>
-      </section>
-
-      {/* ─── Footer: Meadow Rise Animated Canvas Footer (Synced with Theme) ─ */}
+      {/* ─── NEW FULL-BLEED CTA + EDITORIAL MEADOW RISE FOOTER SECTION ──────── */}
       <MeadowRiseFooter
         name="CloudResumeAI"
+        brandHref="/"
         preset={footerPreset}
-        heading="Engineering High-Impact Cloud Careers with Gemini AI"
-        tagline="Next-generation cloud resume engineering powered by Google Cloud Platform & Gemini AI."
+        heading={"Engineering\nHigh-Impact Cloud\nCareers with Gemini AI"}
         subheading="Optimize for ATS scanners, craft impact bullets, and export vector PDFs in milliseconds."
+        tagline="Next-generation cloud resume engineering powered by Google Cloud Platform & Gemini AI."
+        placeholder="Enter your university / work email"
         cta={{ label: "Start Building Free", href: "/dashboard" }}
+        columns={[
+          {
+            title: "Navigate",
+            links: [
+              { label: "Home", href: "/" },
+              { label: "About", href: "/#features" },
+              { label: "Templates", href: "/templates" },
+              { label: "Dashboard", href: "/dashboard" },
+            ],
+          },
+          {
+            title: "Cloud",
+            links: [
+              { label: "Google Cloud Platform", href: "/#architecture" },
+              { label: "Cloud Run", href: "/#architecture" },
+              { label: "Cloud Storage", href: "/#architecture" },
+            ],
+          },
+          {
+            title: "AI Assistant",
+            links: [
+              { label: "Gemini AI", href: "/ai" },
+              { label: "ATS Scorer", href: "/ai" },
+              { label: "Career Coach", href: "/ai" },
+            ],
+          },
+        ]}
+        socials={[
+          { icon: "linkedin", href: "https://linkedin.com", label: "LinkedIn" },
+          { icon: "instagram", href: "https://instagram.com", label: "Instagram" },
+          { icon: "facebook", href: "https://facebook.com", label: "Facebook" },
+          { icon: "x", href: "https://twitter.com", label: "X" },
+        ]}
+        legal={[
+          { label: "Privacy Policy", href: "#" },
+          { label: "Terms of Use", href: "#" },
+        ]}
       />
+
+      {/* ─── OPTIMIZE RESUME MODAL WIZARD ───────────────────────────────────── */}
+      <OptimizeResumeModal
+        isOpen={isOptimizeOpen}
+        onClose={() => setIsOptimizeOpen(false)}
+      />
+
     </div>
   );
 };

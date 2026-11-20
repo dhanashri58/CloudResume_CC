@@ -23,15 +23,15 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary:
-      'bg-[#1C1917] text-white hover:bg-[#292524] focus:ring-stone-500 shadow-sm active:scale-[0.98]',
+      'bg-[var(--text-primary)] text-[var(--bg-page)] hover:opacity-90 focus:ring-[var(--accent-primary)] shadow-sm active:scale-[0.98]',
     secondary:
-      'bg-white text-stone-800 hover:bg-[#FAF7F2] border border-[#DCD3C7] focus:ring-amber-500 shadow-2xs',
+      'bg-[var(--bg-surface)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] border border-[var(--border-subtle)] focus:ring-[var(--accent-primary)] shadow-2xs',
     ghost:
-      'text-stone-600 hover:bg-[#F5EFE6] hover:text-[#1C1917] focus:ring-stone-400',
+      'text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)] focus:ring-[var(--accent-primary)]',
     danger:
       'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500 shadow-sm',
     outline:
-      'border border-[#DCD3C7] text-stone-800 hover:bg-[#FAF7F2] hover:text-[#1C1917] focus:ring-amber-500',
+      'border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] focus:ring-[var(--accent-primary)]',
   };
 
   const sizes = {
@@ -120,9 +120,9 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white border border-[#E7DFD5] text-[#1C1917] rounded-3xl shadow-sm ${
+      className={`bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] rounded-3xl shadow-sm transition-colors ${
         hover
-          ? 'hover:shadow-md hover:border-amber-400 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer'
+          ? 'hover:shadow-md hover:border-[var(--accent-primary)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer'
           : ''
       } ${className}`}
       onClick={onClick}
@@ -154,20 +154,20 @@ export const Input: React.FC<InputProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-bold text-stone-700"
+          className="block text-xs font-bold text-[var(--text-secondary)]"
         >
           {label}
         </label>
       )}
       <input
         id={inputId}
-        className={`w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5] text-stone-900 placeholder-stone-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 focus:bg-white ${
-          error ? 'border-rose-400' : 'border-[#E7DFD5] hover:border-stone-400'
+        className={`w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[var(--bg-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] transition-all focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30 focus:border-[var(--accent-primary)] focus:bg-[var(--bg-surface)] ${
+          error ? 'border-rose-400' : 'border-[var(--border-subtle)] hover:border-[var(--border-card)]'
         } ${className}`}
         {...rest}
       />
       {hint && !error && (
-        <p className="text-xs text-stone-500">{hint}</p>
+        <p className="text-xs text-[var(--text-muted)]">{hint}</p>
       )}
       {error && <p className="text-xs text-rose-600">{error}</p>}
     </div>
@@ -195,15 +195,15 @@ export const Textarea: React.FC<TextareaProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-bold text-stone-700"
+          className="block text-xs font-bold text-[var(--text-secondary)]"
         >
           {label}
         </label>
       )}
       <textarea
         id={inputId}
-        className={`w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[#FAF8F5] text-stone-900 placeholder-stone-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 focus:bg-white resize-none ${
-          error ? 'border-rose-400' : 'border-[#E7DFD5] hover:border-stone-400'
+        className={`w-full px-3.5 py-2.5 text-xs border rounded-xl bg-[var(--bg-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] transition-all focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30 focus:border-[var(--accent-primary)] focus:bg-[var(--bg-surface)] resize-none ${
+          error ? 'border-rose-400' : 'border-[var(--border-subtle)] hover:border-[var(--border-card)]'
         } ${className}`}
         {...rest}
       />
@@ -227,9 +227,9 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => (
   <div className="flex items-start justify-between gap-4">
     <div>
-      <h2 className="text-base font-bold text-[#1C1917] font-serif">{title}</h2>
+      <h2 className="text-base font-bold text-[var(--text-primary)] font-serif">{title}</h2>
       {subtitle && (
-        <p className="mt-0.5 text-xs text-stone-500">{subtitle}</p>
+        <p className="mt-0.5 text-xs text-[var(--text-muted)]">{subtitle}</p>
       )}
     </div>
     {action && <div className="flex-shrink-0">{action}</div>}
@@ -240,7 +240,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 
 export const Divider: React.FC<{ className?: string }> = ({
   className = '',
-}) => <hr className={`border-[#E7DFD5] ${className}`} />;
+}) => <hr className={`border-[var(--border-subtle)] ${className}`} />;
 
 // ─── Spinner ────────────────────────────────────────────────────────────────
 

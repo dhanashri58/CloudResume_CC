@@ -1276,7 +1276,12 @@ export default function MeadowRiseFooter({
     const scene = sceneRef.current;
     const canvas = canvasRef.current;
     if (!root || !hero || !scene || !canvas) return;
-    const ctx = canvas.getContext("2d");
+    let ctx: CanvasRenderingContext2D | null = null;
+    try {
+      ctx = canvas.getContext("2d");
+    } catch {
+      return;
+    }
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

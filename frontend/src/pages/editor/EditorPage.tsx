@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { SAMPLE_RESUME_DATA } from '../../data/mockData';
 import { Button, Input, Textarea, Badge } from '../../components/ui';
+import { ThemeToggle } from '../../components/ui/ThemeToggle';
 import {
   getResume,
   createResume,
@@ -50,21 +51,21 @@ const EditorSection: React.FC<{
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border border-[#E7DFD5] rounded-3xl overflow-hidden bg-white shadow-sm transition-all duration-200">
+    <div className="border border-[var(--border-subtle)] rounded-3xl overflow-hidden bg-[var(--bg-surface)] shadow-sm transition-all duration-200">
       <button
         type="button"
-        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-[#FAF8F5] transition-colors"
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-[var(--bg-subtle)] transition-colors"
         onClick={() => setOpen(!open)}
       >
-        <span className="text-sm font-bold text-[#1C1917] font-serif">{title}</span>
+        <span className="text-sm font-bold text-[var(--text-primary)] font-sans">{title}</span>
         {open ? (
-          <ChevronUp size={16} className="text-stone-400" />
+          <ChevronUp size={16} className="text-[var(--text-muted)]" />
         ) : (
-          <ChevronDown size={16} className="text-stone-400" />
+          <ChevronDown size={16} className="text-[var(--text-muted)]" />
         )}
       </button>
       {open && (
-        <div className="px-6 pb-6 pt-3 border-t border-[#EFEAE2] text-stone-700">
+        <div className="px-6 pb-6 pt-3 border-t border-[var(--border-subtle)] text-[var(--text-secondary)]">
           {children}
         </div>
       )}
@@ -407,10 +408,10 @@ const EditorPage: React.FC = () => {
   return (
     <div className="flex flex-col h-full min-h-screen bg-[#FAF7F2] text-[#1C1917] relative overflow-hidden selection:bg-amber-500/20 selection:text-amber-900">
       {/* Editor top bar */}
-      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#E7DFD5] px-4 py-3 flex items-center gap-3">
+      <div className="sticky top-0 z-30 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] px-4 py-3 flex items-center gap-3 transition-colors shadow-2xs">
         <Link
           to="/dashboard"
-          className="p-1.5 rounded-full text-stone-500 hover:text-[#1C1917] hover:bg-[#FAF7F2] border border-[#E7DFD5] transition-colors"
+          className="p-1.5 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] border border-[var(--border-subtle)] transition-colors"
         >
           <ArrowLeft size={16} />
         </Link>
@@ -420,20 +421,21 @@ const EditorPage: React.FC = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-sm font-bold text-[#1C1917] bg-[#FAF8F5] border border-[#E7DFD5] rounded-full px-3.5 py-1 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 w-full max-w-xs placeholder-stone-400"
+            className="text-sm font-bold text-[var(--text-primary)] bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-full px-3.5 py-1 focus:outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] w-full max-w-xs placeholder-[var(--text-muted)] transition-colors"
             placeholder="Resume title..."
           />
         </div>
 
         {errorMessage && (
-          <span className="text-xs text-amber-700 hidden md:block">
+          <span className="text-xs text-rose-600 dark:text-rose-400 hidden md:block">
             {errorMessage}
           </span>
         )}
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {loading && (
-            <RefreshCw size={13} className="animate-spin text-stone-400" />
+            <RefreshCw size={13} className="animate-spin text-[var(--text-muted)]" />
           )}
           <Badge variant={saved ? 'green' : 'slate'}>
             {saving ? 'Saving...' : saved ? 'Saved' : 'Unsaved'}
@@ -443,8 +445,8 @@ const EditorPage: React.FC = () => {
             onClick={() => setPreviewMode(!previewMode)}
             className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-colors ${
               previewMode
-                ? 'bg-amber-100 border-amber-300 text-amber-900'
-                : 'border-[#DCD3C7] text-stone-700 hover:bg-[#FAF7F2] hover:text-[#1C1917]'
+                ? 'bg-amber-100 dark:bg-amber-900/40 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200'
+                : 'border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)]'
             }`}
           >
             <Eye size={13} />
@@ -454,15 +456,15 @@ const EditorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsJobMatchModalOpen(true)}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/30 text-amber-900 dark:text-amber-200 hover:bg-amber-100 transition-colors"
           >
-            <Sparkles size={13} className="text-amber-700" />
+            <Sparkles size={13} className="text-amber-600 dark:text-amber-400" />
             Match Job
           </button>
 
           <Link to="/ai">
-            <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-[#DCD3C7] bg-white text-stone-700 hover:bg-[#FAF7F2] transition-colors">
-              <Sparkles size={13} className="text-amber-600" />
+            <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)] transition-colors">
+              <Sparkles size={13} className="text-[var(--accent-primary)]" />
               AI assist
             </button>
           </Link>
@@ -499,7 +501,7 @@ const EditorPage: React.FC = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Editor panel */}
         <div
-          className={`overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#FAF7F2] ${
+          className={`overflow-y-auto p-4 sm:p-6 space-y-4 bg-[var(--bg-page)] ${
             previewMode ? 'hidden lg:block lg:w-1/2' : 'w-full lg:w-1/2'
           }`}
         >
@@ -772,14 +774,14 @@ const EditorPage: React.FC = () => {
 
         {/* Preview panel */}
         <div
-          className={`bg-[#F5EFE6] border-l border-[#E7DFD5] overflow-y-auto p-6 ${
+          className={`bg-[var(--bg-subtle)] border-l border-[var(--border-subtle)] overflow-y-auto p-6 ${
             previewMode ? 'w-full lg:w-1/2' : 'hidden lg:block lg:w-1/2'
           }`}
         >
           <div className="sticky top-0 flex items-center justify-between mb-4 z-10 pb-2">
-            <p className="text-xs font-bold text-stone-600 uppercase tracking-wider">Live preview</p>
+            <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Live preview</p>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full border border-stone-300 bg-white text-stone-700 font-semibold shadow-2xs">A4 Studio</span>
+              <span className="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] font-semibold shadow-2xs">A4 Studio</span>
             </div>
           </div>
           <ResumePreview data={data} />
