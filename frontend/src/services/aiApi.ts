@@ -1,6 +1,6 @@
 import { getAuthHeaders } from './authToken';
+import { API_BASE_URL } from '../config/api';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 const CLIENT_TIMEOUT_MS = 25000;
 
 export interface AIStatusResponse {

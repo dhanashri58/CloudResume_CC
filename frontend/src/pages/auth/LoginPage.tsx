@@ -19,8 +19,7 @@ import {
 } from 'lucide-react';
 import { GoogleOAuthModal } from '../../components/auth/GoogleOAuthModal';
 import { PersonaModal, PersonaType } from '../../components/auth/PersonaModal';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+import { API_BASE_URL } from '../../config/api';
 
 export const LoginPage: React.FC<{ initialMode?: 'signin' | 'signup' }> = ({
   initialMode = 'signin',

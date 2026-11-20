@@ -1,7 +1,6 @@
 import type { ResumeCard, ResumeData } from '../types';
 import { getAuthHeaders } from './authToken';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+import { API_BASE_URL } from '../config/api';
 
 export interface ResumeListResponse {
   resumes: ResumeCard[];
