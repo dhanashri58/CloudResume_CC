@@ -4,7 +4,7 @@ import secrets
 from flask import Blueprint, request, jsonify, current_app
 from app.services.auth_service import AuthService, require_auth
 from app.repositories.user_repository import UserRepository
-from app.models.user import User
+from app.models.user import User, UserProfile
 from app.services.token_verifier import TokenVerifier
 from app.extensions import db
 
@@ -169,6 +169,10 @@ def google_auth():
         }), 422
 
     user = UserRepository.get_by_email(email)
+    name_parts = full_name.split(" ", 1) if full_name else []
+    first_name = name_parts[0] if name_parts else (email.split("@")[0])
+    last_name = name_parts[1] if len(name_parts) > 1 else ""
+
     if not user:
         stable_sub = claims.get("sub") or email
         user = User(
@@ -178,10 +182,29 @@ def google_auth():
             auth_provider_id=f"google:{stable_sub}",
         )
         user.set_password(secrets.token_urlsafe(32))
+        profile = UserProfile(
+            user=user,
+            first_name=first_name,
+            last_name=last_name,
+            headline="Cloud Professional",
+        )
         db.session.add(user)
+        db.session.add(profile)
         db.session.commit()
-    elif not user.full_name and full_name:
-        user.full_name = full_name
+    else:
+        if full_name:
+            user.full_name = full_name
+        if not user.profile:
+            profile = UserProfile(
+                user=user,
+                first_name=first_name,
+                last_name=last_name,
+                headline="Cloud Professional",
+            )
+            db.session.add(profile)
+        elif first_name and not user.profile.first_name:
+            user.profile.first_name = first_name
+            user.profile.last_name = last_name
         db.session.commit()
 
     token = AuthService.generate_token(user, expires_in_seconds=86400 * 7)
@@ -189,4 +212,10 @@ def google_auth():
         "message": "Google authentication successful.",
         "token": token,
         "user": user.to_dict(),
+        "profile": {
+            "first_name": user.profile.first_name if user.profile else first_name,
+            "last_name": user.profile.last_name if user.profile else last_name,
+            "headline": user.profile.headline if user.profile else "Cloud Professional",
+            "email": user.email,
+        } if user.profile else None,
     }), 200
